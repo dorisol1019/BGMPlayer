@@ -49,9 +49,6 @@ namespace WpfAudioPlayer
             }
             this.Play();
         }
-
-        [DllImport("OggLoader.dll", CallingConvention = CallingConvention.Cdecl)]
-        static extern int LoadOgg(string file, [In][Out] ref IntPtr wave);
         
         /// <summary>
         /// ファイルへのストリームを生成します。
@@ -98,20 +95,9 @@ namespace WpfAudioPlayer
 
             else if (FileExtensionType.ogg == ext)
             {
-                IntPtr wave = Marshal.AllocHGlobal(1); // Allocate Something So That C# Has Easier Access
-
-                int size = LoadOgg(fileName, ref wave);
-                byte[] buffer = new byte[size];
-
-                Marshal.Copy(wave, buffer, 0, buffer.Length);
-
-                Marshal.FreeHGlobal(wave);
-
-                strm = new MemoryStream(buffer);
-                WaveStream reader = new WaveFileReader(strm);
-                stream = new WaveChannel32(reader);
-
-
+                var vorbisStream = new NAudio.Vorbis.VorbisWaveReader(fileName);
+                
+                stream = new WaveChannel32(vorbisStream);
             }
 
             else

@@ -31,7 +31,7 @@ namespace BGMPlayer
             string path = @"Playlist\";
 #if DEBUG
             //path = @"testplaylist";
-            //path = @"Playlist\";
+            path = @"Playlist\";
 #endif
 
             player = new BGMPlayerCore(new WindowInteropHelper(this).Handle, path);

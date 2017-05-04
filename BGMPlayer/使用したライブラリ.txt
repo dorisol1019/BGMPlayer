@@ -15,7 +15,6 @@ http://gurugurusmf.migmig.net/
 
 libogg Copyright (c) 2002, Xiph.org Foundation.All rights reserved.
 libvorbis Copyright (c) 2002-2015 Xiph.org Foundation.All rights reserved.
-OggVorbis Copyright (c) 2009 あひるわーくす
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
@@ -47,6 +46,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ---------------------------
 
 NAudio Copyright (c) 2017 Mark Heath
+NAudio.Vorbis ﻿Copyright (c) 2015 Andrew Ward, Ms-PL
+NVorbis ﻿Copyright (c) 2012 Andrew Ward, Ms-PL
 
 Microsoft Public License (Ms-PL)
 
