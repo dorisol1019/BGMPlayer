@@ -2,9 +2,7 @@
 　　　　　　　　　 BGM鳴ら～すV3の使用ライブラリ
 ----------------------------------------------------------------------
 
-使用ライブラリを以下に記載します
-この内容はReadme.txtに書かれているものと同じものです
-
+使用したオープンソースライブラリを以下に記載します
 
 # 使用したライブラリ
 
@@ -47,7 +45,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 NAudio Copyright (c) 2017 Mark Heath
 NAudio.Vorbis ﻿Copyright (c) 2015 Andrew Ward, Ms-PL
-NVorbis ﻿Copyright (c) 2012 Andrew Ward, Ms-PL
+NVorbis ﻿Copyright (c) 2015 Andrew Ward, Ms-PL
 
 Microsoft Public License (Ms-PL)
 
