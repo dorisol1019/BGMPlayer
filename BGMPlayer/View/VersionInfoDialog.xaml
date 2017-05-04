@@ -11,12 +11,12 @@
     </Window.Resources>
     <Grid>
         <Image Source="{StaticResource Icon}" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="105" Margin="23,32,0,0"/>
-        <Label Content="BGM鳴ら～すV3" HorizontalContentAlignment="Center" FontSize="13pt" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.627,0.257" Margin="133,56,0,0" Width="151" Height="33"/>
-        <Label Content="Version 1.0.0.0" HorizontalContentAlignment="Center" FontSize="13pt" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.627,0.257" Margin="133,89,0,0" Width="151" Height="33"/>
-        <Label Content="Copyright (c) 2017 dorifru0209" HorizontalContentAlignment="Center" FontSize="10pt" VerticalAlignment="Top" RenderTransformOrigin="1.627,0.257" Margin="10,156,0,0" HorizontalAlignment="Left" Width="274"/>
+        <Label Content="{Binding ApplicationName.Value}" HorizontalContentAlignment="Center" FontSize="13pt" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.627,0.257" Margin="133,56,0,0" Width="151" Height="33"/>
+        <Label Content="{Binding ApplicationVersion.Value}" HorizontalContentAlignment="Center" FontSize="13pt" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.627,0.257" Margin="133,89,0,0" Width="151" Height="33"/>
+        <Label Content="{Binding Copyright.Value}" HorizontalContentAlignment="Center" FontSize="10pt" VerticalAlignment="Top" RenderTransformOrigin="1.627,0.257" Margin="10,156,0,0" HorizontalAlignment="Left" Width="274"/>
         <Label x:Uid="label" HorizontalContentAlignment="Center" FontSize="10pt" VerticalAlignment="Top" RenderTransformOrigin="1.627,0.257" Margin="10,180,0,0" HorizontalAlignment="Left" Width="274">
-            <Hyperlink x:Uid="hyperlink" NavigateUri="https://github.com/dorisol1019/BGMPlayer" Name="linkLabel">
-                <TextBlock Text="https://github.com/dorisol1019/BGMPlayer"/>
+            <Hyperlink Command="{Binding NavigateToProjectURL}" x:Uid="hyperlink" NavigateUri="{Binding ProjectURL.Value}" Name="linkLabel">
+                <TextBlock Text="{Binding ProjectURL.Value}"/>
             </Hyperlink>
         </Label>
 

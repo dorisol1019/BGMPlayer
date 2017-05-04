@@ -7,6 +7,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
+using Prism.Mvvm;
+using Microsoft.Practices.Unity;
+
 namespace BGMPlayer
 {
     /// <summary>
@@ -43,6 +46,15 @@ namespace BGMPlayer
             }
 
             base.OnExit(e);
+        }
+
+        IUnityContainer Container { get; } = new UnityContainer();
+
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+            ViewModelLocationProvider.SetDefaultViewModelFactory(
+                x => Container.Resolve(x));
+            this.Container.Resolve<MainWindow>().Show();
         }
     }
 }

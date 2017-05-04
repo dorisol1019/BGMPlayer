@@ -22,6 +22,7 @@ namespace BGMPlayer.View
         public VersionInfoDialog()
         {
             InitializeComponent();
+            this.DataContext = new ViewModel.VersionInfoDialogViewModel();
         }
     }
 }

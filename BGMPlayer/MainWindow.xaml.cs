@@ -112,13 +112,11 @@ namespace BGMPlayer
 
         private void VersionInfoMenu_Click(object sender, RoutedEventArgs e)
         {
-            System.Reflection.Assembly asm =
-                System.Reflection.Assembly.GetExecutingAssembly();
-            //バージョンの取得
-            System.Version ver = asm.GetName().Version;
-            MessageBox.Show($"BGM鳴ら～すV3 {ver.ToString()}\n" +
-                $"Copyright (c) 2017 dorifru0209",
-                "BGMPlayerV3 About");
+            var dig = new View.VersionInfoDialog()
+            {
+                Owner = this
+            };
+            dig.Show();
         }
 
         private void OpenFolderMenu_Click(object sender, RoutedEventArgs e)
