@@ -1,0 +1,24 @@
+﻿<Window x:Class="BGMPlayer.View.VersionInfoDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BGMPlayer.View"
+        mc:Ignorable="d"
+        Title="BGM鳴ら～すV3について" Height="260" Width="300" ResizeMode="NoResize" Background="#eeeeee">
+    <Window.Resources>
+        <BitmapImage x:Key="Icon" UriSource="../icon3.ico" />
+    </Window.Resources>
+    <Grid>
+        <Image Source="{StaticResource Icon}" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="105" Margin="23,32,0,0"/>
+        <Label Content="BGM鳴ら～すV3" HorizontalContentAlignment="Center" FontSize="13pt" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.627,0.257" Margin="133,56,0,0" Width="151" Height="33"/>
+        <Label Content="Version 1.0.0.0" HorizontalContentAlignment="Center" FontSize="13pt" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.627,0.257" Margin="133,89,0,0" Width="151" Height="33"/>
+        <Label Content="Copyright (c) 2017 dorifru0209" HorizontalContentAlignment="Center" FontSize="10pt" VerticalAlignment="Top" RenderTransformOrigin="1.627,0.257" Margin="10,156,0,0" HorizontalAlignment="Left" Width="274"/>
+        <Label x:Uid="label" HorizontalContentAlignment="Center" FontSize="10pt" VerticalAlignment="Top" RenderTransformOrigin="1.627,0.257" Margin="10,180,0,0" HorizontalAlignment="Left" Width="274">
+            <Hyperlink x:Uid="hyperlink" NavigateUri="https://github.com/dorisol1019/BGMPlayer" Name="linkLabel">
+                <TextBlock Text="https://github.com/dorisol1019/BGMPlayer"/>
+            </Hyperlink>
+        </Label>
+
+    </Grid>
+</Window>
