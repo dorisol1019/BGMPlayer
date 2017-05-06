@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace BGMPlayer.View
+namespace BGMPlayer.Views
 {
     /// <summary>
     /// VersionInfoDialog.xaml の相互作用ロジック
@@ -22,7 +22,6 @@ namespace BGMPlayer.View
         public VersionInfoDialog()
         {
             InitializeComponent();
-            this.DataContext = new ViewModel.VersionInfoDialogViewModel();
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BGMPlayer.Model
+namespace BGMPlayer.Models
 {
     public class VersionInfo
     {

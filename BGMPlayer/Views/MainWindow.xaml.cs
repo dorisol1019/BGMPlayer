@@ -16,7 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BGMPlayer
+namespace BGMPlayer.Views
 {
     /// <summary>
     /// MainWindow.xaml の相互作用ロジック
@@ -39,49 +39,13 @@ namespace BGMPlayer
 
 
             player.LoopEvent += Player_LoopEvent;
-
-            this.Title = defaultTitle;
-            this.Closed += MainWindow_Closed;
+            
             this.Loaded += MainWindow_Loaded;
-            ResizeMode = ResizeMode.NoResize;
-
-            //            BGMList.FontFamily = new FontFamily("MeiryoKe_Gothic");//, 10.5f, GraphicsUnit.Point);
-            BGMList.FontSize = (double)(new FontSizeConverter()).ConvertFromString("10pt");
-            var bgmnamelist = player.BGMNameList;
-            if (bgmnamelist.Count == 0)
-            {
-                MessageBox.Show("Playlistフォルダに音楽ファイルがありません\n" +
-                    "音楽ファイルをPlaylistフォルダに入れてから起動して下さい", "Error!!");
-                BGMList.ItemsSource = new List<string>[0];
-            }
-            else
-            {
-                BGMList.ItemsSource = bgmnamelist;
-            }
-
-            BGMList.SelectedIndex = 0;
-            BGMList.SelectionMode = SelectionMode.Single;
-            BGMList.KeyUp += BGMList_KeyUp;
-            BGMList.KeyDown += BGMList_KeyDown;
-
-
-            PlayButton.Click += PlayButton_Click;
-            StopButton.Click += StopButton_Click;
-            PauseOrRestartButton.Click += PauseOrRestartButton_Click;
-
-            volumeSlider.Value = 5;
-            volumeSlider.ValueChanged += VolumeSlider_ValueChanged;
-
-            IsTopMostWindow.Checked += IsTopMostWindow_Checked;
-            IsTopMostWindow.Unchecked += IsTopMostWindow_Checked;
+            
 
             loopOption.SelectionChanged += LoopOption_SelectionChanged;
             loopNumber.PreviewTextInput += LoopNumber_PreviewTextInput;
-
-            //OpenFolderMenu.Click += OpenFolderMenu_Click;
-            CommandBindings.Add(new CommandBinding(ApplicationCommands.Open, OpenFolderMenu_Click));
-            ReStartMenu.Click += ReStartMenu_Click;
-            endMenu.Click += EndMenu_Click;
+            
 
             VersionInfoMenu.Click += VersionInfoMenu_Click;
             LibMenu.Click += LibMenu_Click;
@@ -112,51 +76,14 @@ namespace BGMPlayer
 
         private void VersionInfoMenu_Click(object sender, RoutedEventArgs e)
         {
-            var dig = new View.VersionInfoDialog()
+            var dig = new VersionInfoDialog()
             {
                 Owner = this
             };
             dig.Show();
         }
-
-        private void OpenFolderMenu_Click(object sender, RoutedEventArgs e)
-        {
-            var dig = new Microsoft.WindowsAPICodePack.Dialogs.CommonOpenFileDialog()
-            {
-                Title = "フォルダを開く",
-                InitialDirectory = System.Environment.CurrentDirectory,
-                IsFolderPicker = true,
-                AddToMostRecentlyUsedList = false,
-                Multiselect = false,
-                ShowPlacesList = true,
-                AllowNonFileSystemItems = false,
-                EnsureFileExists = true,
-                EnsurePathExists = true,
-                EnsureValidNames = true,
-                EnsureReadOnly = false,
-                DefaultDirectory = System.Environment.CurrentDirectory
-            };
-            if (dig.ShowDialog(this) == Microsoft.WindowsAPICodePack.Dialogs.CommonFileDialogResult.Ok)
-            {
-                var folderName = dig.FileName;
-                player.Init(folderName);
-                BGMList.ItemsSource = player.BGMNameList;
-                BGMList.SelectedIndex = 0;
-                selectedBGMIndex = -1;
-            }
-        }
-
-        private void ReStartMenu_Click(object sender, RoutedEventArgs e)
-        {
-            System.Diagnostics.Process.Start(App.ResourceAssembly.Location, "/restart");
-            Application.Current.Shutdown();
-        }
-
-        private void EndMenu_Click(object sender, RoutedEventArgs e)
-        {
-            App.Current.Shutdown();
-        }
-
+        
+        
         private void LoopOption_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (loopOption.SelectedIndex == 1)
@@ -222,44 +149,13 @@ namespace BGMPlayer
             this.Topmost = !Topmost;
         }
         static bool doubleClicked = false;
-        private async void BGMList_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            if (doubleClicked) return;
-            doubleClicked = true;
-            await Play();
-            doubleClicked = false;
-        }
+        
 
         private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             ChangeVolume();
         }
-
-        private void BGMList_KeyDown(object sender, KeyEventArgs e)
-        {
-            var modifiers = Keyboard.Modifiers;
-            if ((modifiers & ModifierKeys.Control) != ModifierKeys.None)
-            {
-                if (e.Key == Key.Left)
-                {
-                    if (volumeSlider.Value > 0)
-                    {
-                        volumeSlider.Value -= 1;
-                        ChangeVolume();
-                    }
-                    e.Handled = true;
-                }
-                else if (e.Key == Key.Right)
-                {
-                    if (volumeSlider.Value < 10)
-                    {
-                        volumeSlider.Value += 1;
-                        ChangeVolume();
-                    }
-                    e.Handled = true;
-                }
-            }
-        }
+        
 
         private void PauseOrRestartButton_Click(object sender, RoutedEventArgs e)
         {
@@ -280,31 +176,12 @@ namespace BGMPlayer
         {
             Stop();
         }
-
-        private async void BGMList_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                await  Play();
-            }
-            if (e.Key == Key.Space)
-            {
-                if (player.IsPause)
-                {
-                    Restart();
-                }
-                else
-                {
-                    Pause();
-                }
-            }
-        }
+        
 
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             loopOption.SelectedIndex = 1;
-            Keyboard.Focus(BGMList);
         }
 
         static bool isPlayButtonClick = false;
@@ -377,10 +254,7 @@ namespace BGMPlayer
 
 
         #region イベントハンドラ
-        private void MainWindow_Closed(object sender, EventArgs e)
-        {
-            player.Dispose();
-        }
+        
         #endregion
 
 

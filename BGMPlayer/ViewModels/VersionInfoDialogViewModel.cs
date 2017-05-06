@@ -9,10 +9,10 @@ using Prism.Mvvm;
 
 using Reactive.Bindings;
 
-using BGMPlayer.Model;
+using BGMPlayer.Models;
 using System.Windows.Input;
 
-namespace BGMPlayer.ViewModel
+namespace BGMPlayer.ViewModels
 {
     public class VersionInfoDialogViewModel : BindableBase
     {

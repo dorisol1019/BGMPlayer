@@ -47,14 +47,11 @@ namespace BGMPlayer
 
             base.OnExit(e);
         }
-
-        IUnityContainer Container { get; } = new UnityContainer();
-
+        
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            ViewModelLocationProvider.SetDefaultViewModelFactory(
-                x => Container.Resolve(x));
-            this.Container.Resolve<MainWindow>().Show();
+            var bootstrapper = new Bootstrapper();
+            bootstrapper.Run();
         }
     }
 }
