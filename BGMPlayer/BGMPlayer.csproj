@@ -186,7 +186,9 @@
     <Content Include="GuruGuruSMF4.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Resource Include="使用したライブラリ.txt" />
+    <Resource Include="使用したライブラリ.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="icon3.ico" />
     <None Include="Readme.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
