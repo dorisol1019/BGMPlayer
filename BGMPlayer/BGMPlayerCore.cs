@@ -67,7 +67,7 @@ namespace BGMPlayer
 
         private async Task Play(BGM bgm)
         {
-            
+            Stop();
             switch (bgm.FileExtension)
             {
                 case FileExtensionType.midi:
