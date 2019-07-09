@@ -1,4 +1,4 @@
-﻿<Window x:Class="BGMPlayer.Views.VersionInfoDialog"
+﻿<UserControl x:Class="BGMPlayer.Views.VersionInfoDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,10 +7,10 @@
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
         mc:Ignorable="d"
-        Title="BGM鳴ら～すV3について" Height="260" Width="300" ResizeMode="NoResize" Background="#eeeeee">
-    <Window.Resources>
+         Height="260" Width="300" Background="#eeeeee">
+    <UserControl.Resources>
         <BitmapImage x:Key="Icon" UriSource="../icon3.ico" />
-    </Window.Resources>
+    </UserControl.Resources>
     <Grid>
         <Image Source="{StaticResource Icon}" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="105" Margin="23,32,0,0"/>
         <Label Content="{Binding ApplicationName.Value}" HorizontalContentAlignment="Center" FontSize="13pt" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.627,0.257" Margin="133,56,0,0" Width="151" Height="33"/>
@@ -23,4 +23,4 @@
         </Label>
 
     </Grid>
-</Window>
+</UserControl>

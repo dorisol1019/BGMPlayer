@@ -10,13 +10,13 @@ using System.IO;
 using System.Collections;
 using BGMPlayer.Extension;
 using System.Reactive.Linq;
-
+using System.ComponentModel;
 
 namespace BGMPlayer
 {
     public delegate void LoopEventHandler(int loopCount);
 
-    public class BGMPlayerCore : IDisposable
+    public class BGMPlayerCore : IDisposable,INotifyPropertyChanged
     {
         #region private変数
         private IGuruGuruSmf4Api _ggs = Ggs4Dll.GetInstance();
@@ -138,12 +138,26 @@ namespace BGMPlayer
                 if (loopCount > oldLoopCount)
                 {
                     oldLoopCount = loopCount;
-                    LoopEvent(loopCount);
+                    //LoopEvent(loopCount);
                 }
+                LoopCount = loopCount;
             });
         }
+        private int loopCount = 0;
+        public int LoopCount {
+            get =>loopCount;
+            private set
+            {
+                if (loopCount == value) return;
+                loopCount = value;
+                PropertyChanged?.Invoke(this, LoopCountPropertyChangedEventArgs);
+            }
+        }
+        
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        public event LoopEventHandler LoopEvent;
+        private static readonly PropertyChangedEventArgs LoopCountPropertyChangedEventArgs
+            = new PropertyChangedEventArgs(nameof(LoopCount));
 
         public void Stop()
         {

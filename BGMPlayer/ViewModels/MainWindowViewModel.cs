@@ -13,6 +13,8 @@ using System.Windows;
 using System.ComponentModel.DataAnnotations;
 using Reactive.Bindings.Notifiers;
 using Reactive.Bindings.Extensions;
+using System.Windows.Threading;
+using Prism.Interactivity.InteractionRequest;
 
 namespace BGMPlayer.ViewModels
 {
@@ -49,6 +51,16 @@ namespace BGMPlayer.ViewModels
         private BusyNotifier BusyNotifier { get; } = new BusyNotifier();
         public ReadOnlyReactiveProperty<bool> IsBusy { get; }
         public ReadOnlyReactiveProperty<bool> IsIdle { get; }
+
+
+        public ReactiveProperty<string> LoopNumber_string { get; }
+        public ReadOnlyReactiveProperty<int> LoopNumber { get; }
+        public ReactiveProperty<TextCompositionEventArgs> LoopNumber_PreviewTextInput { get; }
+        public ReactiveProperty<int> LoopOptionSelectedIndex { get; }
+        public ReactiveProperty<Visibility> LoopShuffleVisibility { get; }
+
+        public ReactiveProperty<bool> IsShuffleChecked { get; }
+        public ReactiveProperty<bool> IsNextChecked { get; }
         public MainWindowViewModel()
         {
             Title = new ReactiveProperty<string>(_defaultTitle);
@@ -59,10 +71,10 @@ namespace BGMPlayer.ViewModels
             string path = @"Playlist\";
 #if DEBUG
             //path = @"testplaylist";
-            path = @"Playlist\";
 #endif
 
             player = new BGMPlayerCore((IntPtr)0, path);
+
             var bgmList = player.BGMNameList;
             if (bgmList.Count == 0)
             {
@@ -92,7 +104,7 @@ namespace BGMPlayer.ViewModels
             PauseOrRestartCommand.Subscribe(PauseOrRestart);
 
             Volume = new ReactiveProperty<double>(5);
-            Volume.PropertyChanged += Volume_PropertyChanged;
+            Volume.Subscribe(_ => ChangeVolume());
 
             CtrlLeftCommand = new DelegateCommand(() =>
              {
@@ -124,17 +136,86 @@ namespace BGMPlayer.ViewModels
                   }
               });
 
-            MouseDoubleClickCommand = PlayCommand;//new DelegateCommand(async () => await Play());
+            MouseDoubleClickCommand = PlayCommand;
 
             IsTopMostWindow = new ReactiveProperty<bool>(false);
             TopMost = IsTopMostWindow.ToReadOnlyReactiveProperty();
 
             WindowClosedCommand = new DelegateCommand(() => player.Dispose());
-        }
 
-        private void Volume_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+            LoopNumber_string = new ReactiveProperty<string>("0", mode: ReactivePropertyMode.None);
+            LoopNumber = LoopNumber_string.Select(e => int.TryParse(e, out int result) ? result : 0).ToReadOnlyReactiveProperty();
+
+            LoopNumber_PreviewTextInput = new ReactiveProperty<TextCompositionEventArgs>(mode: ReactivePropertyMode.None);
+            LoopNumber_PreviewTextInput.Subscribe((e) =>
+            {
+                bool canParse = false;
+                {
+                    var tmp = LoopNumber_string.Value + e.Text;
+                    canParse = uint.TryParse(tmp, out uint x);
+                }
+                e.Handled = !canParse;
+            });
+            LoopShuffleVisibility = new ReactiveProperty<Visibility>();
+            LoopOptionSelectedIndex = new ReactiveProperty<int>(1);
+            LoopOptionSelectedIndex.Subscribe(_ =>
+            {
+                if (LoopOptionSelectedIndex.Value == 1)
+                {
+                    LoopShuffleVisibility.Value = Visibility.Visible;
+                }
+                else
+                {
+                    LoopShuffleVisibility.Value = Visibility.Hidden;
+                }
+            });
+
+            IsShuffleChecked = new ReactiveProperty<bool>(true);
+            IsNextChecked = IsShuffleChecked.Inverse().ToReactiveProperty();
+
+            LoopCount = player.ObserveProperty(x => x.LoopCount).ToReactiveProperty();
+            LoopCount.Subscribe(async i =>
+            {
+                int index = -1;
+                if (LoopOptionSelectedIndex.Value == 0) return;
+                int loopN = LoopNumber.Value;
+                if (loopN + 1 > i) return;
+
+                if (IsShuffleChecked.Value)
+                {
+                    var rand = new Random();
+
+                    index = rand.Next(BGMList.Value.Count());
+                }
+                else if (IsNextChecked.Value)
+                {
+                    index = selectedBGMIndex + 1;
+                    if (BGMList.Value.Count() <= index) index = 0;
+                }
+                using (BusyNotifier.ProcessStart())
+                {
+
+                    Stop();
+                    await Play(index);
+                }
+                BGMSelectedIndex.Value = selectedBGMIndex;
+            }
+
+            );
+
+            _interactionRequest = new InteractionRequest<INotification>();
+            PopUpVersionInfoCommand = new DelegateCommand(() =>
+              _interactionRequest.Raise(new Notification { Title="BGM鳴ら～すV3について" })
+            );
+        }
+        public ReactiveProperty<int> LoopCount { get; }
+
+        private InteractionRequest<INotification> _interactionRequest;
+        public DelegateCommand PopUpVersionInfoCommand { get; }
+
+        public InteractionRequest<INotification> InteractionRequest
         {
-            ChangeVolume();
+            get => _interactionRequest;
         }
 
         private async Task Play()
@@ -153,6 +234,7 @@ namespace BGMPlayer.ViewModels
             await player.Play(index);
             ChangeVolume();
             PauseOrRestartButtonContent.Value = "一時停止";
+            selectedBGMIndex = index;
             Title.Value = $"再生中:{player.SelectedBGM}";
         }
 
@@ -206,10 +288,11 @@ namespace BGMPlayer.ViewModels
             player.Init(folderName);
             BGMList.Value = player.BGMNameList;
             BGMSelectedIndex.Value = 0;
-            //selectedBGMIndex = -1;
+            selectedBGMIndex = -1;
 
         }
-
+        
+        private int selectedBGMIndex = -1;
 
     }
 }

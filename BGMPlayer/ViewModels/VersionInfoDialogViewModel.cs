@@ -11,14 +11,14 @@ using Reactive.Bindings;
 
 using BGMPlayer.Models;
 using System.Windows.Input;
+using Prism.Interactivity.InteractionRequest;
 
 namespace BGMPlayer.ViewModels
 {
-    public class VersionInfoDialogViewModel : BindableBase
+    public class VersionInfoDialogViewModel : BindableBase,IInteractionRequestAware
     {
         VersionInfo _versionInfo = new VersionInfo();
-
-        //public string ApplicationName { get; private set; }
+        
         public ReactiveProperty<string> ApplicationName { get; private set; }
         public ReactiveProperty<string> ApplicationVersion { get; }
 
@@ -26,10 +26,11 @@ namespace BGMPlayer.ViewModels
         public ReactiveProperty<string> ProjectURL { get; }
 
         public ICommand NavigateToProjectURL { get; }
+        public INotification Notification { get; set; }
+        public Action FinishInteraction { get; set; }
 
         public VersionInfoDialogViewModel()
         {
-            //ApplicationName = _versionInfo.ApplicationName;
             ApplicationName = new ReactiveProperty<string>(_versionInfo.ApplicationName);
             ApplicationVersion = new ReactiveProperty<string>(_versionInfo.ApplicationVersion);
 
