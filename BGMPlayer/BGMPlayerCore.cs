@@ -11,12 +11,12 @@ using System.Collections;
 using BGMPlayer.Extension;
 using System.Reactive.Linq;
 using System.ComponentModel;
+using Reactive.Bindings;
+using Reactive.Bindings.ObjectExtensions;
 
 namespace BGMPlayer
 {
-    public delegate void LoopEventHandler(int loopCount);
-
-    public class BGMPlayerCore : IDisposable,INotifyPropertyChanged
+    public class BGMPlayerCore : IDisposable
     {
         #region private変数
         private IGuruGuruSmf4Api _ggs = Ggs4Dll.GetInstance();
@@ -27,9 +27,8 @@ namespace BGMPlayer
         private string[] _extensionNames = new[] { ".mid", ".midi", ".wav", ".wave", ".mp3", ".ogg" };
         private List<BGM> _bgmList = null;
         private BGM _selectedBGM = null;
-        private bool isLoop=false;
+        private bool isLoop = false;
         
-        private IDisposable loopTimerDisposer;
         #endregion
 
         #region　プロパティ
@@ -37,8 +36,11 @@ namespace BGMPlayer
         public List<string> BGMNameList { get => _bgmList.Select(e => Path.GetFileName(e.FileName)).ToList(); }
         public bool IsPlaying => _selectedBGM != null;
         public bool IsPause { get; private set; } = false;
-        private int noLoopBGM_Loopcount = int.MaxValue;
-        private int oldLoopCount = 0;
+
+        public ReadOnlyReactiveProperty<int> LoopCount { get; private set; }
+        private ReactiveProperty<int> MidiLoopCount { get; set; }
+        private ReadOnlyReactiveProperty<int> AudioLoopCount { get; set; }
+
         #endregion
 
         public BGMPlayerCore(IntPtr handle, string path = @"Playlist\")
@@ -46,13 +48,12 @@ namespace BGMPlayer
             _ggs.OpenDevice(-1, handle);
 
             this.Init(path);
-
         }
 
         public void Init(string path)
         {
             _bgmList = GetBGMList(path);
-            
+
         }
 
         public async Task Play(int index)
@@ -66,24 +67,28 @@ namespace BGMPlayer
 
         private async Task Play(BGM bgm)
         {
+            
             switch (bgm.FileExtension)
             {
                 case FileExtensionType.midi:
                     _ggs.AddListFromFile(bgm.FileName, 0, 1);
-                    _ggs.Play(PlayOption.Loop | PlayOption.SkipBeginning, 1, 0, 0, 0);
+                    _ggs.Play(PlayOption.Loop, 1, 0, 0, 0);
                     _ggs.GetSmfInformation(out SmfInformation info, 1);
-                    if (info.LoopTime >= info.LastNoteTime || info.LoopTick == -1)
+                    if (info.LoopTime >= info.LastNoteTime)
                     {
-                        if (_selectedBGM != bgm) noLoopBGM_Loopcount = 0;
-                        
                         isLoop = false;
-
                     }
                     else
                     {
-                        noLoopBGM_Loopcount = int.MaxValue;
                         isLoop = true;
                     }
+                    MidiLoopCount = _ggs.ObserveEveryValueChanged(e => e.GetPlayerStatus().LoopCount).ToReactiveProperty(mode:ReactivePropertyMode.DistinctUntilChanged);
+                    MidiLoopCount.Subscribe((i)=>
+                    {
+                        if (isLoop == false) MidiLoopCount.Value = int.MaxValue;
+                    }
+                    );
+                    LoopCount = MidiLoopCount.ToReadOnlyReactiveProperty();
                     break;
                 case FileExtensionType.wave:
                 case FileExtensionType.ogg:
@@ -92,72 +97,16 @@ namespace BGMPlayer
                     _audioPlayer = new AudioPlayer();
                     await _audioPlayer.Play(bgm.FileName, bgm.FileExtension);
                     isLoop = true;
+                    AudioLoopCount = _audioPlayer.ObserveEveryValueChanged(e => e.LoopCount).ToReadOnlyReactiveProperty();
+                    LoopCount = AudioLoopCount;
                     break;
                 case FileExtensionType.other:
                 default:
                     return;
             }
-            oldLoopCount = 0;
             IsPause = false;
-            var timer = Observable.Timer(TimeSpan.Zero, TimeSpan.FromMilliseconds(30));
-            loopTimerDisposer = timer.Subscribe( x =>
-            {
-                if (!IsPlaying) return;
-                int loopCount = 0;
-                switch (_selectedBGM.FileExtension)
-                {
-                    case FileExtensionType.midi:
-                        PlayerStatus status = _ggs.GetPlayerStatus();
-                        loopCount = status.LoopCount;
-                        if (!isLoop)
-                        {
-                            if (status.State == PlayerState.Stop)
-                            {
-                                noLoopBGM_Loopcount++;
-                                var selectedname = _selectedBGM.FileName;
-                                var selectedex = _selectedBGM.FileExtension;
-                                //Stop();
-                                //await Play(new BGM(selectedname, selectedex));// _selectedBGM);
-                                _ggs.Play(PlayOption.SkipBeginning, 1, 0, 0, 0);
-
-                                loopCount = noLoopBGM_Loopcount;
-                            }
-                        }
-                        else { noLoopBGM_Loopcount = int.MaxValue; }
-                        break;
-                    case FileExtensionType.wave:
-                    case FileExtensionType.ogg:
-                    case FileExtensionType.mp3:
-                        loopCount = _audioPlayer?.LoopCount ?? 0;
-                        break;
-                    case FileExtensionType.other:
-                        break;
-                    default:
-                        break;
-                }
-                if (loopCount > oldLoopCount)
-                {
-                    oldLoopCount = loopCount;
-                    //LoopEvent(loopCount);
-                }
-                LoopCount = loopCount;
-            });
-        }
-        private int loopCount = 0;
-        public int LoopCount {
-            get =>loopCount;
-            private set
-            {
-                if (loopCount == value) return;
-                loopCount = value;
-                PropertyChanged?.Invoke(this, LoopCountPropertyChangedEventArgs);
-            }
         }
         
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private static readonly PropertyChangedEventArgs LoopCountPropertyChangedEventArgs
-            = new PropertyChangedEventArgs(nameof(LoopCount));
 
         public void Stop()
         {
@@ -165,8 +114,12 @@ namespace BGMPlayer
             switch (_selectedBGM.FileExtension)
             {
                 case FileExtensionType.midi:
-                    _ggs.Stop(0);
-                    _ggs.DeleteListItem(1);
+                    PlayerStatus status = _ggs.GetPlayerStatus();
+                    if (status.State != PlayerState.Stop)
+                    {
+                        _ggs.Stop(0);
+                    }
+
                     break;
                 case FileExtensionType.wave:
                 case FileExtensionType.ogg:
@@ -181,8 +134,6 @@ namespace BGMPlayer
             }
             _selectedBGM = null;
             IsPause = false;
-            oldLoopCount = 0;
-            loopTimerDisposer.Dispose();
         }
 
 

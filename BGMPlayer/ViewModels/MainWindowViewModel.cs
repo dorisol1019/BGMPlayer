@@ -95,7 +95,7 @@ namespace BGMPlayer.ViewModels
             });
 
             PlayCommand = IsIdle.ToReactiveCommand();
-            PlayCommand.Subscribe(async () => await Play());
+            PlayCommand.Subscribe(async () => await this.Play());
             StopCommand = new ReactiveCommand();
             StopCommand.Subscribe(Stop);
 
@@ -173,42 +173,14 @@ namespace BGMPlayer.ViewModels
             IsShuffleChecked = new ReactiveProperty<bool>(true);
             IsNextChecked = IsShuffleChecked.Inverse().ToReactiveProperty();
 
-            LoopCount = player.ObserveProperty(x => x.LoopCount).ToReactiveProperty();
-            LoopCount.Subscribe(async i =>
-            {
-                int index = -1;
-                if (LoopOptionSelectedIndex.Value == 0) return;
-                int loopN = LoopNumber.Value;
-                if (loopN + 1 > i) return;
+            //LoopCount = player.ObserveProperty(x => x.LoopCount).ToReactiveProperty();
 
-                if (IsShuffleChecked.Value)
-                {
-                    var rand = new Random();
-
-                    index = rand.Next(BGMList.Value.Count());
-                }
-                else if (IsNextChecked.Value)
-                {
-                    index = selectedBGMIndex + 1;
-                    if (BGMList.Value.Count() <= index) index = 0;
-                }
-                using (BusyNotifier.ProcessStart())
-                {
-
-                    Stop();
-                    await Play(index);
-                }
-                BGMSelectedIndex.Value = selectedBGMIndex;
-            }
-
-            );
 
             _interactionRequest = new InteractionRequest<INotification>();
             PopUpVersionInfoCommand = new DelegateCommand(() =>
-              _interactionRequest.Raise(new Notification { Title="BGM鳴ら～すV3について" })
+              _interactionRequest.Raise(new Notification { Title = "BGM鳴ら～すV3について" })
             );
         }
-        public ReactiveProperty<int> LoopCount { get; }
 
         private InteractionRequest<INotification> _interactionRequest;
         public DelegateCommand PopUpVersionInfoCommand { get; }
@@ -221,17 +193,57 @@ namespace BGMPlayer.ViewModels
         private async Task Play()
         {
             if (IsBusy.Value) return;
-            using (BusyNotifier.ProcessStart())
-            {
-                int index = BGMSelectedIndex.Value;
-                Stop();
-                await Play(index);
-            }
+
+            int index = BGMSelectedIndex.Value;
+            Stop();
+            await Play(index);
+
         }
+
+        IDisposable loopCountDisposable;
 
         private async Task Play(int index)
         {
-            await player.Play(index);
+            if (IsBusy.Value) return;
+            Title.Value = "ロード中…";
+            using (BusyNotifier.ProcessStart())
+            {
+                await player.Play(index);
+            }
+
+            loopCountDisposable = player.LoopCount.Subscribe(async i =>
+             {
+                 if (i <= 0) return;
+                 int _index = -1;
+                 if (LoopOptionSelectedIndex.Value == 0) return;
+                 int loopN = LoopNumber.Value;
+                 if (loopN + 1 > i) return;
+
+                 if (IsShuffleChecked.Value)
+                 {
+                     var rand = new Random();
+
+                     _index = rand.Next(BGMList.Value.Count());
+                 }
+                 else if (IsNextChecked.Value)
+                 {
+                     _index = selectedBGMIndex + 1;
+                     if (BGMList.Value.Count() <= _index) _index = 0;
+                 }
+                 {
+                     await Task.Delay(100);
+
+
+                     Stop();
+
+                     await Task.Delay(100);
+
+                     await Play(_index);
+                 }
+                 BGMSelectedIndex.Value = selectedBGMIndex;
+             });
+
+
             ChangeVolume();
             PauseOrRestartButtonContent.Value = "一時停止";
             selectedBGMIndex = index;
@@ -241,6 +253,7 @@ namespace BGMPlayer.ViewModels
         private void Stop()
         {
             player.Stop();
+            loopCountDisposable?.Dispose();
             PauseOrRestartButtonContent.Value = "";
             Title.Value = _defaultTitle;
         }
@@ -291,7 +304,7 @@ namespace BGMPlayer.ViewModels
             selectedBGMIndex = -1;
 
         }
-        
+
         private int selectedBGMIndex = -1;
 
     }
