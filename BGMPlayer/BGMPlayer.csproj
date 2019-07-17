@@ -64,7 +64,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BGM.cs" />
-    <Compile Include="Bootstrapper.cs" />
     <Compile Include="CompareNatural.cs" />
     <Compile Include="FileExtensionType.cs" />
     <Compile Include="Models\OpenFolderDialog.cs" />

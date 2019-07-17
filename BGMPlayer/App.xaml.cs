@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using BGMPlayer.Views;
+using Prism.Ioc;
+using Prism.Unity;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 
@@ -7,8 +10,18 @@ namespace BGMPlayer
     /// <summary>
     /// App.xaml の相互作用ロジック
     /// </summary>
-    public partial class App : Application
+    public partial class App : PrismApplication
     {
+        protected override Window CreateShell()
+        {
+            return Container.Resolve<MainWindow>();
+        }
+
+        protected override void RegisterTypes(IContainerRegistry containerRegistry)
+        {
+
+        }
+
         private Mutex mutex;
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -38,12 +51,6 @@ namespace BGMPlayer
             }
 
             base.OnExit(e);
-        }
-        
-        private void Application_Startup(object sender, StartupEventArgs e)
-        {
-            var bootstrapper = new Bootstrapper();
-            bootstrapper.Run();
         }
     }
 }
