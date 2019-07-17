@@ -1,5 +1,4 @@
-﻿using Microsoft.Practices.Unity;
-using Prism.Unity;
+﻿using Prism.Unity;
 using BGMPlayer.Views;
 using System.Windows;
 
@@ -9,7 +8,7 @@ namespace BGMPlayer
     {
         protected override DependencyObject CreateShell()
         {
-            return Container.Resolve<MainWindow>();
+            return Container.TryResolve<MainWindow>();
         }
 
         protected override void InitializeShell()
