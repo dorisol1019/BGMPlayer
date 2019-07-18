@@ -19,8 +19,16 @@
             <prism:InvokeCommandAction Command="{Binding Path=WindowClosedCommand}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
-    <Grid Margin="0,0,0,0" FocusManager.FocusedElement="{Binding ElementName=BGMList}" >
-        <Menu HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="372">
+    <Grid FocusManager.FocusedElement="{Binding ElementName=BGMList}" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.3*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="18" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Menu HorizontalAlignment="Left"  VerticalAlignment="Top" Grid.Row="0">
             <MenuItem Header="ファイル(_F)" HorizontalContentAlignment="Left">
                 <MenuItem Name="OpenFolderMenu" Header="フォルダを開く(_O)" InputGestureText="Ctrl+O" Command="{Binding OpenFolderCommand}"/>
                 <Separator />
@@ -49,9 +57,11 @@
             </MenuItem>
 
         </Menu>
-        <ListBox Name="BGMList" ItemsSource="{Binding BGMList.Value,UpdateSourceTrigger=PropertyChanged}" FontSize="10pt" HorizontalAlignment="Left" Height="256" VerticalAlignment="Top" Width="205" Margin="0,18,0,0"
+        <ListBox Name="BGMList" ItemsSource="{Binding BGMList.Value,UpdateSourceTrigger=PropertyChanged}" FontSize="10pt" Margin="2,2,2,2"
                  SelectedIndex="{Binding BGMSelectedIndex.Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                 SelectionMode="Single" HorizontalContentAlignment="Stretch">
+                 SelectionMode="Single" HorizontalContentAlignment="Stretch"
+                 Grid.Column="0" Grid.Row="1"                 
+                 >
             <ListBox.InputBindings>
                 <KeyBinding Command="{Binding CtrlLeftCommand}" Gesture="Ctrl+Left"></KeyBinding>
                 <KeyBinding Command="{Binding CtrlRightCommand}" Gesture="Ctrl+Right"></KeyBinding>
@@ -63,37 +73,69 @@
                     <ContentControl Content="{Binding}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseDoubleClick">
-                                <i:InvokeCommandAction Command="{Binding Path=DataContext.MouseDoubleClickCommand, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}}"></i:InvokeCommandAction>
+                                <i:InvokeCommandAction Command="{Binding Path=DataContext.MouseDoubleClickCommand, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}}"></i:InvokeCommandAction>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </ContentControl>
                 </DataTemplate>
             </ListBox.ItemTemplate>
-            
         </ListBox>
-        <Button Name="PlayButton" Command="{Binding PlayCommand}" Content="再生" HorizontalAlignment="Left" VerticalAlignment="Top" Width="70" Margin="210,23,0,0"/>
-        <Button Name="StopButton" Command="{Binding StopCommand}" Content="停止" HorizontalAlignment="Left" VerticalAlignment="Top" Width="70" Margin="290,23,-1,0"/>
-        <Button Name="PauseOrRestartButton" Command="{Binding PauseOrRestartCommand}"  Content="{Binding PauseOrRestartButtonContent.Value}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="70" Margin="210,48,0,0"/>
-        <GroupBox Header="音量" HorizontalAlignment="Left" Height="55" VerticalAlignment="Top" Width="152" Margin="210,73,0,0">
-            <Slider Name="volumeSlider" Value="{Binding Volume.Value}" VerticalAlignment="Top" Margin="0,0,-2,0"
-                    Maximum="10" Minimum="0" LargeChange="1" SmallChange="1" TickPlacement="Both" HorizontalAlignment="Right" Width="142"/>
-        </GroupBox>
-        <CheckBox Name="IsTopMostWindow" IsChecked="{Binding IsTopMostWindow.Value}" Content="常に最前面に表示する" HorizontalAlignment="Left" Margin="214,139,0,0" VerticalAlignment="Top"/>
-        <TextBox Name="loopNumber" Text="{Binding LoopNumber_string.Value,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="23" TextWrapping="NoWrap" VerticalAlignment="Top" Width="24"  Margin="229,219,0,0" Visibility="{Binding LoopShuffleVisibility.Value}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="PreviewTextInput">
-                    <r:EventToReactive ReactiveProperty="{Binding LoopNumber_PreviewTextInput}"></r:EventToReactive>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </TextBox>
-        <Label Name="loopLabel" Content="回ループしたときに" HorizontalAlignment="Left" Margin="258,215,0,0" VerticalAlignment="Top" Width="102" Visibility="{Binding LoopShuffleVisibility.Value}" />
-        <RadioButton Name="LoopOption_Shuffle" IsChecked="{Binding IsShuffleChecked.Value}" GroupName="ShuffleOrNext" Content="シャッフル" Margin="215,250,85,10" Visibility="{Binding LoopShuffleVisibility.Value}"  />
-        <RadioButton Name="LoopOption_Next" IsChecked="{Binding IsNextChecked.Value}" GroupName="ShuffleOrNext" Content="次の曲" Margin="295,250,12,10" Visibility="{Binding LoopShuffleVisibility.Value}" />
-        <GroupBox Header="ループ設定" HorizontalAlignment="Left" Height="115" Margin="210,159,0,0" VerticalAlignment="Top" Width="150" >
-            <ComboBox Name="loopOption" SelectedIndex="{Binding LoopOptionSelectedIndex.Value}"  VerticalAlignment="Top" Margin="10,10,14,0" Height="20">
-                <Label Content="無限ループ"></Label>
-                <Label Content="回数指定"></Label>
-            </ComboBox>
-        </GroupBox>
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.5*" />
+                <RowDefinition Height="0.5*" />
+                <RowDefinition Height="0.3*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+                <Button Name="PlayButton" Command="{Binding PlayCommand}" Content="再生" VerticalAlignment="Center" HorizontalAlignment="Center" Width="70" Grid.Column="0" Grid.Row="0" />
+                <Button Name="StopButton" Command="{Binding StopCommand}" Content="停止" VerticalAlignment="Center" HorizontalAlignment="Center" Width="70" Grid.Column="1" Grid.Row="0"/>
+                <Button Name="PauseOrRestartButton" Command="{Binding PauseOrRestartCommand}"  Content="{Binding PauseOrRestartButtonContent.Value}" VerticalAlignment="Center" HorizontalAlignment="Center" Width="70" Grid.Column="0" Grid.Row="1" />
+            </Grid>
+            <GroupBox Header="音量" Grid.Row="1">
+                <Slider Name="volumeSlider" Value="{Binding Volume.Value}"
+                    Maximum="10" Minimum="0" LargeChange="1" SmallChange="1" TickPlacement="Both"/>
+            </GroupBox>
+            <CheckBox Name="IsTopMostWindow" VerticalAlignment="Center" IsChecked="{Binding IsTopMostWindow.Value}" Content="常に最前面に表示する" Grid.Row="2" />
+            <GroupBox Header="ループ設定" Grid.Row="3">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <ComboBox Name="loopOption" SelectedIndex="{Binding LoopOptionSelectedIndex.Value}" Margin="10,0,10,0" Height="20" Grid.Row="0">
+                        <Label Content="無限ループ"></Label>
+                        <Label Content="回数指定"></Label>
+                    </ComboBox>
+                    <StackPanel Orientation="Horizontal" Margin="10,0,10,0" Grid.Row="1">
+                        <TextBox Name="loopNumber" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding LoopNumber_string.Value,UpdateSourceTrigger=PropertyChanged}" Height="23" TextWrapping="NoWrap" Width="24" Visibility="{Binding LoopShuffleVisibility.Value}" >
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="PreviewTextInput">
+                                    <r:EventToReactive ReactiveProperty="{Binding LoopNumber_PreviewTextInput}"></r:EventToReactive>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+                        <Label Name="loopLabel" Content="回ループしたときに" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="{Binding LoopShuffleVisibility.Value}" />
+                    </StackPanel>
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <RadioButton Name="LoopOption_Shuffle" VerticalAlignment="Center" IsChecked="{Binding IsShuffleChecked.Value}" GroupName="ShuffleOrNext" Content="シャッフル" Grid.Column="0"  Visibility="{Binding LoopShuffleVisibility.Value}"  />
+                        <RadioButton Name="LoopOption_Next" VerticalAlignment="Center" IsChecked="{Binding IsNextChecked.Value}" GroupName="ShuffleOrNext" Content="次の曲" Grid.Column="1" Visibility="{Binding LoopShuffleVisibility.Value}" />
+                    </Grid>
+                </Grid>
+            </GroupBox>
+        </Grid>
     </Grid>
 </Window>
