@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BGMPlayer", "BGMPlayer\BGMP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BGMPlayerCore", "BGMPlayerCore\BGMPlayerCore.csproj", "{CDEE564F-E72D-4C27-8190-6F8C63EAEB4E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BGMList", "BGMList\BGMList.csproj", "{82659A73-D138-4D71-8B06-70F659D1E520}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,11 +43,26 @@ Global
 		{CDEE564F-E72D-4C27-8190-6F8C63EAEB4E}.Release|x64.Build.0 = Release|Any CPU
 		{CDEE564F-E72D-4C27-8190-6F8C63EAEB4E}.Release|x86.ActiveCfg = Release|Any CPU
 		{CDEE564F-E72D-4C27-8190-6F8C63EAEB4E}.Release|x86.Build.0 = Release|Any CPU
+		{82659A73-D138-4D71-8B06-70F659D1E520}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82659A73-D138-4D71-8B06-70F659D1E520}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82659A73-D138-4D71-8B06-70F659D1E520}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{82659A73-D138-4D71-8B06-70F659D1E520}.Debug|x64.Build.0 = Debug|Any CPU
+		{82659A73-D138-4D71-8B06-70F659D1E520}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{82659A73-D138-4D71-8B06-70F659D1E520}.Debug|x86.Build.0 = Debug|Any CPU
+		{82659A73-D138-4D71-8B06-70F659D1E520}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82659A73-D138-4D71-8B06-70F659D1E520}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82659A73-D138-4D71-8B06-70F659D1E520}.Release|x64.ActiveCfg = Release|Any CPU
+		{82659A73-D138-4D71-8B06-70F659D1E520}.Release|x64.Build.0 = Release|Any CPU
+		{82659A73-D138-4D71-8B06-70F659D1E520}.Release|x86.ActiveCfg = Release|Any CPU
+		{82659A73-D138-4D71-8B06-70F659D1E520}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CD9E451E-2289-4776-B794-46349E91F9A1}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8DFE824E-65E0-4FF1-8D81-2B9DE7556FA5}
 	EndGlobalSection
 EndGlobal
