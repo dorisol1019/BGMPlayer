@@ -172,5 +172,11 @@
       <Name>BGMPlayerCore</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BGMList\BGMList.csproj">
+      <Project>{82659a73-d138-4d71-8b06-70f659d1e520}</Project>
+      <Name>BGMList</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
