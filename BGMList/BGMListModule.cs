@@ -9,7 +9,8 @@ namespace BGMList
     {
         public void OnInitialized(IContainerProvider containerProvider)
         {
- 
+            var regionManager = containerProvider.Resolve<IRegionManager>();
+            regionManager.RegisterViewWithRegion("BGMList", typeof(Views.BGMList));
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
