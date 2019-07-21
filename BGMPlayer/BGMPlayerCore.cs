@@ -41,6 +41,7 @@ namespace BGMPlayer
         private ReactiveProperty<int> MidiLoopCount { get; set; }
         private ReadOnlyReactiveProperty<int> AudioLoopCount { get; set; }
 
+        public ReactivePropertySlim<PlayingState> State { get; }
         #endregion
 
         public BGMPlayerCore(IntPtr handle, string path = @"Playlist\")
@@ -48,6 +49,8 @@ namespace BGMPlayer
             _ggs.OpenDevice(-1, handle);
 
             this.Init(path);
+
+            State = new ReactivePropertySlim<PlayingState>(PlayingState.Stopping);
         }
 
         public void Init(string path)
@@ -105,6 +108,7 @@ namespace BGMPlayer
                     return;
             }
             IsPause = false;
+            State.Value = PlayingState.Playing;
         }
         
 
@@ -134,6 +138,7 @@ namespace BGMPlayer
             }
             _selectedBGM = null;
             IsPause = false;
+            State.Value = PlayingState.Stopping;
         }
 
 
@@ -155,6 +160,7 @@ namespace BGMPlayer
                     break;
             }
             IsPause = true;
+            State.Value = PlayingState.Pausing;
         }
 
         public void ReStart()
@@ -175,6 +181,7 @@ namespace BGMPlayer
                     break;
             }
             IsPause = false;
+            State.Value = PlayingState.Playing;
         }
 
         public void Dispose()

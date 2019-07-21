@@ -1,4 +1,5 @@
-﻿using Reactive.Bindings.Notifiers;
+﻿using Reactive.Bindings;
+using Reactive.Bindings.Notifiers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,22 +8,20 @@ using System.Threading.Tasks;
 
 namespace BGMPlayer
 {
-    public enum PlayingState
-    {
-        Playing,
-        Stopping,
-        Pausing,
-    }
     public class BGMPlayerService : IBGMPlayerService
     {
         private IBGMPlayerCore bgmPlayerCore = default;
 
         private BooleanNotifier IsPause = default;
+
+        public ReadOnlyReactivePropertySlim<PlayingState> State { get; }
         public BGMPlayerService(IBGMPlayerCore bgmPlayerCore)
         {
             this.bgmPlayerCore = bgmPlayerCore;
 
             IsPause = new BooleanNotifier(false);
+
+            State = bgmPlayerCore.State.ToReadOnlyReactivePropertySlim();
         }
         public async Task Play(BGM bgm)
         {
