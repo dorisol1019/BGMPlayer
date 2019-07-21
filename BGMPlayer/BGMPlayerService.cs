@@ -18,14 +18,15 @@ namespace BGMPlayer
 
             IsPause = new BooleanNotifier(false);
         }
-        public Task Play(BGM bgm)
+        public async Task Play(BGM bgm)
         {
-            throw new NotImplementedException();
+            bgmPlayerCore.Stop();
+            await bgmPlayerCore.Play(bgm);
         }
 
         public void Stop()
         {
-            throw new NotImplementedException();
+            bgmPlayerCore.Stop();
         }
 
         public void PauseOrReStart()
