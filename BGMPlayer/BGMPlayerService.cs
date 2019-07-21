@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Reactive.Bindings.Notifiers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,9 +10,13 @@ namespace BGMPlayer
     public class BGMPlayerService : IBGMPlayerService
     {
         private IBGMPlayerCore bgmPlayerCore = default;
+
+        private BooleanNotifier IsPause = default;
         public BGMPlayerService(IBGMPlayerCore bgmPlayerCore)
         {
             this.bgmPlayerCore = bgmPlayerCore;
+
+            IsPause = new BooleanNotifier(false);
         }
         public Task Play(BGM bgm)
         {
@@ -25,7 +30,16 @@ namespace BGMPlayer
 
         public void PauseOrReStart()
         {
-            throw new NotImplementedException();
+            if(!IsPause.Value)
+            {
+                bgmPlayerCore.Pause();
+                IsPause.TurnOn();
+            }
+            else if (IsPause.Value)
+            {
+                bgmPlayerCore.ReStart();
+                IsPause.TurnOff();
+            }
         }
     }
 }
