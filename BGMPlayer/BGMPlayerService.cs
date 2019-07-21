@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace BGMPlayer
 {
+    public enum PlayingState
+    {
+        Playing,
+        Stopping,
+        Pausing,
+    }
     public class BGMPlayerService : IBGMPlayerService
     {
         private IBGMPlayerCore bgmPlayerCore = default;
