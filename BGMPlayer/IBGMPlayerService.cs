@@ -8,6 +8,10 @@ namespace BGMPlayer
 {
     public interface IBGMPlayerService
     {
+        Task Play(BGM bgm);
 
+        void Stop();
+
+        void PauseOrReStart();
     }
 }
