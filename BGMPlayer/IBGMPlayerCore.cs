@@ -8,6 +8,13 @@ namespace BGMPlayer
 {
     public interface IBGMPlayerCore
     {
+        Task Play(BGM bgm);
+
+        void Stop();
+
+        void Pause();
+
+        void ReStart();
 
         void ChangeVolume(int volume);
     }

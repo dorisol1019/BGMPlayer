@@ -65,7 +65,7 @@ namespace BGMPlayer
             _selectedBGM = bgm;
         }
 
-        private async Task Play(BGM bgm)
+        public async Task Play(BGM bgm)
         {
             Stop();
             switch (bgm.FileExtension)
