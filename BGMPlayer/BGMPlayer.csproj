@@ -66,6 +66,7 @@
     <Compile Include="BGM.cs" />
     <Compile Include="CompareNatural.cs" />
     <Compile Include="FileExtensionType.cs" />
+    <Compile Include="IBGMPlayerCore.cs" />
     <Compile Include="Models\OpenFolderDialog.cs" />
     <Compile Include="Models\VersionInfo.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
