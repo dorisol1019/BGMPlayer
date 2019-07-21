@@ -12,14 +12,10 @@ namespace BGMPlayer
     {
         private IBGMPlayerCore bgmPlayerCore = default;
 
-        private BooleanNotifier IsPause = default;
-
         public ReadOnlyReactivePropertySlim<PlayingState> State { get; }
         public BGMPlayerService(IBGMPlayerCore bgmPlayerCore)
         {
             this.bgmPlayerCore = bgmPlayerCore;
-
-            IsPause = new BooleanNotifier(false);
 
             State = bgmPlayerCore.State.ToReadOnlyReactivePropertySlim();
         }
@@ -36,15 +32,16 @@ namespace BGMPlayer
 
         public void PauseOrReStart()
         {
-            if(!IsPause.Value)
+            switch (State.Value)
             {
-                bgmPlayerCore.Pause();
-                IsPause.TurnOn();
-            }
-            else if (IsPause.Value)
-            {
-                bgmPlayerCore.ReStart();
-                IsPause.TurnOff();
+                case PlayingState.Playing:
+                    bgmPlayerCore.Pause();
+                    break;
+                case PlayingState.Pausing:
+                    bgmPlayerCore.ReStart();
+                    break;
+                default:
+                    break;
             }
         }
     }
