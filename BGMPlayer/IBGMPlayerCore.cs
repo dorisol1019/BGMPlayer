@@ -8,5 +8,7 @@ namespace BGMPlayer
 {
     public interface IBGMPlayerCore
     {
+
+        void ChangeVolume(int volume);
     }
 }
