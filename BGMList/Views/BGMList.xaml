@@ -10,6 +10,10 @@
                  SelectedIndex="{Binding SelectedBGMIndex.Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                  SelectedItem="{Binding SelectedBGM.Value,Mode=OneWayToSource,UpdateSourceTrigger=PropertyChanged}"
                  SelectionMode="Single" HorizontalContentAlignment="Stretch" >
+            <ListBox.InputBindings>
+                <KeyBinding Gesture="Enter" Command="{Binding PlayCommand}" />
+                <KeyBinding Gesture="Space" Command="{Binding PauseOrRestartCommand}" />
+            </ListBox.InputBindings>
         </ListBox>
     </Grid>
 </UserControl>

@@ -12,6 +12,10 @@ namespace BGMList.ViewModels
         public ReactiveCollection<string> BGMs { get; }
         public ReactiveProperty<string> SelectedBGMIndex { get; set; }
         public ReactivePropertySlim<string> SelectedBGM { get; set; }
+
+        public AsyncReactiveCommand PlayCommand { get; }
+
+        public ReactiveCommand PauseOrRestartCommand { get; }
         public BGMListViewModel()
         {
 
