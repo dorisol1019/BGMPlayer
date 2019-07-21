@@ -16,7 +16,7 @@ using Reactive.Bindings.ObjectExtensions;
 
 namespace BGMPlayer
 {
-    public class BGMPlayerCore : IDisposable
+    public class BGMPlayerCore : IBGMPlayerCore , IDisposable
     {
         #region private変数
         private IGuruGuruSmf4Api _ggs = Ggs4Dll.GetInstance();
