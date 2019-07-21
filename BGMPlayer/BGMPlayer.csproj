@@ -64,9 +64,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BGM.cs" />
+    <Compile Include="BGMPlayerService.cs" />
     <Compile Include="CompareNatural.cs" />
     <Compile Include="FileExtensionType.cs" />
     <Compile Include="IBGMPlayerCore.cs" />
+    <Compile Include="IBGMPlayerService.cs" />
     <Compile Include="Models\OpenFolderDialog.cs" />
     <Compile Include="Models\VersionInfo.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
