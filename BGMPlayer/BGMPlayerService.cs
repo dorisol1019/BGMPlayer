@@ -15,6 +15,11 @@ namespace BGMPlayer
         public ReadOnlyReactivePropertySlim<PlayingState> State { get; }
 
         public ReadOnlyReactivePropertySlim<int> LoopCounter{get;}
+
+        public ReadOnlyReactivePropertySlim<bool> IsPlaying { get; }
+
+        private ReactivePropertySlim<bool> isPlaying = default;
+
         public BGMPlayerService(IBGMPlayerCore bgmPlayerCore)
         {
             this.bgmPlayerCore = bgmPlayerCore;
@@ -23,16 +28,21 @@ namespace BGMPlayer
 
             // LoopCountの作りが特殊なのでこのままではいけない
             LoopCounter = bgmPlayerCore.LoopCount.ToReadOnlyReactivePropertySlim();
+
+            isPlaying = new ReactivePropertySlim<bool>(false);
+            IsPlaying = IsPlaying.ToReadOnlyReactivePropertySlim();
         }
         public async Task Play(BGM bgm)
         {
             bgmPlayerCore.Stop();
             await bgmPlayerCore.Play(bgm);
+            isPlaying.Value = true;
         }
 
         public void Stop()
         {
             bgmPlayerCore.Stop();
+            isPlaying.Value = false;
         }
 
         public void PauseOrReStart()

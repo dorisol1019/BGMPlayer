@@ -21,5 +21,6 @@ namespace BGMPlayer
 
         ReadOnlyReactivePropertySlim<int> LoopCounter { get; }
 
+        ReadOnlyReactivePropertySlim<bool> IsPlaying { get; }
     }
 }
