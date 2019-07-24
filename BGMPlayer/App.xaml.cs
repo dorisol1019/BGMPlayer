@@ -19,6 +19,8 @@ namespace BGMPlayer
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.RegisterSingleton<IBGMPlayerCore, BGMPlayerCore>();
+            containerRegistry.RegisterSingleton<IBGMPlayerService, BGMPlayerService>();
             
         }
 
