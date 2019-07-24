@@ -225,17 +225,10 @@ namespace BGMPlayer.ViewModels
                      if (BGMList.Value.Count() <= _index) _index = 0;
                  }
                  {
-                     await Task.Delay(100);
-
-
-                     Stop();
-
-                     await Task.Delay(100);
-
-                     await player.Play(bgms[_index]);
-
+                     loopCountDisposable?.Dispose();
+                     BGMSelectedItem.Value = bgms[_index].FileName;
+                     await Play(bgms[_index]);
                  }
-                 BGMSelectedIndex.Value = selectedBGMIndex;
              });
 
 
