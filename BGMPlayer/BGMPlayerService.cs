@@ -13,11 +13,15 @@ namespace BGMPlayer
         private IBGMPlayerCore bgmPlayerCore = default;
 
         public ReadOnlyReactivePropertySlim<PlayingState> State { get; }
+
+        public ReadOnlyReactivePropertySlim<int> LoopCounter{get;}
         public BGMPlayerService(IBGMPlayerCore bgmPlayerCore)
         {
             this.bgmPlayerCore = bgmPlayerCore;
 
             State = bgmPlayerCore.State.ToReadOnlyReactivePropertySlim();
+
+            LoopCounter = bgmPlayerCore.LoopCount.ToReadOnlyReactivePropertySlim();
         }
         public async Task Play(BGM bgm)
         {
