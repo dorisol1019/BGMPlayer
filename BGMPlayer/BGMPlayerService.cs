@@ -30,7 +30,7 @@ namespace BGMPlayer
             LoopCounter = bgmPlayerCore.LoopCount.ToReadOnlyReactivePropertySlim();
 
             isPlaying = new ReactivePropertySlim<bool>(false);
-            IsPlaying = IsPlaying.ToReadOnlyReactivePropertySlim();
+            IsPlaying = isPlaying.ToReadOnlyReactivePropertySlim();
         }
         public async Task Play(BGM bgm)
         {
