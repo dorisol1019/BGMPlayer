@@ -15,6 +15,9 @@ using Reactive.Bindings.Notifiers;
 using Reactive.Bindings.Extensions;
 using System.Windows.Threading;
 using Prism.Interactivity.InteractionRequest;
+using System.IO;
+using BGMPlayer.Extension;
+using System.Collections;
 
 namespace BGMPlayer.ViewModels
 {
@@ -29,7 +32,7 @@ namespace BGMPlayer.ViewModels
         const string _defaultTitle = "BGM鳴ら～すV3";
         private BGMPlayerCore player;
 
-        private List<BGM> bgms { get; }
+        private List<BGM> bgms = null;
 
         public ICommand Shutdown { get; }
         public ICommand OpenFolderCommand { get; }
@@ -75,15 +78,15 @@ namespace BGMPlayer.ViewModels
             //path = @"testplaylist";
 #endif
 
-            player = new BGMPlayerCore(path);
+            player = new BGMPlayerCore();
 
-            var bgmList = player.BGMNameList;
-            if (bgmList.Count == 0)
+            bgms = GetBGMList(path);
+            if (bgms.Count == 0)
             {
                 MessageBox.Show("Playlistフォルダに音楽ファイルがありません\n" +
                     "音楽ファイルをPlaylistフォルダに入れてから起動して下さい", "Error!!");
             }
-            BGMList = new ReactiveProperty<IEnumerable<string>>(bgmList);
+            BGMList = new ReactiveProperty<IEnumerable<string>>(bgms.Select(e=>e.FileName));
             BGMSelectedIndex = new ReactiveProperty<int>(0);
             BGMSelectedItem = new ReactiveProperty<string>();
 
@@ -191,26 +194,16 @@ namespace BGMPlayer.ViewModels
         {
             get => _interactionRequest;
         }
-
-        private async Task Play()
-        {
-            if (IsBusy.Value) return;
-
-            int index = BGMSelectedIndex.Value;
-            Stop();
-            await Play(index);
-
-        }
-
+        
         IDisposable loopCountDisposable;
 
-        private async Task Play(int index)
+        private async Task Play()
         {
             if (IsBusy.Value) return;
             Title.Value = "ロード中…";
             using (BusyNotifier.ProcessStart())
             {
-                await player.Play(index);
+                await player.Play(bgms.FirstOrDefault(e=>e.FileName == BGMSelectedItem.Value));
             }
 
             loopCountDisposable = player.LoopCount.Subscribe(async i =>
@@ -240,7 +233,8 @@ namespace BGMPlayer.ViewModels
 
                      await Task.Delay(100);
 
-                     await Play(_index);
+                     await player.Play(bgms[_index]);
+
                  }
                  BGMSelectedIndex.Value = selectedBGMIndex;
              });
@@ -248,8 +242,7 @@ namespace BGMPlayer.ViewModels
 
             ChangeVolume();
             PauseOrRestartButtonContent.Value = "一時停止";
-            selectedBGMIndex = index;
-            Title.Value = $"再生中:{player.SelectedBGM}";
+            Title.Value = $"再生中:{BGMSelectedItem.Value}";
         }
 
         private void Stop()
@@ -300,8 +293,8 @@ namespace BGMPlayer.ViewModels
             dig.Show();
 
             var folderName = dig.FolderName;
-            player.Init(folderName);
-            BGMList.Value = player.BGMNameList;
+            bgms = GetBGMList(folderName);
+            BGMList.Value = bgms.Select(e=>e.FileName);
             BGMSelectedIndex.Value = 0;
             selectedBGMIndex = -1;
 
@@ -309,5 +302,39 @@ namespace BGMPlayer.ViewModels
 
         private int selectedBGMIndex = -1;
 
+
+        private string[] _extensionNames = new[] { ".mid", ".midi", ".wav", ".wave", ".mp3", ".ogg" };
+
+        private List<BGM> GetBGMList(string path)
+        {
+            if (!Directory.Exists(path)) throw new DirectoryNotFoundException();
+            var files = Directory.GetFiles(path);
+            var enableFiles = new List<BGM>();
+            foreach (var file in files)
+            {
+                foreach (var extensionName in _extensionNames)
+                {
+                    var extension = Path.GetExtension(file);
+                    if (string.Compare(extension, extensionName, true) == 0)
+                    {
+                        FileExtensionType ext = FileExtensionType.other;
+                        extension = extension.ToLower();
+                        if (extension == ".mid" || extension == ".midi")
+                            ext = FileExtensionType.midi;
+                        if (extension == ".wav" || extension == ".wave")
+                            ext = FileExtensionType.wave;
+                        if (extension == ".mp3")
+                            ext = FileExtensionType.mp3;
+                        if (extension == ".ogg")
+                            ext = FileExtensionType.ogg;
+
+                        enableFiles.Add(new BGM(file, ext));
+                    }
+                }
+
+            }
+            enableFiles.Sort((e, f) => CompareExtension.CompareNatural(e.FileName, f.FileName));
+            return enableFiles;
+        }
     }
 }

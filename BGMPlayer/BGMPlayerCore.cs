@@ -22,10 +22,6 @@ namespace BGMPlayer
         private IGuruGuruSmf4Api _ggs = Ggs4Dll.GetInstance();
         private AudioPlayer _audioPlayer;
 
-        private string oldPath = "";
-
-        private string[] _extensionNames = new[] { ".mid", ".midi", ".wav", ".wave", ".mp3", ".ogg" };
-        private List<BGM> _bgmList = null;
         private BGM _selectedBGM = null;
         private bool isLoop = false;
         
@@ -33,7 +29,6 @@ namespace BGMPlayer
 
         #region　プロパティ
         public string SelectedBGM { get => _selectedBGM?.FileName ?? ""; }
-        public List<string> BGMNameList { get => _bgmList.Select(e => e.FileName).ToList(); }
         public bool IsPlaying => _selectedBGM != null;
         public bool IsPause { get; private set; } = false;
 
@@ -44,28 +39,11 @@ namespace BGMPlayer
         public ReactivePropertySlim<PlayingState> State { get; }
         #endregion
 
-        public BGMPlayerCore(string path = @"Playlist\")
+        public BGMPlayerCore()
         {
             _ggs.OpenDevice(-1, (IntPtr)0);
 
-            this.Init(path);
-
             State = new ReactivePropertySlim<PlayingState>(PlayingState.Stopping);
-        }
-
-        public void Init(string path)
-        {
-            _bgmList = GetBGMList(path);
-
-        }
-
-        public async Task Play(int index)
-        {
-            var bgm = _bgmList[index];
-
-            await Play(bgm);
-
-            _selectedBGM = bgm;
         }
 
         public async Task Play(BGM bgm)
@@ -74,7 +52,7 @@ namespace BGMPlayer
             switch (bgm.FileExtension)
             {
                 case FileExtensionType.midi:
-                    _ggs.AddListFromFile(bgm.FileName, 0, 1);
+                    _ggs.AddListFromFile(bgm.FullPath, 0, 1);
                     _ggs.Play(PlayOption.Loop, 1, 0, 0, 0);
                     _ggs.GetSmfInformation(out SmfInformation info, 1);
                     if (info.LoopTime >= info.LastNoteTime)
@@ -98,7 +76,7 @@ namespace BGMPlayer
                 case FileExtensionType.mp3:
                     if (_audioPlayer != null) _audioPlayer.Dispose();
                     _audioPlayer = new AudioPlayer();
-                    await _audioPlayer.Play(bgm.FileName, bgm.FileExtension);
+                    await _audioPlayer.Play(bgm.FullPath, bgm.FileExtension);
                     isLoop = true;
                     AudioLoopCount = _audioPlayer.ObserveEveryValueChanged(e => e.LoopCount).ToReadOnlyReactiveProperty();
                     LoopCount = AudioLoopCount;
@@ -109,6 +87,7 @@ namespace BGMPlayer
             }
             IsPause = false;
             State.Value = PlayingState.Playing;
+            _selectedBGM = bgm;
         }
         
 
@@ -213,40 +192,7 @@ namespace BGMPlayer
 
 
         #region
-        private List<BGM> GetBGMList(string path)
-        {
-            if (oldPath == path) return _bgmList;
-            oldPath = path;
 
-            if (!Directory.Exists(path)) throw new DirectoryNotFoundException();
-            var files = Directory.GetFiles(path);
-            var enableFiles = new List<BGM>();
-            foreach (var file in files)
-            {
-                foreach (var extensionName in _extensionNames)
-                {
-                    var extension = Path.GetExtension(file);
-                    if (string.Compare(extension, extensionName, true) == 0)
-                    {
-                        FileExtensionType ext = FileExtensionType.other;
-                        extension = extension.ToLower();
-                        if (extension == ".mid" || extension == ".midi")
-                            ext = FileExtensionType.midi;
-                        if (extension == ".wav" || extension == ".wave")
-                            ext = FileExtensionType.wave;
-                        if (extension == ".mp3")
-                            ext = FileExtensionType.mp3;
-                        if (extension == ".ogg")
-                            ext = FileExtensionType.ogg;
-
-                        enableFiles.Add(new BGM(file, ext));
-                    }
-                }
-
-            }
-            enableFiles.Sort((e, f) => CompareExtension.CompareNatural(e.FileName, f.FileName));
-            return enableFiles;
-        }
         #endregion
     }
 }
