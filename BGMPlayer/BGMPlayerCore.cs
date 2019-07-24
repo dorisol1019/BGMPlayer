@@ -32,8 +32,8 @@ namespace BGMPlayer
         #endregion
 
         #region　プロパティ
-        public string SelectedBGM { get => Path.GetFileName(_selectedBGM?.FileName ?? ""); }
-        public List<string> BGMNameList { get => _bgmList.Select(e => Path.GetFileName(e.FileName)).ToList(); }
+        public string SelectedBGM { get => _selectedBGM?.FileName ?? ""; }
+        public List<string> BGMNameList { get => _bgmList.Select(e => e.FileName).ToList(); }
         public bool IsPlaying => _selectedBGM != null;
         public bool IsPause { get; private set; } = false;
 
