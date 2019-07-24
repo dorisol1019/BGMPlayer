@@ -44,6 +44,8 @@ namespace BGMPlayer
             _ggs.OpenDevice(-1, (IntPtr)0);
 
             State = new ReactivePropertySlim<PlayingState>(PlayingState.Stopping);
+
+            _audioPlayer = new AudioPlayer();
         }
 
         public async Task Play(BGM bgm)
@@ -74,8 +76,6 @@ namespace BGMPlayer
                 case FileExtensionType.wave:
                 case FileExtensionType.ogg:
                 case FileExtensionType.mp3:
-                    if (_audioPlayer != null) _audioPlayer.Dispose();
-                    _audioPlayer = new AudioPlayer();
                     await _audioPlayer.Play(bgm.FullPath, bgm.FileExtension);
                     isLoop = true;
                     AudioLoopCount = _audioPlayer.ObserveEveryValueChanged(e => e.LoopCount).ToReadOnlyReactiveProperty();
@@ -108,8 +108,6 @@ namespace BGMPlayer
                 case FileExtensionType.ogg:
                 case FileExtensionType.mp3:
                     _audioPlayer.Stop();
-                    _audioPlayer.Dispose();
-                    _audioPlayer = null;
                     break;
                 case FileExtensionType.other:
                 default:
@@ -167,6 +165,7 @@ namespace BGMPlayer
         {
             Stop();
             _ggs.CloseDevice();
+            _audioPlayer.Dispose();
         }
 
         public void ChangeVolume(int value)
