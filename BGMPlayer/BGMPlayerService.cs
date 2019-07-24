@@ -64,5 +64,10 @@ namespace BGMPlayer
         {
             bgmPlayerCore.ChangeVolume(value);
         }
+
+        public void Dispose()
+        {
+            bgmPlayerCore.Dispose();
+        }
     }
 }

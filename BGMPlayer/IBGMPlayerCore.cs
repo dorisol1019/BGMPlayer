@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BGMPlayer
 {
-    public interface IBGMPlayerCore
+    public interface IBGMPlayerCore : IDisposable
     {
         Task Play(BGM bgm);
 
@@ -22,5 +22,6 @@ namespace BGMPlayer
         ReactivePropertySlim<PlayingState> State { get; }
 
         ReadOnlyReactiveProperty<int> LoopCount { get; }
+
     }
 }
