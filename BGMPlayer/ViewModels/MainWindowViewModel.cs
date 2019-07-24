@@ -73,7 +73,7 @@ namespace BGMPlayer.ViewModels
             //path = @"testplaylist";
 #endif
 
-            player = new BGMPlayerCore((IntPtr)0, path);
+            player = new BGMPlayerCore(path);
 
             var bgmList = player.BGMNameList;
             if (bgmList.Count == 0)

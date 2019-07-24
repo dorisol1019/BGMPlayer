@@ -44,9 +44,9 @@ namespace BGMPlayer
         public ReactivePropertySlim<PlayingState> State { get; }
         #endregion
 
-        public BGMPlayerCore(IntPtr handle, string path = @"Playlist\")
+        public BGMPlayerCore(string path = @"Playlist\")
         {
-            _ggs.OpenDevice(-1, handle);
+            _ggs.OpenDevice(-1, (IntPtr)0);
 
             this.Init(path);
 
