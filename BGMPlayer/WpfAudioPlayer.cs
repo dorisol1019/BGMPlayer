@@ -143,7 +143,7 @@ namespace WpfAudioPlayer
         public void Stop()
         {
             _wasApi.Stop();
-            this._audioStream.Position = 0;
+            this._audioStream?.Dispose();
         }
 
         /// <summary>
