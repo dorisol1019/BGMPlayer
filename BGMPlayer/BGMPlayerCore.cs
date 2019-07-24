@@ -52,7 +52,7 @@ namespace BGMPlayer
             _audioPlayer = new AudioPlayer();
 
             loopCount = new ReactivePropertySlim<int>(0);
-            LoopCount = loopCount.ToReadOnlyReactiveProperty();
+            LoopCount = loopCount.ToReadOnlyReactiveProperty(mode: ReactivePropertyMode.DistinctUntilChanged);
 
             MidiLoopCount = _ggs.ObserveEveryValueChanged(e => e.GetPlayerStatus().LoopCount).ToReactiveProperty(mode: ReactivePropertyMode.DistinctUntilChanged);
             AudioLoopCount = _audioPlayer.ObserveEveryValueChanged(e => e.LoopCount).ToReadOnlyReactiveProperty(mode: ReactivePropertyMode.DistinctUntilChanged);
