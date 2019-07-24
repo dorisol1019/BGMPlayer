@@ -24,7 +24,11 @@ namespace BGMPlayer
 
         private BGM _selectedBGM = null;
         private bool isLoop = false;
-        
+
+        private ReactivePropertySlim<int> loopCount = default;
+
+        private IDisposable loopCountUnSubscriber = default;
+
         #endregion
 
         #region　プロパティ
@@ -46,6 +50,13 @@ namespace BGMPlayer
             State = new ReactivePropertySlim<PlayingState>(PlayingState.Stopping);
 
             _audioPlayer = new AudioPlayer();
+
+            loopCount = new ReactivePropertySlim<int>(0);
+            LoopCount = loopCount.ToReadOnlyReactiveProperty();
+
+            MidiLoopCount = _ggs.ObserveEveryValueChanged(e => e.GetPlayerStatus().LoopCount).ToReactiveProperty(mode: ReactivePropertyMode.DistinctUntilChanged);
+            AudioLoopCount = _audioPlayer.ObserveEveryValueChanged(e => e.LoopCount).ToReadOnlyReactiveProperty();
+
         }
 
         public async Task Play(BGM bgm)
@@ -65,21 +76,22 @@ namespace BGMPlayer
                     {
                         isLoop = true;
                     }
-                    MidiLoopCount = _ggs.ObserveEveryValueChanged(e => e.GetPlayerStatus().LoopCount).ToReactiveProperty(mode:ReactivePropertyMode.DistinctUntilChanged);
-                    MidiLoopCount.Subscribe((i)=>
+                    loopCountUnSubscriber = MidiLoopCount.Subscribe((i)=>
                     {
                         if (isLoop == false) MidiLoopCount.Value = int.MaxValue;
+                        loopCount.Value = MidiLoopCount.Value;
                     }
                     );
-                    LoopCount = MidiLoopCount.ToReadOnlyReactiveProperty();
                     break;
                 case FileExtensionType.wave:
                 case FileExtensionType.ogg:
                 case FileExtensionType.mp3:
                     await _audioPlayer.Play(bgm.FullPath, bgm.FileExtension);
                     isLoop = true;
-                    AudioLoopCount = _audioPlayer.ObserveEveryValueChanged(e => e.LoopCount).ToReadOnlyReactiveProperty();
-                    LoopCount = AudioLoopCount;
+                    loopCountUnSubscriber = AudioLoopCount.Subscribe((count) =>
+                    {
+                        loopCount.Value = count;
+                    });
                     break;
                 case FileExtensionType.other:
                 default:
@@ -116,6 +128,8 @@ namespace BGMPlayer
             _selectedBGM = null;
             IsPause = false;
             State.Value = PlayingState.Stopping;
+            loopCountUnSubscriber?.Dispose();
+            loopCount.Value = 0;
         }
 
 
