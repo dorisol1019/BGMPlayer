@@ -59,6 +59,7 @@
         </Menu>
         <ListBox Name="BGMList" ItemsSource="{Binding BGMList.Value,UpdateSourceTrigger=PropertyChanged}" FontSize="10pt" Margin="2,2,2,2"
                  SelectedIndex="{Binding BGMSelectedIndex.Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                 SelectedItem="{Binding BGMSelectedItem.Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                  SelectionMode="Single" HorizontalContentAlignment="Stretch"
                  Grid.Column="0" Grid.Row="1"                 
                  >
