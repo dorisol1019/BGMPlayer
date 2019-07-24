@@ -29,6 +29,8 @@ namespace BGMPlayer.ViewModels
         const string _defaultTitle = "BGM鳴ら～すV3";
         private BGMPlayerCore player;
 
+        private List<BGM> bgms { get; }
+
         public ICommand Shutdown { get; }
         public ICommand OpenFolderCommand { get; }
         public ICommand RestartCommand { get; }
