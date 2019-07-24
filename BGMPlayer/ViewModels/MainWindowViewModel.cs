@@ -88,7 +88,7 @@ namespace BGMPlayer.ViewModels
             }
             BGMList = new ReactiveProperty<IEnumerable<string>>(bgms.Select(e=>e.FileName));
             BGMSelectedIndex = new ReactiveProperty<int>(0);
-            BGMSelectedItem = new ReactiveProperty<string>();
+            BGMSelectedItem = new ReactiveProperty<string>("");
 
             Shutdown = new DelegateCommand(() => Application.Current.Shutdown());
 
