@@ -48,5 +48,10 @@ namespace BGMPlayer
                     break;
             }
         }
+
+        public void ChangeVolume(int value)
+        {
+            bgmPlayerCore.ChangeVolume(value);
+        }
     }
 }

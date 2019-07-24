@@ -15,6 +15,8 @@ namespace BGMPlayer
 
         void PauseOrReStart();
 
+        void ChangeVolume(int value);
+
         ReadOnlyReactivePropertySlim<PlayingState> State { get; }
 
         ReadOnlyReactivePropertySlim<int> LoopCounter { get; }
