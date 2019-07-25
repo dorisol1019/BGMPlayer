@@ -23,7 +23,7 @@ namespace BGMPlayer
         private AudioPlayer _audioPlayer;
 
         private BGM _selectedBGM = null;
-        private bool isLoop = false;
+        private bool isLoopableBGM = false;
 
         private ReactivePropertySlim<int> loopCount = default;
 
@@ -69,15 +69,15 @@ namespace BGMPlayer
                     _ggs.GetSmfInformation(out SmfInformation info, 1);
                     if (info.LoopTime >= info.LastNoteTime)
                     {
-                        isLoop = false;
+                        isLoopableBGM = false;
                     }
                     else
                     {
-                        isLoop = true;
+                        isLoopableBGM = true;
                     }
                     loopCountUnSubscriber = MidiLoopCount.Subscribe((i)=>
                     {
-                        if (isLoop == false) MidiLoopCount.Value = int.MaxValue;
+                        if (isLoopableBGM == false) MidiLoopCount.Value = int.MaxValue;
                         loopCount.Value = MidiLoopCount.Value;
                     }
                     );
@@ -86,7 +86,7 @@ namespace BGMPlayer
                 case FileExtensionType.ogg:
                 case FileExtensionType.mp3:
                     await _audioPlayer.Play(bgm.FullPath, bgm.FileExtension);
-                    isLoop = true;
+                    isLoopableBGM = true;
                     loopCountUnSubscriber = AudioLoopCount.Subscribe((count) =>
                     {
                         loopCount.Value = count;
