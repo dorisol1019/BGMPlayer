@@ -87,7 +87,7 @@ namespace BGMPlayer.ViewModels
                 MessageBox.Show("Playlistフォルダに音楽ファイルがありません\n" +
                     "音楽ファイルをPlaylistフォルダに入れてから起動して下さい", "Error!!");
             }
-            BGMList = new ReactiveProperty<IEnumerable<string>>(bgms.Select(e=>e.FileName));
+            BGMList = new ReactiveProperty<IEnumerable<string>>(bgms.Select(e => e.FileName));
             BGMSelectedIndex = new ReactiveProperty<int>(0);
             BGMSelectedItem = new ReactiveProperty<string>("");
 
@@ -179,6 +179,33 @@ namespace BGMPlayer.ViewModels
             PopUpVersionInfoCommand = new DelegateCommand(() =>
               _interactionRequest.Raise(new Notification { Title = "BGM鳴ら～すV3について" })
             );
+
+            player.LoopCounter.Subscribe(async count =>
+            {
+                if (count <= 0) return;
+                int index = -1;
+                if (LoopOptionSelectedIndex.Value == 0) return;
+                int loopN = LoopNumber.Value;
+                if (loopN + 1 > count) return;
+
+                this.Stop();
+
+                if (IsShuffleChecked.Value)
+                {
+                    var rand = new Random();
+
+                    index = rand.Next(BGMList.Value.Count());
+                }
+                else if (IsNextChecked.Value)
+                {
+                    index = selectedBGMIndex + 1;
+                    if (BGMList.Value.Count() <= index) index = 0;
+                }
+                {
+                    BGMSelectedItem.Value = bgms[index].FileName;
+                    await Play(bgms[index]);
+                }
+            });
         }
 
         private InteractionRequest<INotification> _interactionRequest;
@@ -189,8 +216,6 @@ namespace BGMPlayer.ViewModels
             get => _interactionRequest;
         }
         
-        IDisposable loopCountDisposable;
-
         private Task Play()
         {
             return Play(bgms.FirstOrDefault(e => e.FileName == BGMSelectedItem.Value));
@@ -205,33 +230,6 @@ namespace BGMPlayer.ViewModels
                 await player.Play(bgm);
             }
 
-            loopCountDisposable = player.LoopCounter.Subscribe(async i =>
-             {
-                 if (i <= 0) return;
-                 int _index = -1;
-                 if (LoopOptionSelectedIndex.Value == 0) return;
-                 int loopN = LoopNumber.Value;
-                 if (loopN + 1 > i) return;
-
-                 if (IsShuffleChecked.Value)
-                 {
-                     var rand = new Random();
-
-                     _index = rand.Next(BGMList.Value.Count());
-                 }
-                 else if (IsNextChecked.Value)
-                 {
-                     _index = selectedBGMIndex + 1;
-                     if (BGMList.Value.Count() <= _index) _index = 0;
-                 }
-                 {
-                     loopCountDisposable?.Dispose();
-                     BGMSelectedItem.Value = bgms[_index].FileName;
-                     await Play(bgms[_index]);
-                 }
-             });
-
-
             ChangeVolume();
             PauseOrRestartButtonContent.Value = "一時停止";
             Title.Value = $"再生中:{BGMSelectedItem.Value}";
@@ -240,7 +238,6 @@ namespace BGMPlayer.ViewModels
         private void Stop()
         {
             player.Stop();
-            loopCountDisposable?.Dispose();
             PauseOrRestartButtonContent.Value = "";
             Title.Value = _defaultTitle;
         }
