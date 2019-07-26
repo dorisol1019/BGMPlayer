@@ -28,8 +28,6 @@ namespace BGMPlayer
 
         private ReactivePropertySlim<int> loopCount = default;
 
-        private IDisposable loopCountUnSubscriber = default;
-
         #endregion
 
         #region　プロパティ
