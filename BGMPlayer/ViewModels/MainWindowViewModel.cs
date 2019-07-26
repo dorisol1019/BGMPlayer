@@ -180,32 +180,32 @@ namespace BGMPlayer.ViewModels
               _interactionRequest.Raise(new Notification { Title = "BGM鳴ら～すV3について" })
             );
 
-            player.LoopCounter.Subscribe(async count =>
-            {
-                if (count <= 0) return;
-                int index = -1;
-                if (LoopOptionSelectedIndex.Value == 0) return;
-                int loopN = LoopNumber.Value;
-                if (loopN + 1 > count) return;
-
-                this.Stop();
-
-                if (IsShuffleChecked.Value)
+            player.LoopCounter.Where(_ => player.State.Value == PlayingState.Playing).Subscribe(async count =>
                 {
-                    var rand = new Random();
+                    if (count <= 0) return;
+                    int index = -1;
+                    if (LoopOptionSelectedIndex.Value == 0) return;
+                    int loopN = LoopNumber.Value;
+                    if (loopN + 1 > count) return;
 
-                    index = rand.Next(BGMList.Value.Count());
-                }
-                else if (IsNextChecked.Value)
-                {
-                    index = selectedBGMIndex + 1;
-                    if (BGMList.Value.Count() <= index) index = 0;
-                }
-                {
-                    BGMSelectedItem.Value = bgms[index].FileName;
-                    await Play(bgms[index]);
-                }
-            });
+                    this.Stop();
+
+                    if (IsShuffleChecked.Value)
+                    {
+                        var rand = new Random();
+
+                        index = rand.Next(BGMList.Value.Count());
+                    }
+                    else if (IsNextChecked.Value)
+                    {
+                        index = selectedBGMIndex + 1;
+                        if (BGMList.Value.Count() <= index) index = 0;
+                    }
+                    {
+                        BGMSelectedItem.Value = bgms[index].FileName;
+                        await Play(bgms[index]);
+                    }
+                });
         }
 
         private InteractionRequest<INotification> _interactionRequest;
