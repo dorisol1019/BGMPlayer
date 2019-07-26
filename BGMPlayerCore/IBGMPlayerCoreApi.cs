@@ -19,8 +19,8 @@ namespace BGMPlayerCore
 
         void ChangeVolume(int volume);
 
-        ReactivePropertySlim<PlayingState> State { get; }
+        ReadOnlyReactivePropertySlim<PlayingState> State { get; }
 
-        ReadOnlyReactiveProperty<int> LoopCount { get; }
+        ReadOnlyReactivePropertySlim<int> LoopCount { get; }
     }
 }

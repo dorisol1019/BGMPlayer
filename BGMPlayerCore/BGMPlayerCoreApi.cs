@@ -28,6 +28,7 @@ namespace BGMPlayerCore
 
         private ReactivePropertySlim<int> loopCount = default;
 
+        private ReactivePropertySlim<PlayingState> state = default;
         #endregion
 
         #region　プロパティ
@@ -35,30 +36,31 @@ namespace BGMPlayerCore
         public bool IsPlaying => _selectedBGM != null;
         public bool IsPause { get; private set; } = false;
 
-        public ReadOnlyReactiveProperty<int> LoopCount { get; private set; }
-        private ReactiveProperty<int> MidiLoopCount { get; set; }
-        private ReactiveProperty<int> AudioLoopCount { get; set; }
+        public ReadOnlyReactivePropertySlim<int> LoopCount { get; private set; }
+        private ReadOnlyReactivePropertySlim<int> MidiLoopCount { get; set; }
+        private ReadOnlyReactivePropertySlim<int> AudioLoopCount { get; set; }
 
-        public ReactivePropertySlim<PlayingState> State { get; }
+        public ReadOnlyReactivePropertySlim<PlayingState> State { get; }
         #endregion
 
         public BGMPlayerCoreApi()
         {
             _ggs.OpenDevice(-1, (IntPtr)0);
 
-            State = new ReactivePropertySlim<PlayingState>(PlayingState.Stopping);
+            state = new ReactivePropertySlim<PlayingState>(PlayingState.Stopping);
+            State = state.ToReadOnlyReactivePropertySlim();
 
             _audioPlayer = new AudioPlayer();
 
             loopCount = new ReactivePropertySlim<int>(0);
-            LoopCount = loopCount.ToReadOnlyReactiveProperty();
+            LoopCount = loopCount.ToReadOnlyReactivePropertySlim();
 
-            MidiLoopCount = _ggs.ObserveEveryValueChanged(e => e.GetPlayerStatus().LoopCount).ToReactiveProperty(mode: ReactivePropertyMode.None);
+            MidiLoopCount = _ggs.ObserveEveryValueChanged(e => e.GetPlayerStatus().LoopCount).ToReadOnlyReactivePropertySlim(mode: ReactivePropertyMode.None);
 
             AudioLoopCount = _audioPlayer.ObserveEveryValueChanged(
                 e =>
                 e.LoopCount
-                ).ToReactiveProperty(mode: ReactivePropertyMode.None);
+                ).ToReadOnlyReactivePropertySlim(mode: ReactivePropertyMode.None);
             MidiLoopCount.Where(_ => !isbusy.IsBusy).Subscribe(count =>
               {
                   using (isbusy.ProcessStart())
@@ -108,7 +110,7 @@ namespace BGMPlayerCore
                     return;
             }
             IsPause = false;
-            State.Value = PlayingState.Playing;
+            state.Value = PlayingState.Playing;
             _selectedBGM = bgm;
         }
         
@@ -136,7 +138,7 @@ namespace BGMPlayerCore
             }
             _selectedBGM = null;
             IsPause = false;
-            State.Value = PlayingState.Stopping;
+            state.Value = PlayingState.Stopping;
             loopCount.Value = 0;
         }
 
@@ -159,7 +161,7 @@ namespace BGMPlayerCore
                     break;
             }
             IsPause = true;
-            State.Value = PlayingState.Pausing;
+            state.Value = PlayingState.Pausing;
         }
 
         public void ReStart()
@@ -180,7 +182,7 @@ namespace BGMPlayerCore
                     break;
             }
             IsPause = false;
-            State.Value = PlayingState.Playing;
+            state.Value = PlayingState.Playing;
         }
 
         public void Dispose()
