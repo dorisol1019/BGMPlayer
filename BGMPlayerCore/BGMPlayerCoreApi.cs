@@ -33,6 +33,8 @@ namespace BGMPlayerCore
         private ReadOnlyReactivePropertySlim<int> midiLoopCount = default;
 
         private ReadOnlyReactivePropertySlim<int> audioLoopCount = default;
+
+        private BusyNotifier loopCountUpdate = new BusyNotifier();
         #endregion
 
         #region　プロパティ
@@ -63,25 +65,25 @@ namespace BGMPlayerCore
                 e =>
                 e.LoopCount
                 ).ToReadOnlyReactivePropertySlim(mode: ReactivePropertyMode.None);
-            midiLoopCount.Where(_ => !isbusy.IsBusy).Subscribe(count =>
+            midiLoopCount.Where(_ => !loopCountUpdate.IsBusy).Subscribe(count =>
               {
-                  using (isbusy.ProcessStart())
+                  using (loopCountUpdate.ProcessStart())
                   {
                       int value = count;
                       if (isLoopableBGM == false) value = int.MaxValue;
                       loopCount.Value = value;
                   }
               });
-            audioLoopCount.Where(_ => !isbusy.IsBusy).Subscribe(count =>
+            audioLoopCount.Where(_ => !loopCountUpdate.IsBusy).Subscribe(count =>
               {
-                  using (isbusy.ProcessStart())
+                  using (loopCountUpdate.ProcessStart())
                   {
                       loopCount.Value = count;
                   }
               });
 
         }
-        BusyNotifier isbusy = new BusyNotifier();
+
         public async Task Play(BGM bgm)
         {
             loopCount.Value = 0;
