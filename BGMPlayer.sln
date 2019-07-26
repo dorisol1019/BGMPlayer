@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BGMPlayer", "BGMPlayer\BGMPlayer.csproj", "{6713322B-4566-4D5B-8408-ADA89BC240BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BGMPlayerCore", "BGMPlayerCore\BGMPlayerCore.csproj", "{CDEE564F-E72D-4C27-8190-6F8C63EAEB4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,8 +29,23 @@ Global
 		{6713322B-4566-4D5B-8408-ADA89BC240BE}.Release|x64.Build.0 = Release|Any CPU
 		{6713322B-4566-4D5B-8408-ADA89BC240BE}.Release|x86.ActiveCfg = Release|Any CPU
 		{6713322B-4566-4D5B-8408-ADA89BC240BE}.Release|x86.Build.0 = Release|Any CPU
+		{CDEE564F-E72D-4C27-8190-6F8C63EAEB4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDEE564F-E72D-4C27-8190-6F8C63EAEB4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDEE564F-E72D-4C27-8190-6F8C63EAEB4E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CDEE564F-E72D-4C27-8190-6F8C63EAEB4E}.Debug|x64.Build.0 = Debug|Any CPU
+		{CDEE564F-E72D-4C27-8190-6F8C63EAEB4E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CDEE564F-E72D-4C27-8190-6F8C63EAEB4E}.Debug|x86.Build.0 = Debug|Any CPU
+		{CDEE564F-E72D-4C27-8190-6F8C63EAEB4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDEE564F-E72D-4C27-8190-6F8C63EAEB4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDEE564F-E72D-4C27-8190-6F8C63EAEB4E}.Release|x64.ActiveCfg = Release|Any CPU
+		{CDEE564F-E72D-4C27-8190-6F8C63EAEB4E}.Release|x64.Build.0 = Release|Any CPU
+		{CDEE564F-E72D-4C27-8190-6F8C63EAEB4E}.Release|x86.ActiveCfg = Release|Any CPU
+		{CDEE564F-E72D-4C27-8190-6F8C63EAEB4E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CD9E451E-2289-4776-B794-46349E91F9A1}
 	EndGlobalSection
 EndGlobal
