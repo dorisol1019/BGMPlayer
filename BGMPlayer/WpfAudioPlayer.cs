@@ -293,7 +293,7 @@ namespace WpfAudioPlayer
         protected override void Dispose(bool disposing)
         {
             sourceStream.Dispose();
-
+            loopcount = 0;
             base.Dispose(disposing);
         }
         public WaveStream SourceStream { get; private set; }
