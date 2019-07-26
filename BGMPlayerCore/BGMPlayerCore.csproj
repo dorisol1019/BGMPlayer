@@ -84,7 +84,6 @@
   <ItemGroup>
     <Compile Include="BGM.cs" />
     <Compile Include="BGMPlayerCoreApi.cs" />
-    <Compile Include="Class1.cs" />
     <Compile Include="FileExtensionType.cs" />
     <Compile Include="IBGMPlayerCoreApi.cs" />
     <Compile Include="PlayingState.cs" />
