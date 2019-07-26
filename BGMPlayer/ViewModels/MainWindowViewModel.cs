@@ -285,12 +285,7 @@ namespace BGMPlayer.ViewModels
             var folderName = dig.FolderName;
             bgms = GetBGMList(folderName);
             BGMList.Value = bgms.Select(e=>e.FileName);
-            selectedBGMIndex = -1;
-
         }
-
-        private int selectedBGMIndex = -1;
-
 
         private string[] _extensionNames = new[] { ".mid", ".midi", ".wav", ".wave", ".mp3", ".ogg" };
 
