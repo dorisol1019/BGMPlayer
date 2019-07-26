@@ -233,8 +233,8 @@ namespace BGMPlayer.ViewModels
 
             ChangeVolume();
             PauseOrRestartButtonContent.Value = "一時停止";
-            Title.Value = $"再生中:{BGMSelectedItem.Value}";
             selectedBGM = BGMSelectedItem.Value;
+            Title.Value = $"再生中:{selectedBGM}";
         }
 
         private void Stop()
@@ -263,13 +263,13 @@ namespace BGMPlayer.ViewModels
         private void Pause()
         {
             PauseOrRestartButtonContent.Value = "停止解除";
-            Title.Value = $"一時停止中:{BGMSelectedItem.Value}";
+            Title.Value = $"一時停止中:{selectedBGM}";
         }
 
         private void Restart()
         {
             PauseOrRestartButtonContent.Value = "一時停止";
-            Title.Value = $"再生中:{BGMSelectedItem.Value}";
+            Title.Value = $"再生中:{selectedBGM}";
         }
 
         private void ChangeVolume()
