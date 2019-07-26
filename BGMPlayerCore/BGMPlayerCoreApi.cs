@@ -29,6 +29,10 @@ namespace BGMPlayerCore
         private ReactivePropertySlim<int> loopCount = default;
 
         private ReactivePropertySlim<PlayingState> state = default;
+
+        private ReadOnlyReactivePropertySlim<int> midiLoopCount = default;
+
+        private ReadOnlyReactivePropertySlim<int> audioLoopCount = default;
         #endregion
 
         #region　プロパティ
@@ -37,8 +41,6 @@ namespace BGMPlayerCore
         public bool IsPause { get; private set; } = false;
 
         public ReadOnlyReactivePropertySlim<int> LoopCount { get; private set; }
-        private ReadOnlyReactivePropertySlim<int> MidiLoopCount { get; set; }
-        private ReadOnlyReactivePropertySlim<int> AudioLoopCount { get; set; }
 
         public ReadOnlyReactivePropertySlim<PlayingState> State { get; }
         #endregion
@@ -55,13 +57,13 @@ namespace BGMPlayerCore
             loopCount = new ReactivePropertySlim<int>(0);
             LoopCount = loopCount.ToReadOnlyReactivePropertySlim();
 
-            MidiLoopCount = _ggs.ObserveEveryValueChanged(e => e.GetPlayerStatus().LoopCount).ToReadOnlyReactivePropertySlim(mode: ReactivePropertyMode.None);
+            midiLoopCount = _ggs.ObserveEveryValueChanged(e => e.GetPlayerStatus().LoopCount).ToReadOnlyReactivePropertySlim(mode: ReactivePropertyMode.None);
 
-            AudioLoopCount = _audioPlayer.ObserveEveryValueChanged(
+            audioLoopCount = _audioPlayer.ObserveEveryValueChanged(
                 e =>
                 e.LoopCount
                 ).ToReadOnlyReactivePropertySlim(mode: ReactivePropertyMode.None);
-            MidiLoopCount.Where(_ => !isbusy.IsBusy).Subscribe(count =>
+            midiLoopCount.Where(_ => !isbusy.IsBusy).Subscribe(count =>
               {
                   using (isbusy.ProcessStart())
                   {
@@ -70,7 +72,7 @@ namespace BGMPlayerCore
                       loopCount.Value = value;
                   }
               });
-            AudioLoopCount.Where(_ => !isbusy.IsBusy).Subscribe(count =>
+            audioLoopCount.Where(_ => !isbusy.IsBusy).Subscribe(count =>
               {
                   using (isbusy.ProcessStart())
                   {
