@@ -81,7 +81,6 @@ namespace BGMPlayerCore
                       loopCount.Value = count;
                   }
               });
-
         }
 
         public async Task Play(BGM bgm)
@@ -101,7 +100,6 @@ namespace BGMPlayerCore
                     {
                         isLoopableBGM = true;
                     }
-
                     break;
                 case FileExtensionType.wave:
                 case FileExtensionType.ogg:
@@ -118,7 +116,6 @@ namespace BGMPlayerCore
             _selectedBGM = bgm;
         }
         
-
         public void Stop()
         {
             if (_selectedBGM == null) return;
@@ -145,7 +142,6 @@ namespace BGMPlayerCore
             state.Value = PlayingState.Stopping;
             loopCount.Value = 0;
         }
-
 
         public void Pause()
         {
@@ -215,11 +211,5 @@ namespace BGMPlayerCore
                 _audioPlayer.Volume = value * 0.1f;
             }
         }
-
-
-
-        #region
-
-        #endregion
     }
 }
