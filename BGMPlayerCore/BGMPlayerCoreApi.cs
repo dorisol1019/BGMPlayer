@@ -38,7 +38,6 @@ namespace BGMPlayerCore
         #endregion
 
         #region　プロパティ
-        public string SelectedBGM { get => _selectedBGM?.FileName ?? ""; }
         public bool IsPlaying => _selectedBGM != null;
         public bool IsPause { get; private set; } = false;
 
