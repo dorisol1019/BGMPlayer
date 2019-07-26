@@ -1,4 +1,5 @@
-﻿using Reactive.Bindings;
+﻿using BGMPlayerCore;
+using Reactive.Bindings;
 using Reactive.Bindings.Notifiers;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace BGMPlayer
 {
     public class BGMPlayerService : IBGMPlayerService
     {
-        private IBGMPlayerCore bgmPlayerCore = default;
+        private IBGMPlayerCoreApi bgmPlayerCore = default;
 
         public ReadOnlyReactivePropertySlim<PlayingState> State { get; }
 
@@ -20,7 +21,7 @@ namespace BGMPlayer
 
         private ReactivePropertySlim<bool> isPlaying = default;
 
-        public BGMPlayerService(IBGMPlayerCore bgmPlayerCore)
+        public BGMPlayerService(IBGMPlayerCoreApi bgmPlayerCore)
         {
             this.bgmPlayerCore = bgmPlayerCore;
 

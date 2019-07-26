@@ -16,7 +16,7 @@ using Reactive.Bindings.Extensions;
 using System.Windows.Threading;
 using Prism.Interactivity.InteractionRequest;
 using System.IO;
-using BGMPlayer.Extension;
+using BGMPlayerCore;
 using System.Collections;
 
 namespace BGMPlayer.ViewModels
