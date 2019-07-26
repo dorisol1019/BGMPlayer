@@ -26,7 +26,6 @@ namespace BGMPlayer
 
             State = bgmPlayerCore.State.ToReadOnlyReactivePropertySlim();
 
-            // LoopCountの作りが特殊なのでこのままではいけない
             LoopCounter = bgmPlayerCore.LoopCount.ToReadOnlyReactivePropertySlim();
 
             isPlaying = new ReactivePropertySlim<bool>(false);
