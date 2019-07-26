@@ -29,6 +29,8 @@ namespace BGMPlayer.ViewModels
         public ReactiveProperty<int> BGMSelectedIndex { get; }
         public ReactiveProperty<string> BGMSelectedItem { get; }
 
+        private string selectedBGM = default;
+
         const string _defaultTitle = "BGM鳴ら～すV3";
         
         private List<BGM> bgms = null;
@@ -196,8 +198,9 @@ namespace BGMPlayer.ViewModels
                     }
                     else if (IsNextChecked.Value)
                     {
-                        index = selectedBGMIndex + 1;
-                        if (BGMList.Value.Count() <= index) index = 0;
+                        var list = bgms.Select(e => e.FileName).ToList();
+                        index = list.FindIndex(e => e == selectedBGM) + 1;                        
+                        if (list.Count <= index) index = 0;
                     }
                     {
                         BGMSelectedItem.Value = bgms[index].FileName;
@@ -231,6 +234,7 @@ namespace BGMPlayer.ViewModels
             ChangeVolume();
             PauseOrRestartButtonContent.Value = "一時停止";
             Title.Value = $"再生中:{BGMSelectedItem.Value}";
+            selectedBGM = BGMSelectedItem.Value;
         }
 
         private void Stop()
