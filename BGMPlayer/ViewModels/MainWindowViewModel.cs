@@ -180,15 +180,13 @@ namespace BGMPlayer.ViewModels
               _interactionRequest.Raise(new Notification { Title = "BGM鳴ら～すV3について" })
             );
 
-            player.LoopCounter.Where(_ => player.State.Value == PlayingState.Playing).Subscribe(async count =>
+            player.LoopCounter.Where(_ => player.State.Value == PlayingState.Playing)
+                .Where(x => x > 0)
+                .Where(x => x >= LoopNumber.Value + 1)
+                .Where(_ => LoopOptionSelectedIndex.Value != 0)
+                .Subscribe(async count =>
                 {
-                    if (count <= 0) return;
                     int index = -1;
-                    if (LoopOptionSelectedIndex.Value == 0) return;
-                    int loopN = LoopNumber.Value;
-                    if (loopN + 1 > count) return;
-
-                    this.Stop();
 
                     if (IsShuffleChecked.Value)
                     {
