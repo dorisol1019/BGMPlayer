@@ -38,7 +38,7 @@ namespace BGMPlayerCore
         #endregion
 
         #region　プロパティ
-        public bool IsPlaying => _selectedBGM != null;
+        private bool IsPlaying => _selectedBGM != null;
 
         public ReadOnlyReactivePropertySlim<int> LoopCount { get; private set; }
 
