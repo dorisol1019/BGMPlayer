@@ -39,7 +39,6 @@ namespace BGMPlayerCore
 
         #region　プロパティ
         public bool IsPlaying => _selectedBGM != null;
-        public bool IsPause { get; private set; } = false;
 
         public ReadOnlyReactivePropertySlim<int> LoopCount { get; private set; }
 
@@ -110,7 +109,6 @@ namespace BGMPlayerCore
                 default:
                     return;
             }
-            IsPause = false;
             state.Value = PlayingState.Playing;
             _selectedBGM = bgm;
         }
@@ -137,7 +135,6 @@ namespace BGMPlayerCore
                     return;
             }
             _selectedBGM = null;
-            IsPause = false;
             state.Value = PlayingState.Stopping;
             loopCount.Value = 0;
         }
@@ -159,7 +156,6 @@ namespace BGMPlayerCore
                 default:
                     break;
             }
-            IsPause = true;
             state.Value = PlayingState.Pausing;
         }
 
@@ -180,7 +176,6 @@ namespace BGMPlayerCore
                 default:
                     break;
             }
-            IsPause = false;
             state.Value = PlayingState.Playing;
         }
 
