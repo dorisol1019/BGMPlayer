@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BGMPlayerCore
 {
-    public interface IBGMPlayerCore : IDisposable
+    public interface IBGMPlayerCoreApi : IDisposable
     {
         Task Play(BGM bgm);
 

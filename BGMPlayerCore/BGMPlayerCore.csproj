@@ -83,10 +83,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BGM.cs" />
-    <Compile Include="BGMPlayerCore.cs" />
+    <Compile Include="BGMPlayerCoreApi.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="FileExtensionType.cs" />
-    <Compile Include="IBGMPlayerCore.cs" />
+    <Compile Include="IBGMPlayerCoreApi.cs" />
     <Compile Include="PlayingState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WpfAudioPlayer.cs" />

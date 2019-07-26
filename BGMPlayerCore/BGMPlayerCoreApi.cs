@@ -15,9 +15,9 @@ using Reactive.Bindings;
 using Reactive.Bindings.ObjectExtensions;
 using Reactive.Bindings.Notifiers;
 
-namespace BGMPlayerCore.Api
+namespace BGMPlayerCore
 {
-    public class BGMPlayerCore : IBGMPlayerCore
+    public class BGMPlayerCoreApi : IBGMPlayerCoreApi
     {
         #region private変数
         private IGuruGuruSmf4Api _ggs = Ggs4Dll.GetInstance();
@@ -42,7 +42,7 @@ namespace BGMPlayerCore.Api
         public ReactivePropertySlim<PlayingState> State { get; }
         #endregion
 
-        public BGMPlayerCore()
+        public BGMPlayerCoreApi()
         {
             _ggs.OpenDevice(-1, (IntPtr)0);
 
