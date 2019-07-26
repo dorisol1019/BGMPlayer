@@ -8,14 +8,14 @@ using GuruGuruSmf;
 using WpfAudioPlayer;
 using System.IO;
 using System.Collections;
-using BGMPlayerCore.Extension;
+using BGMPlayerCore;
 using System.Reactive.Linq;
 using System.ComponentModel;
 using Reactive.Bindings;
 using Reactive.Bindings.ObjectExtensions;
 using Reactive.Bindings.Notifiers;
 
-namespace BGMPlayerCore
+namespace BGMPlayerCore.Api
 {
     public class BGMPlayerCore : IBGMPlayerCore
     {

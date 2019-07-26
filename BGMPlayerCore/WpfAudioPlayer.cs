@@ -7,7 +7,7 @@ using NAudio.CoreAudioApi;
 
 using System.Runtime.InteropServices;
 
-using BGMPlayerCore.Extension;
+using BGMPlayerCore;
 
 namespace WpfAudioPlayer
 {
