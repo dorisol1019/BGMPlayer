@@ -23,16 +23,6 @@ namespace WpfAudioPlayer
         private WasapiOut2 _wasApi;
         private FileStream fs = null;
         private MemoryStream ms = null;
-        /// <summary>
-        /// インスタンスを初期化します。
-        /// </summary>
-        /// <param name="fileName">ファイルへのパス。</param>
-        /// <exception cref="FileNotFoundException">ファイルが存在しない。</exception>
-        /// <exception cref="Exception">ストリームの生成に失敗した。</exception>
-        public AudioPlayer(string fileName, FileExtensionType ext)
-        {
-            
-        }
         public AudioPlayer() { }
 
         public async Task Play(string file, FileExtensionType ext)
