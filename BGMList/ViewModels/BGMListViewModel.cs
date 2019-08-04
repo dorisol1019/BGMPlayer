@@ -3,7 +3,10 @@ using Prism.Mvvm;
 using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
+using BGMList.Models;
+using System.Reactive.Linq;
 
 namespace BGMList.ViewModels
 {
@@ -16,8 +19,12 @@ namespace BGMList.ViewModels
         public AsyncReactiveCommand PlayCommand { get; }
 
         public ReactiveCommand PauseOrRestartCommand { get; }
-        public BGMListViewModel()
+
+        private readonly IAllBGMs allBGMs;
+        public BGMListViewModel(IAllBGMs allBGMs)
         {
+            this.allBGMs = allBGMs;
+            BGMs = allBGMs.BGMs.Select(e => e.Select(f => f.FileName).OrderBy(f => f, new CompareNaural())).SelectMany(e => e.ToObservable()).ToReadOnlyReactiveCollection();
         }
     }
 }
