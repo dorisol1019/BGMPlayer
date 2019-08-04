@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="BGMListModule.cs" />
     <Compile Include="Models\AllBGMs.cs" />
+    <Compile Include="Models\CompareNatural.cs" />
     <Compile Include="Models\IAllBGMs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
