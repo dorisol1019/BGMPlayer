@@ -7,6 +7,7 @@ using System.Collections;
 using System.Linq;
 using BGMList.Models;
 using System.Reactive.Linq;
+using BGMPlayer;
 
 namespace BGMList.ViewModels
 {
@@ -21,8 +22,12 @@ namespace BGMList.ViewModels
         public ReactiveCommand PauseOrRestartCommand { get; }
 
         private readonly IAllBGMs allBGMs;
-        public BGMListViewModel(IAllBGMs allBGMs)
+
+        private readonly IBGMPlayerService bgmPlayerService;
+        public BGMListViewModel(IBGMPlayerService bgmPlayerService,IAllBGMs allBGMs)
         {
+            this.bgmPlayerService = bgmPlayerService;
+
             this.allBGMs = allBGMs;
             BGMs = allBGMs.BGMs.Select(e => e.Select(f => f.FileName).OrderBy(f => f, new CompareNaural())).SelectMany(e => e.ToObservable()).ToReadOnlyReactiveCollection();
         }
