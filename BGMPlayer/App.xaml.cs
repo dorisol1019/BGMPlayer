@@ -1,4 +1,5 @@
 ﻿using BGMPlayer.Views;
+using BGMPlayerCore;
 using Prism.Ioc;
 using Prism.Unity;
 using System.Linq;
@@ -19,7 +20,8 @@ namespace BGMPlayer
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            
+            containerRegistry.RegisterSingleton<IBGMPlayerCoreApi, BGMPlayerCoreApi>();
+            containerRegistry.RegisterSingleton<IBGMPlayerService, BGMPlayerService>();
         }
 
     }

@@ -63,9 +63,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BGM.cs" />
+    <Compile Include="BGMPlayerService.cs" />
     <Compile Include="CompareNatural.cs" />
-    <Compile Include="FileExtensionType.cs" />
+    <Compile Include="IBGMPlayerService.cs" />
     <Compile Include="Models\OpenFolderDialog.cs" />
     <Compile Include="Models\VersionInfo.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
@@ -77,13 +77,10 @@
     <Compile Include="Views\VersionInfoDialog.xaml.cs">
       <DependentUpon>VersionInfoDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WpfAudioPlayer.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BGMPlayerCore.cs" />
-    <Compile Include="GuruGuruSMF4.cs" />
     <Page Include="Views\MainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>XamlIntelliSenseFileGenerator</Generator>
@@ -120,9 +117,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="GuruGuruSMF4.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Resource Include="使用したライブラリ.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
@@ -171,6 +165,12 @@
     <PackageReference Include="System.Threading.Tasks.Extensions">
       <Version>4.5.3</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BGMPlayerCore\BGMPlayerCore.csproj">
+      <Project>{cdee564f-e72d-4c27-8190-6f8c63eaeb4e}</Project>
+      <Name>BGMPlayerCore</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

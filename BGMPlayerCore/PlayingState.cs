@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BGMPlayer.Extension
+namespace BGMPlayerCore
 {
-    public enum FileExtensionType
+    public enum PlayingState
     {
-        midi, wave, ogg, mp3, other
+        Playing,
+        Stopping,
+        Pausing,
     }
 }

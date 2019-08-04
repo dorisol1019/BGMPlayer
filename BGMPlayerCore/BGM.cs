@@ -1,20 +1,23 @@
-﻿using BGMPlayer.Extension;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BGMPlayer
+namespace BGMPlayerCore
 {
     public class BGM
     {
         public string FileName { get; }
+
+        public string FullPath { get; }
         public FileExtensionType FileExtension { get; }
 
-        public BGM(string fileName,FileExtensionType fileExtension)
+        public BGM(string filepath,FileExtensionType fileExtension)
         {
-            FileName = fileName;
+            FullPath = Path.GetFullPath(filepath);
+            FileName = Path.GetFileName(filepath);
             FileExtension = fileExtension;
         }
     }
