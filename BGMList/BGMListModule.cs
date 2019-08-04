@@ -2,6 +2,7 @@
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
+using BGMList.Models;
 
 namespace BGMList
 {
@@ -15,7 +16,7 @@ namespace BGMList
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            
+            containerRegistry.Register<IAllBGMs, AllBGMs>();
         }
     }
 }
