@@ -63,9 +63,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BGMPlayerService.cs" />
     <Compile Include="CompareNatural.cs" />
-    <Compile Include="IBGMPlayerService.cs" />
     <Compile Include="Models\OpenFolderDialog.cs" />
     <Compile Include="Models\VersionInfo.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
@@ -170,6 +168,10 @@
     <ProjectReference Include="..\BGMPlayerCore\BGMPlayerCore.csproj">
       <Project>{cdee564f-e72d-4c27-8190-6f8c63eaeb4e}</Project>
       <Name>BGMPlayerCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BGMPlayerService\BGMPlayerService.csproj">
+      <Project>{10dbda67-12b8-4aa4-b871-4afb8f4575cb}</Project>
+      <Name>BGMPlayerService</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
