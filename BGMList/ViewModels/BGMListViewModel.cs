@@ -9,7 +9,7 @@ namespace BGMList.ViewModels
 {
     public class BGMListViewModel : BindableBase
     {
-        public ReactiveCollection<string> BGMs { get; }
+        public ReadOnlyReactiveCollection<string> BGMs { get; }
         public ReactiveProperty<string> SelectedBGMIndex { get; set; }
         public ReactivePropertySlim<string> SelectedBGM { get; set; }
 
@@ -18,7 +18,6 @@ namespace BGMList.ViewModels
         public ReactiveCommand PauseOrRestartCommand { get; }
         public BGMListViewModel()
         {
-
         }
     }
 }
