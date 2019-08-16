@@ -1,6 +1,8 @@
-﻿using BGMPlayer.Views;
+﻿using BGMList;
+using BGMPlayer.Views;
 using BGMPlayerCore;
 using Prism.Ioc;
+using Prism.Modularity;
 using Prism.Unity;
 using System.Linq;
 using System.Threading;
@@ -24,5 +26,10 @@ namespace BGMPlayer
             containerRegistry.RegisterSingleton<IBGMPlayerService, BGMPlayerService>();
         }
 
+        protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
+        {
+            base.ConfigureModuleCatalog(moduleCatalog);
+            moduleCatalog.AddModule<BGMListModule>(InitializationMode.WhenAvailable);
+        }
     }
 }
