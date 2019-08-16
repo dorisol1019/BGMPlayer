@@ -57,30 +57,7 @@
             </MenuItem>
 
         </Menu>
-        <ListBox Name="BGMList" ItemsSource="{Binding BGMList.Value,UpdateSourceTrigger=PropertyChanged}" FontSize="10pt" Margin="2,2,2,2"
-                 SelectedIndex="{Binding BGMSelectedIndex.Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                 SelectedItem="{Binding BGMSelectedItem.Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                 SelectionMode="Single" HorizontalContentAlignment="Stretch"
-                 Grid.Column="0" Grid.Row="1"                 
-                 >
-            <ListBox.InputBindings>
-                <KeyBinding Command="{Binding CtrlLeftCommand}" Gesture="Ctrl+Left"></KeyBinding>
-                <KeyBinding Command="{Binding CtrlRightCommand}" Gesture="Ctrl+Right"></KeyBinding>
-                <KeyBinding Command="{Binding SpaceCommand}" Gesture="Space"></KeyBinding>
-                <KeyBinding Command="{Binding EnterCommand}" Gesture="Enter"></KeyBinding>
-            </ListBox.InputBindings>
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <ContentControl Content="{Binding}">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="MouseDoubleClick">
-                                <i:InvokeCommandAction Command="{Binding Path=DataContext.MouseDoubleClickCommand, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}}"></i:InvokeCommandAction>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </ContentControl>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        <ContentControl prism:RegionManager.RegionName="BGMList" Grid.Row="1" />
         <Grid Grid.Row="1" Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.5*" />
