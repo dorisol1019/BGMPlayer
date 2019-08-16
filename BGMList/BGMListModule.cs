@@ -16,7 +16,7 @@ namespace BGMList
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.Register<IAllBGMs, AllBGMs>();
+            containerRegistry.RegisterInstance<IAllBGMs>(new AllBGMs());
         }
     }
 }
