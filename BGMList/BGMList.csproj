@@ -53,6 +53,7 @@
     <Compile Include="Models\AllBGMs.cs" />
     <Compile Include="Models\CompareNatural.cs" />
     <Compile Include="Models\IAllBGMs.cs" />
+    <Compile Include="Models\IPlaylist.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
