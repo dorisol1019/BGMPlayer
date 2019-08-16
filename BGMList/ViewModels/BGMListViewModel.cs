@@ -31,8 +31,13 @@ namespace BGMList.ViewModels
             this.allBGMs = allBGMs;
             BGMs = allBGMs.BGMs.Select(e => e.Select(f => f.FileName).OrderBy(f => f, new CompareNaural())).SelectMany(e => e.ToObservable()).ToReadOnlyReactiveCollection();
 
+            SelectedBGM = new ReactivePropertySlim<string>("");
+            SelectedBGMIndex = new ReactiveProperty<string>("");
+
+            PlayCommand = new AsyncReactiveCommand();
             PlayCommand.Subscribe(() => bgmPlayerService.Play(allBGMs.BGMs.Value.First(e => e.FileName == SelectedBGM.Value)));
 
+            PauseOrRestartCommand = new ReactiveCommand();
             PauseOrRestartCommand.Subscribe(bgmPlayerService.PauseOrReStart);
         }
     }
