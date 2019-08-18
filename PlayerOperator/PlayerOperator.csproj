@@ -78,6 +78,14 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BGMList\BGMList.csproj">
+      <Project>{82659a73-d138-4d71-8b06-70f659d1e520}</Project>
+      <Name>BGMList</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BGMPlayerCore\BGMPlayerCore.csproj">
+      <Project>{CDEE564F-E72D-4C27-8190-6F8C63EAEB4E}</Project>
+      <Name>BGMPlayerCore</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BGMPlayerService\BGMPlayerService.csproj">
       <Project>{10dbda67-12b8-4aa4-b871-4afb8f4575cb}</Project>
       <Name>BGMPlayerService</Name>
