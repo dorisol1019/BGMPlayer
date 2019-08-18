@@ -173,6 +173,10 @@
       <Project>{10dbda67-12b8-4aa4-b871-4afb8f4575cb}</Project>
       <Name>BGMPlayerService</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PlayerOperator\PlayerOperator.csproj">
+      <Project>{486E25CD-6A76-44BA-8A9B-A4D44CA2BED6}</Project>
+      <Name>PlayerOperator</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BGMList\BGMList.csproj">
