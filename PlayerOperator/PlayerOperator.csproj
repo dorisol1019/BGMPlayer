@@ -80,6 +80,9 @@
   <ItemGroup />
   <ItemGroup>
     <PackageReference Include="Prism.Wpf" Version="7.1.0.431&#xD;" />
+    <PackageReference Include="ReactiveProperty">
+      <Version>6.0.3</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\PlayerOperator.xaml">
