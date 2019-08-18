@@ -4,14 +4,14 @@ using System.Globalization;
 
 namespace System.Collections
 {
-    class CompareNaural : IComparer<string>
+    public class CompareNaural : IComparer<string>
     {
         public int Compare(string x, string y)
         {
             return CompareExtension.CompareNatural(x, y);
         }
     }
-    static class CompareExtension
+    static public class CompareExtension
     {
         public static int CompareNatural(string strA, string strB)
         {
