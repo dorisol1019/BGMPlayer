@@ -77,7 +77,12 @@
     </None>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\BGMPlayerService\BGMPlayerService.csproj">
+      <Project>{10dbda67-12b8-4aa4-b871-4afb8f4575cb}</Project>
+      <Name>BGMPlayerService</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Prism.Wpf" Version="7.1.0.431&#xD;" />
     <PackageReference Include="ReactiveProperty">
