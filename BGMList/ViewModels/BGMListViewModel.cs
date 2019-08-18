@@ -24,14 +24,14 @@ namespace BGMList.ViewModels
         private readonly IAllBGMs allBGMs;
 
         private readonly IBGMPlayerService bgmPlayerService;
-        public BGMListViewModel(IBGMPlayerService bgmPlayerService,IAllBGMs allBGMs)
+        public BGMListViewModel(IBGMPlayerService bgmPlayerService, IAllBGMs allBGMs, ISelectedBGM selectedBGM)
         {
             this.bgmPlayerService = bgmPlayerService;
 
             this.allBGMs = allBGMs;
             BGMs = allBGMs.BGMs.Select(e => e.Select(f => f.FileName).OrderBy(f => f, new CompareNaural())).SelectMany(e => e.ToObservable()).ToReadOnlyReactiveCollection();
 
-            SelectedBGM = new ReactivePropertySlim<string>("");
+            SelectedBGM = selectedBGM.selectedBGM;
             SelectedBGMIndex = new ReactiveProperty<int>(0);
 
             PlayCommand = new AsyncReactiveCommand();
