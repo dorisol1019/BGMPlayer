@@ -54,7 +54,9 @@
     <Compile Include="Models\CompareNatural.cs" />
     <Compile Include="Models\IAllBGMs.cs" />
     <Compile Include="Models\IPlaylist.cs" />
+    <Compile Include="Models\ISelectedBGM.cs" />
     <Compile Include="Models\OrderedPlaylist.cs" />
+    <Compile Include="Models\SelectedBGM.cs" />
     <Compile Include="Models\ShuffledPlaylist.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
