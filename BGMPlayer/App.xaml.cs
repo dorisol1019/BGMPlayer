@@ -1,6 +1,8 @@
 ﻿using BGMList;
 using BGMPlayer.Views;
 using BGMPlayerCore;
+using PlayerOperator;
+using PlayerOperator.Views;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Unity;
@@ -30,6 +32,7 @@ namespace BGMPlayer
         {
             base.ConfigureModuleCatalog(moduleCatalog);
             moduleCatalog.AddModule<BGMListModule>(InitializationMode.WhenAvailable);
+            moduleCatalog.AddModule<PlayerOperatorModule>(InitializationMode.WhenAvailable);
         }
     }
 }
