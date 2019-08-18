@@ -49,6 +49,9 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\IPlaylist.cs" />
+    <Compile Include="Models\OrderedPlaylist.cs" />
+    <Compile Include="Models\ShuffledPlaylist.cs" />
     <Compile Include="PlayerOperatorModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
