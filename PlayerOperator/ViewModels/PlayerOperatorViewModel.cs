@@ -1,4 +1,5 @@
-﻿using Prism.Commands;
+﻿using BGMPlayer;
+using Prism.Commands;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -8,9 +9,10 @@ namespace PlayerOperator.ViewModels
 {
     public class PlayerOperatorViewModel : BindableBase
     {
-        public PlayerOperatorViewModel()
+        private IBGMPlayerService bgmPlayerService;
+        public PlayerOperatorViewModel(IBGMPlayerService bgmPlayerService)
         {
-
+            this.bgmPlayerService = bgmPlayerService;
         }
     }
 }
