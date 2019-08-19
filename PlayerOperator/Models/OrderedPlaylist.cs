@@ -11,14 +11,15 @@ namespace PlayerOperator.Models
     {
         private List<BGM> playlist;
         private int currentIndex = 0;
-        public OrderedPlaylist(IEnumerable<BGM> source)
+        public OrderedPlaylist(IEnumerable<BGM> source, BGM currentBGM)
         {
             playlist = new List<BGM>(source);
+            currentIndex = playlist.FindIndex(e => e == currentBGM);
         }
         public BGM Next()
         {
-            int index = currentIndex % playlist.Count;
             currentIndex++;
+            int index = currentIndex % playlist.Count;
 
             if(currentIndex >= playlist.Count)
             {
