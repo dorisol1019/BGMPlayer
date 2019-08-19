@@ -9,6 +9,6 @@ namespace BGMList.Models
 {
     public class SelectedBGM : ISelectedBGM
     {
-        public ReactivePropertySlim<string> selectedBGM { get; set; }
+        public ReactivePropertySlim<string> selectedBGM { get; set; } = new ReactivePropertySlim<string>("");
     }
 }
