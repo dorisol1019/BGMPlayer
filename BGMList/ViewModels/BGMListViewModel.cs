@@ -8,6 +8,8 @@ using System.Linq;
 using BGMList.Models;
 using System.Reactive.Linq;
 using BGMPlayer;
+using BGMPlayerService;
+using BGMPlayerCore;
 
 namespace BGMList.ViewModels
 {
@@ -24,7 +26,7 @@ namespace BGMList.ViewModels
         private readonly IAllBGMs allBGMs;
 
         private readonly IBGMPlayerService bgmPlayerService;
-        public BGMListViewModel(IBGMPlayerService bgmPlayerService, IAllBGMs allBGMs, ISelectedBGM selectedBGM)
+        public BGMListViewModel(IBGMPlayerService bgmPlayerService, IAllBGMs allBGMs, ISelectedBGM selectedBGM, IUserOperationNotification<BGM> playingBGMNotification)
         {
             this.bgmPlayerService = bgmPlayerService;
 
@@ -35,7 +37,12 @@ namespace BGMList.ViewModels
             SelectedBGMIndex = new ReactiveProperty<int>(0);
 
             PlayCommand = new AsyncReactiveCommand();
-            PlayCommand.Subscribe(() => bgmPlayerService.Play(allBGMs.BGMs.Value.First(e => e.FileName == SelectedBGM.Value)));
+            PlayCommand.Subscribe(() =>
+            {
+                var bgm = allBGMs.BGMs.Value.First(e => e.FileName == SelectedBGM.Value);
+                playingBGMNotification.Notification.Value = bgm;
+                return bgmPlayerService.Play(bgm);
+            });
 
             PauseOrRestartCommand = new ReactiveCommand();
             PauseOrRestartCommand.Subscribe(bgmPlayerService.PauseOrReStart);
