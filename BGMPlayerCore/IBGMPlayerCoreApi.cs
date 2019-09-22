@@ -22,5 +22,7 @@ namespace BGMPlayerCore
         ReadOnlyReactivePropertySlim<PlayingState> State { get; }
 
         ReadOnlyReactivePropertySlim<int> LoopCount { get; }
+
+        ReadOnlyReactivePropertySlim<BGM> PlayingBGM { get; }
     }
 }

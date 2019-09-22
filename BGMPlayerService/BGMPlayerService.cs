@@ -19,6 +19,8 @@ namespace BGMPlayer
 
         public ReadOnlyReactivePropertySlim<bool> IsPlaying { get; }
 
+        public ReadOnlyReactivePropertySlim<BGM> PlayingBGM { get; }
+
         private ReactivePropertySlim<bool> isPlaying = default;
 
         public BGMPlayerService(IBGMPlayerCoreApi bgmPlayerCore)
@@ -31,6 +33,8 @@ namespace BGMPlayer
 
             isPlaying = new ReactivePropertySlim<bool>(false);
             IsPlaying = isPlaying.ToReadOnlyReactivePropertySlim();
+
+            PlayingBGM = this.bgmPlayerCore.PlayingBGM;
         }
         public async Task Play(BGM bgm)
         {
