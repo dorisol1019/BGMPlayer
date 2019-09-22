@@ -151,6 +151,24 @@ namespace PlayerOperator.ViewModels
                     playlist = new OrderedPlaylist(bgms, bgm);
                 }
             });
+
+            this.player.State.Subscribe(state =>
+            {
+                switch (player.State.Value)
+                {
+                    case PlayingState.Playing:
+                        this.PauseOrRestartButtonContent.Value = "一時停止";
+                        break;
+                    case PlayingState.Stopping:
+                        this.PauseOrRestartButtonContent.Value = "";
+                        break;
+                    case PlayingState.Pausing:
+                        this.PauseOrRestartButtonContent.Value = "停止解除";
+                        break;
+                    default:
+                        break;
+                }
+            });
         }
 
         private IPlaylist playlist;
@@ -194,7 +212,6 @@ namespace PlayerOperator.ViewModels
         }
         private async Task Play(BGM bgm)
         {
-
             if (IsBusy.Value) return;
             using (BusyNotifier.ProcessStart())
             {
@@ -202,41 +219,17 @@ namespace PlayerOperator.ViewModels
             }
 
             ChangeVolume();
-            PauseOrRestartButtonContent.Value = "一時停止";
         }
 
         private void Stop()
         {
             player.Stop();
-            PauseOrRestartButtonContent.Value = "";
         }
 
         private void PauseOrRestart()
         {
-            if (player.IsPlaying.Value)
-            {
-                if (player.State.Value == PlayingState.Pausing)
-                {
-                    Restart();
-                }
-                else if (player.State.Value == PlayingState.Playing)
-                {
-                    Pause();
-                }
-            }
             player.PauseOrReStart();
         }
-
-        private void Pause()
-        {
-            PauseOrRestartButtonContent.Value = "停止解除";
-        }
-
-        private void Restart()
-        {
-            PauseOrRestartButtonContent.Value = "一時停止";
-        }
-
         private void ChangeVolume()
         {
             player.ChangeVolume((int)Volume.Value);
