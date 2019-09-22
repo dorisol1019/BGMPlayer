@@ -33,6 +33,8 @@ namespace BGMPlayer.ViewModels
         public ICommand Shutdown { get; }
         public ICommand OpenFolderCommand { get; }
 
+        public ICommand WindowClosedCommand { get; }
+
         private IAllBGMs allBGMs;
 
         public MainWindowViewModel(IBGMPlayerService bgmPlayerService, IAllBGMs allBGMs)
@@ -66,6 +68,8 @@ namespace BGMPlayer.ViewModels
             );
 
             OpenFolderCommand = new DelegateCommand(() => OpenFolder());
+
+            WindowClosedCommand = new DelegateCommand(() => bgmPlayerService.Dispose());
         }
 
         private InteractionRequest<INotification> _interactionRequest;
