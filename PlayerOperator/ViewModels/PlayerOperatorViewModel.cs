@@ -36,6 +36,11 @@ namespace PlayerOperator.ViewModels
             IsIdle = BusyNotifier.Inverse().ToReadOnlyReactiveProperty();
 
             bgms = allBGMs.BGMs.Value.OrderBy(e => e.FileName, new CompareNaural()).ToList();
+            allBGMs.BGMs.Subscribe(bgms =>
+            {
+                this.bgms = bgms.OrderBy(e => e.FileName, new CompareNaural()).ToList();
+            });
+
 
             BGMList = new ReactiveProperty<IEnumerable<string>>(bgms.Select(e => e.FileName));
 
