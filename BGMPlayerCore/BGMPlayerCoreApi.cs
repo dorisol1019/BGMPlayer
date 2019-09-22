@@ -23,7 +23,7 @@ namespace BGMPlayerCore
         private IGuruGuruSmf4Api _ggs = Ggs4Dll.GetInstance();
         private AudioPlayer _audioPlayer;
 
-        private BGM _selectedBGM = null;
+        private ReactivePropertySlim<BGM> playingBGM;
         private bool isLoopableBGM = false;
 
         private ReactivePropertySlim<int> loopCount = default;
@@ -40,11 +40,13 @@ namespace BGMPlayerCore
         #endregion
 
         #region　プロパティ
-        private bool IsPlaying => _selectedBGM != null;
+        private bool IsPlaying => playingBGM.Value != null;
 
         public ReadOnlyReactivePropertySlim<int> LoopCount { get; private set; }
 
         public ReadOnlyReactivePropertySlim<PlayingState> State { get; }
+
+        public ReadOnlyReactivePropertySlim<BGM> PlayingBGM { get; }
         #endregion
 
         public BGMPlayerCoreApi()
@@ -53,6 +55,9 @@ namespace BGMPlayerCore
 
             state = new ReactivePropertySlim<PlayingState>(PlayingState.Stopping);
             State = state.ToReadOnlyReactivePropertySlim();
+
+            playingBGM = new ReactivePropertySlim<BGM>(null);
+            PlayingBGM = new ReadOnlyReactivePropertySlim<BGM>(playingBGM);
 
             _audioPlayer = new AudioPlayer();
 
@@ -111,15 +116,15 @@ namespace BGMPlayerCore
                 default:
                     return;
             }
+            playingBGM.Value = bgm;
             state.Value = PlayingState.Playing;
-            _selectedBGM = bgm;
             ChangeVolume(volume);
         }
         
         public void Stop()
         {
-            if (_selectedBGM == null) return;
-            switch (_selectedBGM.FileExtension)
+            if (playingBGM.Value == null) return;
+            switch (playingBGM.Value.FileExtension)
             {
                 case FileExtensionType.midi:
                     PlayerStatus status = _ggs.GetPlayerStatus();
@@ -137,7 +142,7 @@ namespace BGMPlayerCore
                 default:
                     return;
             }
-            _selectedBGM = null;
+            playingBGM.Value = null;
             state.Value = PlayingState.Stopping;
             loopCount.Value = 0;
         }
@@ -145,7 +150,7 @@ namespace BGMPlayerCore
         public void Pause()
         {
             if (!IsPlaying) return;
-            switch (_selectedBGM.FileExtension)
+            switch (playingBGM.Value.FileExtension)
             {
                 case FileExtensionType.midi:
                     _ggs.Pause();
@@ -165,7 +170,7 @@ namespace BGMPlayerCore
         public void ReStart()
         {
             if (!IsPlaying) return;
-            switch (_selectedBGM.FileExtension)
+            switch (playingBGM.Value.FileExtension)
             {
                 case FileExtensionType.midi:
                     _ggs.Restart();
@@ -192,7 +197,7 @@ namespace BGMPlayerCore
         public void ChangeVolume(int value)
         {
             if (!IsPlaying) return;
-            if (_selectedBGM.FileExtension == FileExtensionType.midi)
+            if (playingBGM.Value.FileExtension == FileExtensionType.midi)
             {
                 if (value == 0)
                 {
@@ -203,7 +208,7 @@ namespace BGMPlayerCore
                     _ggs.SetMasterVolume(-5 * (10 - value));
                 }
             }
-            else if (_selectedBGM.FileExtension != FileExtensionType.other)
+            else if (playingBGM.Value.FileExtension != FileExtensionType.other)
             {
                 _audioPlayer.Volume = value * 0.1f;
             }
