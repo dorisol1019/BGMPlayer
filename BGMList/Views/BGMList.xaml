@@ -6,7 +6,7 @@
              
              prism:ViewModelLocator.AutoWireViewModel="True">
     <Grid>
-        <ListBox Name="BGMListBox" ItemsSource="{Binding BGMs,UpdateSourceTrigger=PropertyChanged}" FontSize="10pt" Margin="2,2,2,2"
+        <ListBox Name="BGMListBox" ItemsSource="{Binding BGMs.Value,UpdateSourceTrigger=PropertyChanged}" FontSize="10pt" Margin="2,2,2,2"
                  SelectedIndex="{Binding SelectedBGMIndex.Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                  SelectedItem="{Binding SelectedBGM.Value,Mode=OneWayToSource,UpdateSourceTrigger=PropertyChanged}"
                  SelectionMode="Single" HorizontalContentAlignment="Stretch" >

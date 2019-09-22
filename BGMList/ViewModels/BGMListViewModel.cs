@@ -15,7 +15,7 @@ namespace BGMList.ViewModels
 {
     public class BGMListViewModel : BindableBase
     {
-        public ReadOnlyReactiveCollection<string> BGMs { get; }
+        public ReadOnlyReactiveProperty<List<string>> BGMs { get; }
         public ReactiveProperty<int> SelectedBGMIndex { get; set; }
         public ReactivePropertySlim<string> SelectedBGM { get; set; }
 
@@ -31,7 +31,7 @@ namespace BGMList.ViewModels
             this.bgmPlayerService = bgmPlayerService;
 
             this.allBGMs = allBGMs;
-            BGMs = allBGMs.BGMs.Select(e => e.Select(f => f.FileName).OrderBy(f => f, new CompareNaural())).SelectMany(e => e.ToObservable()).ToReadOnlyReactiveCollection();
+            BGMs = allBGMs.BGMs.Select(e => e.Select(f => f.FileName).OrderBy(f => f, new CompareNaural()).ToList()).ToReadOnlyReactiveProperty();
 
             SelectedBGM = selectedBGM.selectedBGM;
             SelectedBGMIndex = new ReactiveProperty<int>(0);
