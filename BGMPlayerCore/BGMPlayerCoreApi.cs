@@ -35,6 +35,8 @@ namespace BGMPlayerCore
         private ReadOnlyReactivePropertySlim<int> audioLoopCount = default;
 
         private BusyNotifier loopCountUpdate = new BusyNotifier();
+
+        private int volume = 5;
         #endregion
 
         #region　プロパティ
@@ -111,6 +113,7 @@ namespace BGMPlayerCore
             }
             state.Value = PlayingState.Playing;
             _selectedBGM = bgm;
+            ChangeVolume(volume);
         }
         
         public void Stop()
@@ -204,6 +207,8 @@ namespace BGMPlayerCore
             {
                 _audioPlayer.Volume = value * 0.1f;
             }
+
+            this.volume = value;
         }
     }
 }
