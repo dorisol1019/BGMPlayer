@@ -34,12 +34,28 @@ namespace BGMPlayer.ViewModels
         public ICommand RestartCommand { get; }
 
 
-        public MainWindowViewModel(IBGMPlayerService player)
+        public MainWindowViewModel(IBGMPlayerService bgmPlayerService)
         {
             Title = new ReactiveProperty<string>(_defaultTitle);
 
             Shutdown = new DelegateCommand(() => Application.Current.Shutdown());
 
+            bgmPlayerService.State.Subscribe(state => {
+                switch (state)
+                {
+                    case PlayingState.Playing:
+                        this.Title.Value = $"再生中 : {bgmPlayerService.PlayingBGM.Value.FileName}";
+                        break;
+                    case PlayingState.Stopping:
+                        this.Title.Value = _defaultTitle;
+                        break;
+                    case PlayingState.Pausing:
+                        this.Title.Value = $"一時停止 : {bgmPlayerService.PlayingBGM.Value.FileName}";
+                        break;
+                    default:
+                        break;
+                }
+            });
 
             _interactionRequest = new InteractionRequest<INotification>();
             PopUpVersionInfoCommand = new DelegateCommand(() =>
