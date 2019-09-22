@@ -1,4 +1,5 @@
 ﻿using BGMList;
+using BGMList.Models;
 using BGMPlayer.Views;
 using BGMPlayerCore;
 using BGMPlayerService;
@@ -25,6 +26,10 @@ namespace BGMPlayer
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.RegisterInstance<IAllBGMs>(new AllBGMs());
+            containerRegistry.RegisterInstance<ISelectedBGM>(new SelectedBGM());
+
+
             containerRegistry.RegisterSingleton<IBGMPlayerCoreApi, BGMPlayerCoreApi>();
             containerRegistry.RegisterSingleton<IBGMPlayerService, BGMPlayerService>();
 
