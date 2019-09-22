@@ -18,6 +18,8 @@ namespace BGMList.Models
         {
             bgms = new ReactiveProperty<List<BGM>>();
             BGMs = new ReadOnlyReactiveProperty<List<BGM>>(bgms);
+
+            this.Refresh("./Playlist");
         }
         public void Refresh(string path)
         {

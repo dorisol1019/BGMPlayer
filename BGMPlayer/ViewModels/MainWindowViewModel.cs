@@ -25,15 +25,9 @@ namespace BGMPlayer.ViewModels
     {
 
         public ReactiveProperty<string> Title { get; }
-        public ReactiveProperty<IEnumerable<string>> BGMList { get; }
-        public ReactiveProperty<int> BGMSelectedIndex { get; }
-        public ReactiveProperty<string> BGMSelectedItem { get; }
-
-        private string selectedBGM = default;
 
         const string _defaultTitle = "BGM鳴ら～すV3";
         
-        private List<BGM> bgms = null;
 
         public ICommand Shutdown { get; }
         public ICommand OpenFolderCommand { get; }
@@ -44,19 +38,6 @@ namespace BGMPlayer.ViewModels
         public ICommand EnterCommand { get; }
         public ICommand MouseDoubleClickCommand { get; }
         public ICommand WindowClosedCommand { get; }
-
-        public ReactiveCommand PlayCommand { get; }
-        public ReactiveCommand StopCommand { get; }
-        public ReactiveCommand PauseOrRestartCommand { get; }
-        public ReactiveCommand ChangeVolumeCommand { get; }
-        public ReactiveProperty<double> Volume { get; }
-        public ReactiveProperty<string> PauseOrRestartButtonContent { get; private set; }
-        public ReadOnlyReactiveProperty<bool> TopMost { get; }
-        public ReactiveProperty<bool> IsTopMostWindow { get; }
-
-        private BusyNotifier BusyNotifier { get; } = new BusyNotifier();
-        public ReadOnlyReactiveProperty<bool> IsBusy { get; }
-        public ReadOnlyReactiveProperty<bool> IsIdle { get; }
 
 
         public ReactiveProperty<string> LoopNumber_string { get; }
@@ -73,74 +54,12 @@ namespace BGMPlayer.ViewModels
         {
             Title = new ReactiveProperty<string>(_defaultTitle);
 
-            IsBusy = BusyNotifier.ToReadOnlyReactiveProperty();
-            IsIdle = BusyNotifier.Inverse().ToReadOnlyReactiveProperty();
-
-            string path = @"Playlist\";
-#if DEBUG
-            //path = @"testplaylist";
-#endif
-
             this.player = player;
 
-            bgms = GetBGMList(path);
-            if (bgms.Count == 0)
-            {
-                MessageBox.Show("Playlistフォルダに音楽ファイルがありません\n" +
-                    "音楽ファイルをPlaylistフォルダに入れてから起動して下さい", "Error!!");
-            }
-            BGMList = new ReactiveProperty<IEnumerable<string>>(bgms.Select(e => e.FileName));
-            BGMSelectedIndex = new ReactiveProperty<int>(0);
-            BGMSelectedItem = new ReactiveProperty<string>("");
 
             Shutdown = new DelegateCommand(() => Application.Current.Shutdown());
 
-            OpenFolderCommand = new DelegateCommand(OpenFolder);
-            RestartCommand = new DelegateCommand(() =>
-            {
-                System.Diagnostics.Process.Start(App.ResourceAssembly.Location, "/restart");
-                Application.Current.Shutdown();
-            });
 
-            PlayCommand = IsIdle.ToReactiveCommand();
-            PlayCommand.Subscribe(async () => await this.Play());
-            StopCommand = new ReactiveCommand();
-            StopCommand.Subscribe(Stop);
-
-            PauseOrRestartButtonContent = new ReactiveProperty<string>("");
-            PauseOrRestartCommand = new ReactiveCommand(PauseOrRestartButtonContent.Select(e => !string.IsNullOrEmpty(e)));
-            PauseOrRestartCommand.Subscribe(PauseOrRestart);
-
-            Volume = new ReactiveProperty<double>(5);
-            Volume.Subscribe(_ => ChangeVolume());
-
-            CtrlLeftCommand = new DelegateCommand(() =>
-             {
-                 if (Volume.Value > 0)
-                 {
-                     Volume.Value -= 1;
-                 }
-             }
-            );
-            CtrlRightCommand = new DelegateCommand(() =>
-            {
-                if (Volume.Value < 10)
-                {
-                    Volume.Value += 1;
-                }
-            }
-            );
-
-            EnterCommand = PlayCommand;
-            SpaceCommand = new DelegateCommand(() =>
-              {
-                  PauseOrRestart();
-              });
-
-            MouseDoubleClickCommand = PlayCommand;
-
-            IsTopMostWindow = new ReactiveProperty<bool>(false);
-            TopMost = IsTopMostWindow.ToReadOnlyReactiveProperty();
 
             WindowClosedCommand = new DelegateCommand(() => player.Dispose());
 
@@ -174,39 +93,12 @@ namespace BGMPlayer.ViewModels
             IsShuffleChecked = new ReactiveProperty<bool>(true);
             IsNextChecked = IsShuffleChecked.Inverse().ToReactiveProperty();
 
-            //LoopCount = player.ObserveProperty(x => x.LoopCount).ToReactiveProperty();
-
 
             _interactionRequest = new InteractionRequest<INotification>();
             PopUpVersionInfoCommand = new DelegateCommand(() =>
               _interactionRequest.Raise(new Notification { Title = "BGM鳴ら～すV3について" })
             );
 
-            player.LoopCounter.Where(_ => player.State.Value == PlayingState.Playing)
-                .Where(x => x > 0)
-                .Where(x => x >= LoopNumber.Value + 1)
-                .Where(_ => LoopOptionSelectedIndex.Value != 0)
-                .Subscribe(async count =>
-                {
-                    int index = -1;
-
-                    if (IsShuffleChecked.Value)
-                    {
-                        var rand = new Random();
-
-                        index = rand.Next(BGMList.Value.Count());
-                    }
-                    else if (IsNextChecked.Value)
-                    {
-                        var list = bgms.Select(e => e.FileName).ToList();
-                        index = list.FindIndex(e => e == selectedBGM) + 1;                        
-                        if (list.Count <= index) index = 0;
-                    }
-                    {
-                        BGMSelectedItem.Value = bgms[index].FileName;
-                        await Play(bgms[index]);
-                    }
-                });
         }
 
         private InteractionRequest<INotification> _interactionRequest;
@@ -215,110 +107,6 @@ namespace BGMPlayer.ViewModels
         public InteractionRequest<INotification> InteractionRequest
         {
             get => _interactionRequest;
-        }
-        
-        private Task Play()
-        {
-            return Play(bgms.FirstOrDefault(e => e.FileName == BGMSelectedItem.Value));
-        }
-        private async Task Play(BGM bgm)
-        {
-
-            if (IsBusy.Value) return;
-            Title.Value = "ロード中…";
-            using (BusyNotifier.ProcessStart())
-            {
-                await player.Play(bgm);
-            }
-
-            ChangeVolume();
-            PauseOrRestartButtonContent.Value = "一時停止";
-            selectedBGM = BGMSelectedItem.Value;
-            Title.Value = $"再生中:{selectedBGM}";
-        }
-
-        private void Stop()
-        {
-            player.Stop();
-            PauseOrRestartButtonContent.Value = "";
-            Title.Value = _defaultTitle;
-        }
-
-        private void PauseOrRestart()
-        {
-            if(player.IsPlaying.Value)
-            {
-                if(player.State.Value == PlayingState.Pausing)
-                {
-                    Restart();
-                }
-                else if (player.State.Value==PlayingState.Playing)
-                {
-                    Pause();
-                }
-            }
-            player.PauseOrReStart();
-        }
-
-        private void Pause()
-        {
-            PauseOrRestartButtonContent.Value = "停止解除";
-            Title.Value = $"一時停止中:{selectedBGM}";
-        }
-
-        private void Restart()
-        {
-            PauseOrRestartButtonContent.Value = "一時停止";
-            Title.Value = $"再生中:{selectedBGM}";
-        }
-
-        private void ChangeVolume()
-        {
-            player.ChangeVolume((int)Volume.Value);
-        }
-
-        void OpenFolder()
-        {
-            var dig = new Models.OpenFolderDialog();
-            dig.Show();
-
-            var folderName = dig.FolderName;
-            bgms = GetBGMList(folderName);
-            BGMList.Value = bgms.Select(e=>e.FileName);
-        }
-
-        private string[] _extensionNames = new[] { ".mid", ".midi", ".wav", ".wave", ".mp3", ".ogg" };
-
-        private List<BGM> GetBGMList(string path)
-        {
-            if (!Directory.Exists(path)) throw new DirectoryNotFoundException();
-            var files = Directory.GetFiles(path);
-            var enableFiles = new List<BGM>();
-            foreach (var file in files)
-            {
-                foreach (var extensionName in _extensionNames)
-                {
-                    var extension = Path.GetExtension(file);
-                    if (string.Compare(extension, extensionName, true) == 0)
-                    {
-                        FileExtensionType ext = FileExtensionType.other;
-                        extension = extension.ToLower();
-                        if (extension == ".mid" || extension == ".midi")
-                            ext = FileExtensionType.midi;
-                        if (extension == ".wav" || extension == ".wave")
-                            ext = FileExtensionType.wave;
-                        if (extension == ".mp3")
-                            ext = FileExtensionType.mp3;
-                        if (extension == ".ogg")
-                            ext = FileExtensionType.ogg;
-
-                        enableFiles.Add(new BGM(file, ext));
-                    }
-                }
-
-            }
-            enableFiles.Sort((e, f) => CompareExtension.CompareNatural(e.FileName, f.FileName));
-            return enableFiles;
         }
     }
 }
