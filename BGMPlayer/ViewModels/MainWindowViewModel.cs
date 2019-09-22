@@ -32,7 +32,6 @@ namespace BGMPlayer.ViewModels
 
         public ICommand Shutdown { get; }
         public ICommand OpenFolderCommand { get; }
-        public ICommand RestartCommand { get; }
 
         private IAllBGMs allBGMs;
 

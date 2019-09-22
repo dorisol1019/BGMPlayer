@@ -32,7 +32,6 @@
             <MenuItem Header="ファイル(_F)" HorizontalContentAlignment="Left">
                 <MenuItem Name="OpenFolderMenu" Header="フォルダを開く(_O)" InputGestureText="Ctrl+O" Command="{Binding OpenFolderCommand}"/>
                 <Separator />
-                <MenuItem Name="RestartMenu" Header="再起動(_S)" Command="{Binding RestartCommand}"></MenuItem>
                 <MenuItem Name="EndMenu" Header="終了(_X)" InputGestureText="Alt+F4" Command="{Binding Shutdown}"></MenuItem>
             </MenuItem>
             <MenuItem Header="ヘルプ(_H)" HorizontalContentAlignment="Left">
