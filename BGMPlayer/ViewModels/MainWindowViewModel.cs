@@ -18,6 +18,7 @@ using Prism.Interactivity.InteractionRequest;
 using System.IO;
 using BGMPlayerCore;
 using System.Collections;
+using BGMList.Models;
 
 namespace BGMPlayer.ViewModels
 {
@@ -33,12 +34,15 @@ namespace BGMPlayer.ViewModels
         public ICommand OpenFolderCommand { get; }
         public ICommand RestartCommand { get; }
 
+        private IAllBGMs allBGMs;
 
-        public MainWindowViewModel(IBGMPlayerService bgmPlayerService)
+        public MainWindowViewModel(IBGMPlayerService bgmPlayerService, IAllBGMs allBGMs)
         {
             Title = new ReactiveProperty<string>(_defaultTitle);
 
             Shutdown = new DelegateCommand(() => Application.Current.Shutdown());
+
+            this.allBGMs = allBGMs;
 
             bgmPlayerService.State.Subscribe(state => {
                 switch (state)
@@ -62,6 +66,7 @@ namespace BGMPlayer.ViewModels
               _interactionRequest.Raise(new Notification { Title = "BGM鳴ら～すV3について" })
             );
 
+            OpenFolderCommand = new DelegateCommand(() => OpenFolder());
         }
 
         private InteractionRequest<INotification> _interactionRequest;
@@ -70,6 +75,18 @@ namespace BGMPlayer.ViewModels
         public InteractionRequest<INotification> InteractionRequest
         {
             get => _interactionRequest;
+        }
+
+        void OpenFolder()
+        {
+            var dig = new Models.OpenFolderDialog();
+            dig.Show();
+
+            var folderName = dig.FolderName;
+
+            if (folderName == "") return;
+
+            this.allBGMs.Refresh(folderName);
         }
     }
 }
