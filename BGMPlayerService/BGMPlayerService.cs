@@ -11,7 +11,7 @@ namespace BGMPlayer
 {
     public class BGMPlayerService : IBGMPlayerService
     {
-        private IBGMPlayerCoreApi bgmPlayerCore = default;
+        private IBGMPlayerCoreApi bgmPlayerCore;
 
         public ReadOnlyReactivePropertySlim<PlayingState> State { get; }
 
@@ -21,7 +21,7 @@ namespace BGMPlayer
 
         public ReadOnlyReactivePropertySlim<BGM> PlayingBGM { get; }
 
-        private ReactivePropertySlim<bool> isPlaying = default;
+        private ReactivePropertySlim<bool> isPlaying;
 
         public BGMPlayerService(IBGMPlayerCoreApi bgmPlayerCore)
         {
