@@ -1,113 +1,27 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{486E25CD-6A76-44BA-8A9B-A4D44CA2BED6}</ProjectGuid>
-    <OutputType>library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PlayerOperator</RootNamespace>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AssemblyName>PlayerOperator</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <RootNamespace>PlayerOperator</RootNamespace>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.0.1" />
+    <PackageReference Include="Prism.Wpf" Version="7.2.0.1367" />
+    <PackageReference Include="ReactiveProperty" Version="6.1.2" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Models\IPlaylist.cs" />
-    <Compile Include="Models\OrderedPlaylist.cs" />
-    <Compile Include="Models\ShuffledPlaylist.cs" />
-    <Compile Include="PlayerOperatorModule.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <Compile Include="ViewModels\PlayerOperatorViewModel.cs" />
-    <Compile Include="Views\PlayerOperator.xaml.cs">
-      <DependentUpon>PlayerOperator.xaml</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <AppDesigner Include="Properties\" />
+    <ProjectReference Include="..\BGMList\BGMList.csproj" />
+    <ProjectReference Include="..\BGMPlayerService\BGMPlayerService.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BGMList\BGMList.csproj">
-      <Project>{82659a73-d138-4d71-8b06-70f659d1e520}</Project>
-      <Name>BGMList</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BGMPlayerCore\BGMPlayerCore.csproj">
-      <Project>{CDEE564F-E72D-4C27-8190-6F8C63EAEB4E}</Project>
-      <Name>BGMPlayerCore</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BGMPlayerService\BGMPlayerService.csproj">
-      <Project>{10dbda67-12b8-4aa4-b871-4afb8f4575cb}</Project>
-      <Name>BGMPlayerService</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf">
-      <Version>1.0.1</Version>
-    </PackageReference>
-    <PackageReference Include="Prism.Wpf" Version="7.1.0.431&#xD;" />
-    <PackageReference Include="ReactiveProperty">
-      <Version>6.0.3</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Views\PlayerOperator.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
 </Project>

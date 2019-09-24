@@ -1,188 +1,39 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6713322B-4566-4D5B-8408-ADA89BC240BE}</ProjectGuid>
     <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+  
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyName>BGMPlayer</AssemblyName>
     <RootNamespace>BGMPlayer</RootNamespace>
-    <AssemblyName>BGM鳴ら～すV3</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile />
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>true</Prefer32Bit>
     <PlatformTarget>x86</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
-    <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+
+  <PropertyGroup Condition="'$(OS)' == 'Windows_NT' and&#xD;&#xA;                 '$(TargetFrameworkIdentifier)' == '.NETCoreApp' and&#xD;&#xA;                 '$(SelfContained)' != 'true'">
+    <RunCommand Condition="'$(PlatformTarget)' == 'x86'">$(MSBuildProgramFiles32)\dotnet\dotnet</RunCommand>
+    <RunCommand Condition="'$(PlatformTarget)' == 'x64'">$(ProgramW6432)\dotnet\dotnet</RunCommand>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>icon3.ico</ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup />
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Windows" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
+    <None Remove="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="CompareNatural.cs" />
-    <Compile Include="Models\OpenFolderDialog.cs" />
-    <Compile Include="Models\VersionInfo.cs" />
-    <Compile Include="ViewModels\MainWindowViewModel.cs" />
-    <Compile Include="ViewModels\VersionInfoDialogViewModel.cs" />
-    <Compile Include="Views\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Views\VersionInfoDialog.xaml.cs">
-      <DependentUpon>VersionInfoDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="Views\MainWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </Page>
-    <Page Include="Views\VersionInfoDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <PackageReference Include="Microsoft.WindowsAPICodePack-Core" Version="1.1.0.2" />
+    <PackageReference Include="Microsoft.WindowsAPICodePack-Shell" Version="1.1.0" />
+    <PackageReference Include="NAudio" Version="1.9.0" />
+    <PackageReference Include="NAudio.Vorbis" Version="1.0.0" />
+    <PackageReference Include="NVorbis" Version="0.8.6" />
+    <PackageReference Include="Prism.Unity" Version="7.2.0.1367" />
+    <PackageReference Include="ReactiveProperty" Version="6.1.2" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
+    <ProjectReference Include="..\BGMList\BGMList.csproj" />
+    <ProjectReference Include="..\BGMPlayerCore\BGMPlayerCore.csproj" />
+    <ProjectReference Include="..\BGMPlayerService\BGMPlayerService.csproj" />
+    <ProjectReference Include="..\PlayerOperator\PlayerOperator.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="使用したライブラリ.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="icon3.ico" />
-    <None Include="Readme.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.WindowsAPICodePack-Core">
-      <Version>1.1.0.2</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.WindowsAPICodePack-Shell">
-      <Version>1.1.0</Version>
-    </PackageReference>
-    <PackageReference Include="NAudio">
-      <Version>1.8.0</Version>
-    </PackageReference>
-    <PackageReference Include="NAudio.Vorbis">
-      <Version>1.0.0</Version>
-    </PackageReference>
-    <PackageReference Include="NVorbis">
-      <Version>0.8.5</Version>
-    </PackageReference>
-    <PackageReference Include="Prism.Unity">
-      <Version>7.1.0.431</Version>
-    </PackageReference>
-    <PackageReference Include="ReactiveProperty">
-      <Version>6.0.3</Version>
-    </PackageReference>
-    <PackageReference Include="System.Reactive.Core">
-      <Version>4.1.5</Version>
-    </PackageReference>
-    <PackageReference Include="System.Reactive.Interfaces">
-      <Version>4.1.5</Version>
-    </PackageReference>
-    <PackageReference Include="System.Reactive.Linq">
-      <Version>4.1.5</Version>
-    </PackageReference>
-    <PackageReference Include="System.Reactive.PlatformServices">
-      <Version>4.1.5</Version>
-    </PackageReference>
-    <PackageReference Include="System.Reactive.Windows.Threading">
-      <Version>4.1.5</Version>
-    </PackageReference>
-    <PackageReference Include="System.Threading.Tasks.Extensions">
-      <Version>4.5.3</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BGMPlayerCore\BGMPlayerCore.csproj">
-      <Project>{cdee564f-e72d-4c27-8190-6f8c63eaeb4e}</Project>
-      <Name>BGMPlayerCore</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BGMPlayerService\BGMPlayerService.csproj">
-      <Project>{10dbda67-12b8-4aa4-b871-4afb8f4575cb}</Project>
-      <Name>BGMPlayerService</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PlayerOperator\PlayerOperator.csproj">
-      <Project>{486E25CD-6A76-44BA-8A9B-A4D44CA2BED6}</Project>
-      <Name>PlayerOperator</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BGMList\BGMList.csproj">
-      <Project>{82659a73-d138-4d71-8b06-70f659d1e520}</Project>
-      <Name>BGMList</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
