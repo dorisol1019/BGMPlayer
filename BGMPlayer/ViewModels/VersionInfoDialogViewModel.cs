@@ -12,13 +12,16 @@ using Reactive.Bindings;
 using BGMPlayer.Models;
 using System.Windows.Input;
 using Prism.Interactivity.InteractionRequest;
+using Prism.Services.Dialogs;
 
 namespace BGMPlayer.ViewModels
 {
-    public class VersionInfoDialogViewModel : BindableBase,IInteractionRequestAware
+    public class VersionInfoDialogViewModel : BindableBase, IDialogAware
     {
         VersionInfo _versionInfo = new VersionInfo();
-        
+
+        public event Action<IDialogResult> RequestClose = (_) => { };
+
         public ReactiveProperty<string> ApplicationName { get; private set; }
         public ReactiveProperty<string> ApplicationVersion { get; }
 
@@ -26,8 +29,8 @@ namespace BGMPlayer.ViewModels
         public ReactiveProperty<string> ProjectURL { get; }
 
         public ICommand NavigateToProjectURL { get; }
-        public INotification Notification { get; set; }
-        public Action FinishInteraction { get; set; }
+
+        public string Title => "BGM鳴ら～すV3について";
 
         public VersionInfoDialogViewModel()
         {
@@ -40,5 +43,17 @@ namespace BGMPlayer.ViewModels
             NavigateToProjectURL = new DelegateCommand(_versionInfo.NavigateToProjectURL);
         }
 
+        public bool CanCloseDialog()
+        {
+            return true;
+        }
+
+        public void OnDialogClosed()
+        {
+        }
+
+        public void OnDialogOpened(IDialogParameters parameters)
+        {
+        }
     }
 }

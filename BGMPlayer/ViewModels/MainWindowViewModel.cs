@@ -19,6 +19,7 @@ using System.IO;
 using BGMPlayerCore;
 using System.Collections;
 using BGMList.Models;
+using Prism.Services.Dialogs;
 
 namespace BGMPlayer.ViewModels
 {
@@ -37,7 +38,7 @@ namespace BGMPlayer.ViewModels
 
         private IAllBGMs allBGMs;
 
-        public MainWindowViewModel(IBGMPlayerService bgmPlayerService, IAllBGMs allBGMs)
+        public MainWindowViewModel(IBGMPlayerService bgmPlayerService, IAllBGMs allBGMs, IDialogService dialogService)
         {
             Title = new ReactiveProperty<string>(_defaultTitle);
 
@@ -62,9 +63,8 @@ namespace BGMPlayer.ViewModels
                 }
             });
 
-            _interactionRequest = new InteractionRequest<INotification>();
             PopUpVersionInfoCommand = new DelegateCommand(() =>
-              _interactionRequest.Raise(new Notification { Title = "BGM鳴ら～すV3について" })
+              dialogService.ShowDialog("VersionInfo", new DialogParameters(), (_) => { })
             );
 
             OpenFolderCommand = new DelegateCommand(() => OpenFolder());
@@ -72,13 +72,8 @@ namespace BGMPlayer.ViewModels
             WindowClosedCommand = new DelegateCommand(() => bgmPlayerService.Dispose());
         }
 
-        private InteractionRequest<INotification> _interactionRequest;
         public DelegateCommand PopUpVersionInfoCommand { get; }
 
-        public InteractionRequest<INotification> InteractionRequest
-        {
-            get => _interactionRequest;
-        }
 
         void OpenFolder()
         {
