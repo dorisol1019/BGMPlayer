@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.0.1" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.0.1" NoWarn="NU1701" />
     <PackageReference Include="Prism.Wpf" Version="7.2.0.1367" />
     <PackageReference Include="ReactiveProperty" Version="6.1.2" />
   </ItemGroup>

@@ -24,10 +24,10 @@
     <None Remove="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.WindowsAPICodePack-Core" Version="1.1.0.2" />
-    <PackageReference Include="Microsoft.WindowsAPICodePack-Shell" Version="1.1.0" />
+    <PackageReference Include="Microsoft.WindowsAPICodePack-Core" Version="1.1.0.2" NoWarn="NU1701" />
+    <PackageReference Include="Microsoft.WindowsAPICodePack-Shell" Version="1.1.0" NoWarn="NU1701" />
     <PackageReference Include="NAudio" Version="1.9.0" />
-    <PackageReference Include="NAudio.Vorbis" Version="1.0.0" />
+    <PackageReference Include="NAudio.Vorbis" Version="1.0.0" NoWarn="NU1701" />
     <PackageReference Include="NVorbis" Version="0.8.6" />
     <PackageReference Include="Prism.Unity" Version="7.2.0.1367" />
     <PackageReference Include="ReactiveProperty" Version="6.1.2" />
