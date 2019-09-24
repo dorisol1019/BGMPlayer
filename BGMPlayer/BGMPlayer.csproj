@@ -8,6 +8,7 @@
     <AssemblyName>BGMPlayer</AssemblyName>
     <RootNamespace>BGMPlayer</RootNamespace>
     <Nullable>enable</Nullable>
+    <ApplicationIcon>icon3.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
