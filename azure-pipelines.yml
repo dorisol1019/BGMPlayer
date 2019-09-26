@@ -52,7 +52,7 @@ steps:
     command: publish    
     publishWebProjects: false
     projects: '**/BGMPlayer.csproj'
-    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory) -r win10-x86 /p:PublishSingleFile=true'
+    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory) -r win10-x86 --self-contained false /p:PublishSingleFile=true'
     zipAfterPublish: True
 
 - task: PublishBuildArtifacts@1
