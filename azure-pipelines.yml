@@ -29,7 +29,8 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: publish    
-    publishWebProjects: True
+    publishWebProjects: false
+    projects: '**/BGMPlayer.csproj'
     arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory) -r win10-x86 --self-contained true /p:PublishSingleFile=true'
     zipAfterPublish: True
 
