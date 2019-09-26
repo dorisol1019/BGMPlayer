@@ -14,28 +14,64 @@ variables:
   buildPlatform: 'x86'
   buildConfiguration: 'Release'
 
-steps:
-- task: UseDotNet@2
-  inputs:
-    packageType: 'sdk'
-    version: '3.0.x'
+stages:
+- stage: build
+  jobs:
+  - job: build_job
+    steps:
+    - task: UseDotNet@2
+      displayName: Install .NET Core 3.0
+      inputs:
+        packageType: 'sdk'
+        version: '3.0.x'
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'build'
-    projects: '**/*.csproj'
-    arguments: '-c $(buildConfiguration)'
+    - task: DotNetCoreCLI@2
+      displayName: Build projects
+      inputs:
+        command: 'build'
+        projects: '**/*.csproj'
+        arguments: '-c $(buildConfiguration)'
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: publish    
-    publishWebProjects: false
-    projects: '**/BGMPlayer.csproj'
-    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory) -r win10-x86 --self-contained true /p:PublishSingleFile=true'
-    zipAfterPublish: True
+  - job: publish_self_conained_job
+    dependsOn: 
+    - build_job
+    condition: succeeded('build_job')
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: Create build artifact
+      inputs:
+        command: publish    
+        publishWebProjects: false
+        projects: '**/BGMPlayer.csproj'
+        arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory) -r win10-x86 --self-contained true /p:PublishSingleFile=true'
+        zipAfterPublish: True
 
-# this code takes all the files in $(Build.ArtifactStagingDirectory) and uploads them as an artifact of your build.
-- task: PublishBuildArtifacts@1
-  inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
-    artifactName: 'BGMPlayer'
+    # this code takes all the files in $(Build.ArtifactStagingDirectory) and uploads them as an artifact of your build.
+    - task: PublishBuildArtifacts@1
+      displayName: Publish build artifact
+      inputs:
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+        artifactName: 'BGMPlayer(runtime_bundle)'
+
+
+
+  - job: publish_job
+    dependsOn: 
+    - build_job
+    condition: succeeded('build_job')
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: Create build artifact
+      inputs:
+        command: publish    
+        publishWebProjects: false
+        projects: '**/BGMPlayer.csproj'
+        arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory) -r win10-x86 /p:PublishSingleFile=true'
+        zipAfterPublish: True
+
+    # this code takes all the files in $(Build.ArtifactStagingDirectory) and uploads them as an artifact of your build.
+    - task: PublishBuildArtifacts@1
+      displayName: Publish build artifact
+      inputs:
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+        artifactName: 'BGMPlayer'
