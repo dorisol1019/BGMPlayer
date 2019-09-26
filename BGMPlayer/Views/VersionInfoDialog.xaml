@@ -11,6 +11,12 @@
     <UserControl.Resources>
         <BitmapImage x:Key="Icon" UriSource="../icon3.ico" />
     </UserControl.Resources>
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="SizeToContent" Value="WidthAndHeight"></Setter>
+            <Setter Property="ResizeMode" Value="NoResize"/>
+        </Style>
+    </prism:Dialog.WindowStyle>
     <Grid>
         <Image Source="{StaticResource Icon}" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="105" Margin="23,32,0,0"/>
         <Label Content="{Binding ApplicationName.Value}" HorizontalContentAlignment="Center" FontSize="13pt" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.627,0.257" Margin="133,56,0,0" Width="151" Height="33"/>
@@ -21,6 +27,5 @@
                 <TextBlock Text="{Binding ProjectURL.Value}"/>
             </Hyperlink>
         </Label>
-
     </Grid>
 </UserControl>

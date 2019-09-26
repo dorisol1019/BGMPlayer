@@ -1,5 +1,6 @@
 ﻿using BGMList;
 using BGMList.Models;
+using BGMPlayer.ViewModels;
 using BGMPlayer.Views;
 using BGMPlayerCore;
 using BGMPlayerService;
@@ -26,6 +27,8 @@ namespace BGMPlayer
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.RegisterDialog<VersionInfoDialog, VersionInfoDialogViewModel>("VersionInfo");
+
             containerRegistry.RegisterInstance<IAllBGMs>(new AllBGMs());
             containerRegistry.RegisterInstance<ISelectedBGM>(new SelectedBGM());
 
