@@ -11,7 +11,7 @@ pool:
 
 variables:
   solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
+  buildPlatform: 'x86'
   buildConfiguration: 'Release'
 
 steps:
@@ -25,3 +25,16 @@ steps:
     command: 'build'
     projects: '**/*.csproj'
     arguments: '-c $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: publish    
+    publishWebProjects: True
+    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory) -r win10-x86 --self-contained true /p:PublishSingleFile=true'
+    zipAfterPublish: True
+
+# this code takes all the files in $(Build.ArtifactStagingDirectory) and uploads them as an artifact of your build.
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+    artifactName: 'myWebsiteName'
