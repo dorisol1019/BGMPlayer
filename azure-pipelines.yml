@@ -18,6 +18,8 @@ stages:
 - stage: build
   jobs:
   - job: build_job
+    pool:
+      vmImage: 'windows-latest'
     steps:
     - task: UseDotNet@2
       displayName: Install .NET Core 3.0
@@ -33,6 +35,8 @@ stages:
         arguments: '-c $(buildConfiguration)'
 
   - job: publish_self_conained_job
+    pool:
+      vmImage: 'windows-latest'
     dependsOn: 
     - build_job
     condition: succeeded('build_job')
@@ -56,13 +60,15 @@ stages:
 
 
   - job: publish_job
+    pool:
+      vmImage: 'windows-latest'
     dependsOn: 
     - build_job
     condition: succeeded('build_job')
     steps:
     - task: DotNetCoreCLI@2
       displayName: Create build artifact
-      inputs:
+        inputs:
         command: publish    
         publishWebProjects: false
         projects: '**/BGMPlayer.csproj'
