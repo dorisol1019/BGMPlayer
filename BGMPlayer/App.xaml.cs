@@ -5,6 +5,7 @@ using BGMPlayer.Views;
 using BGMPlayerCore;
 using BGMPlayerService;
 using PlayerOperator;
+using PlayerOperator.Models;
 using PlayerOperator.Views;
 using Prism.Ioc;
 using Prism.Modularity;
@@ -37,6 +38,7 @@ namespace BGMPlayer
             containerRegistry.RegisterSingleton<IBGMPlayerService, BGMPlayerService>();
 
             containerRegistry.RegisterInstance<IUserOperationNotification<BGM>>(new UserOperationNotification<BGM>());
+            containerRegistry.Register<ISettingRepository, SettingRepository>();
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
