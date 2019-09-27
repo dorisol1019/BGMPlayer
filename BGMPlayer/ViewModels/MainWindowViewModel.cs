@@ -28,6 +28,8 @@ namespace BGMPlayer.ViewModels
 
         public ReactiveProperty<string> Title { get; }
 
+        public ReadOnlyReactivePropertySlim<bool> IsTopMostWindow { get; }
+
         const string _defaultTitle = "BGM鳴ら～すV3";
         
 
