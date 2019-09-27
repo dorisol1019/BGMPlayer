@@ -9,7 +9,7 @@
         prism:ViewModelLocator.AutoWireViewModel="True"        
         mc:Ignorable="d"
         Title="{Binding Title.Value}" Height="315" Width="380" Background="#eeeeee" ResizeMode="NoResize"
-        Topmost="{Binding TopMost.Value}">
+        Topmost="{Binding IsTopMostWindow.Value}">
     <Window.InputBindings>
         <KeyBinding Command="{Binding OpenFolderCommand}" Gesture="Ctrl+O" />
     </Window.InputBindings>
