@@ -39,6 +39,7 @@ namespace BGMPlayer
 
             containerRegistry.RegisterInstance<IUserOperationNotification<BGM>>(new UserOperationNotification<BGM>());
             containerRegistry.Register<ISettingRepository, SettingRepository>();
+            containerRegistry.RegisterSingleton<ISettingService, SettingService>();
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
