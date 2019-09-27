@@ -6,7 +6,7 @@ namespace PlayerOperator.Models
 {
     public interface ISettingRepository
     {
-        void SetSetting(Setting setting);
-        Setting GetSetting();
+        void SaveSetting(Setting setting);
+        Setting LoadSetting();
     }
 }

@@ -13,12 +13,12 @@ namespace PlayerOperator.Models
             setting = new Setting();
         }
 
-        public void SetSetting(Setting setting)
+        public void SaveSetting(Setting setting)
         {
             this.setting = setting;
         }
 
-        public Setting GetSetting()
+        public Setting LoadSetting()
         {
             return setting;
         }

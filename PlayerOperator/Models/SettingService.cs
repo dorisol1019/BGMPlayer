@@ -10,7 +10,7 @@ namespace PlayerOperator.Models
     {
         public SettingService(ISettingRepository settingRepository)
         {
-            var setting = settingRepository.GetSetting();
+            var setting = settingRepository.LoadSetting();
             IsTopMostWindow = setting.IsTopMostWindow;
         }
 
