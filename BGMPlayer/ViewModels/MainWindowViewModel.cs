@@ -20,6 +20,7 @@ using BGMPlayerCore;
 using System.Collections;
 using BGMList.Models;
 using Prism.Services.Dialogs;
+using PlayerOperator.Models;
 
 namespace BGMPlayer.ViewModels
 {
@@ -40,9 +41,10 @@ namespace BGMPlayer.ViewModels
 
         private IAllBGMs allBGMs;
 
-        public MainWindowViewModel(IBGMPlayerService bgmPlayerService, IAllBGMs allBGMs, IDialogService dialogService)
+        public MainWindowViewModel(IBGMPlayerService bgmPlayerService, IAllBGMs allBGMs, ISettingService settingService , IDialogService dialogService)
         {
             Title = new ReactiveProperty<string>(_defaultTitle);
+            IsTopMostWindow = settingService.IsTopMostWindow.ToReadOnlyReactivePropertySlim();
 
             Shutdown = new DelegateCommand(() => Application.Current.Shutdown());
 

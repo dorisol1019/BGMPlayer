@@ -26,7 +26,7 @@ namespace PlayerOperator.ViewModels
         private ISelectedBGM selectedBGM;
 
         private IUserOperationNotification<BGM> playingBGMNotification;
-        public PlayerOperatorViewModel(IBGMPlayerService bgmPlayerService, IAllBGMs allBGMs, ISelectedBGM selectedBGM, IUserOperationNotification<BGM> playingBGMNotification)
+        public PlayerOperatorViewModel(IBGMPlayerService bgmPlayerService, IAllBGMs allBGMs, ISelectedBGM selectedBGM, IUserOperationNotification<BGM> playingBGMNotification, ISettingService settingService)
         {
             this.player = bgmPlayerService;
             this.selectedBGM = selectedBGM;
@@ -86,7 +86,7 @@ namespace PlayerOperator.ViewModels
 
             MouseDoubleClickCommand = PlayCommand;
 
-            IsTopMostWindow = new ReactiveProperty<bool>(false);
+            IsTopMostWindow = settingService.IsTopMostWindow;
             TopMost = IsTopMostWindow.ToReadOnlyReactiveProperty();
 
             LoopNumber_string = new ReactiveProperty<string>("0", mode: ReactivePropertyMode.None);
@@ -194,7 +194,7 @@ namespace PlayerOperator.ViewModels
         public ReactiveProperty<double> Volume { get; }
         public ReactiveProperty<string> PauseOrRestartButtonContent { get; private set; }
         public ReadOnlyReactiveProperty<bool> TopMost { get; }
-        public ReactiveProperty<bool> IsTopMostWindow { get; }
+        public BooleanNotifier IsTopMostWindow { get; }
 
         private BusyNotifier BusyNotifier { get; } = new BusyNotifier();
         public ReadOnlyReactiveProperty<bool> IsBusy { get; }
