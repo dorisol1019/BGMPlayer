@@ -15,6 +15,7 @@
         <Style TargetType="Window">
             <Setter Property="SizeToContent" Value="WidthAndHeight"></Setter>
             <Setter Property="ResizeMode" Value="NoResize"/>
+            <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterOwner" />
         </Style>
     </prism:Dialog.WindowStyle>
     <Grid>

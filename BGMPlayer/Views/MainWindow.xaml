@@ -8,7 +8,7 @@
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"        
         mc:Ignorable="d"
-        Title="{Binding Title.Value}" Height="315" Width="380" Background="#eeeeee" ResizeMode="NoResize"
+        Title="{Binding Title.Value}" Height="315" Width="380" Background="#eeeeee" ResizeMode="NoResize" prism:Dialog.WindowStartupLocation="CenterScreen"
         Topmost="{Binding IsTopMostWindow.Value}">
     <Window.InputBindings>
         <KeyBinding Command="{Binding OpenFolderCommand}" Gesture="Ctrl+O" />
