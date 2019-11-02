@@ -71,13 +71,17 @@ namespace BGMPlayer.ViewModels
               dialogService.ShowDialog("VersionInfo", new DialogParameters(), (_) => { })
             );
 
+            PopUpLibrarysInfoCommand = new DelegateCommand(() =>
+                 dialogService.ShowDialog("LibrarysInfo", new DialogParameters(), (_) => { })
+                );
+
             OpenFolderCommand = new DelegateCommand(() => OpenFolder());
 
             WindowClosedCommand = new DelegateCommand(() => bgmPlayerService.Dispose());
         }
 
         public DelegateCommand PopUpVersionInfoCommand { get; }
-
+        public DelegateCommand PopUpLibrarysInfoCommand { get; }
 
         void OpenFolder()
         {

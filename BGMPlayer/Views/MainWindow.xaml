@@ -35,7 +35,7 @@
             </MenuItem>
             <MenuItem Header="ヘルプ(_H)" HorizontalContentAlignment="Left">
                 <MenuItem Name="VersionInfoMenu" Header="バージョン情報" Command="{Binding PopUpVersionInfoCommand}" />
-                <MenuItem Name="LibMenu" Header="使用したライブラリ"></MenuItem>
+                <MenuItem Name="LibMenu" Header="使用したライブラリ" Command="{Binding PopUpLibrarysInfoCommand}"></MenuItem>
             </MenuItem>
         </Menu>
         <ContentControl prism:RegionManager.RegionName="BGMList" Grid.Row="1" />

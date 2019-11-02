@@ -36,6 +36,11 @@
     <None Remove="icon3.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\使用したライブラリ.txt" Link="使用したライブラリ.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.WindowsAPICodePack-Core" Version="1.1.0.2" NoWarn="NU1701" />
     <PackageReference Include="Microsoft.WindowsAPICodePack-Shell" Version="1.1.0" NoWarn="NU1701" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.3" NoWarn="NU1701" />

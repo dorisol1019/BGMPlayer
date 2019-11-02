@@ -1,0 +1,18 @@
+﻿<UserControl x:Class="BGMPlayer.Views.LibrarysInfoDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"             
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             Background="#eeeeee">
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="Height" Value="360" />
+            <Setter Property="Width" Value="480" />
+            <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterOwner" />
+            <Setter Property="ResizeMode" Value="NoResize"/>
+        </Style>
+    </prism:Dialog.WindowStyle>
+    <Grid>
+        <TextBox Text="{Binding Text}" IsReadOnly="True" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" />
+    </Grid>
+</UserControl>

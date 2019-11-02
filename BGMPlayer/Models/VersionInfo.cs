@@ -22,7 +22,7 @@ namespace BGMPlayer.Models
             var asm= Assembly.GetExecutingAssembly();
             ApplicationVersion = $"Version {asm.GetName().Version}";
 
-            CopyrightText = "Copyright (c) 2017 dorifru0209";
+            CopyrightText = "Copyright (c) 2017-2019 dorisol1019";
             ProjectURL = "https://github.com/dorisol1019/BGMPlayer";
         }
 
