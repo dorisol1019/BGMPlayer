@@ -48,8 +48,8 @@ steps:
   displayName: copy self-contained document
   inputs:
     contents: |
-      $(Build.SourcesDirectory)/**/BGMPlayer/README.txt
-      $(Build.SourcesDirectory)/**/BGMPlayer/使用したライブラリ.txt
+      $(Build.SourcesDirectory)/**/README.txt
+      $(Build.SourcesDirectory)/**/使用したライブラリ.txt
     targetFolder: $(Build.BinariesDirectory)
     flattenFolders: true
 
@@ -78,8 +78,8 @@ steps:
   displayName: copy document
   inputs:
     contents: |
-      $(Build.SourcesDirectory)/**/BGMPlayer/README.txt
-      $(Build.SourcesDirectory)/**/BGMPlayer/使用したライブラリ.txt
+      $(Build.SourcesDirectory)/**/README.txt
+      $(Build.SourcesDirectory)/**/使用したライブラリ.txt
     targetFolder: $(Build.BinariesDirectory)
     flattenFolders: true
 
