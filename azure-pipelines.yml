@@ -40,14 +40,27 @@ steps:
     command: publish    
     publishWebProjects: false
     projects: '**/BGMPlayer.csproj'
-    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory) -r win10-x86 --self-contained true /p:PublishSingleFile=true'
-    zipAfterPublish: True
+    arguments: '--configuration $(BuildConfiguration) --output $(Build.BinariesDirectory) -r win10-x86 --self-contained true /p:PublishSingleFile=true'
+    zipAfterPublish: false
+    modifyOutputPath: false
 
-- task: PublishBuildArtifacts@1
-  displayName: Publish build self-contained artifact
+- task: CopyFiles@2
+  displayName: copy self-contained document
   inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
-    artifactName: 'BGMPlayer(runtime_bundle)'
+    contents: |
+      $(Build.SourcesDirectory)/**/BGMPlayer/README.txt
+      $(Build.SourcesDirectory)/**/BGMPlayer/使用したライブラリ.txt
+    targetFolder: $(Build.BinariesDirectory)
+    flattenFolders: true
+
+
+- task: ArchiveFiles@2
+  displayName: Create self-contained zip 
+  inputs:
+    rootFolderOrFile: '$(Build.BinariesDirectory)' 
+    includeRootFolder: false 
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/BGMPlayer_runtime_bundle.zip' 
 
 #ポータブル
 - task: DotNetCoreCLI@2
@@ -56,11 +69,36 @@ steps:
     command: publish    
     publishWebProjects: false
     projects: '**/BGMPlayer.csproj'
-    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory) -r win10-x86 --self-contained false /p:PublishSingleFile=true'
-    zipAfterPublish: True
+    arguments: '--configuration $(BuildConfiguration) --output $(Build.BinariesDirectory) -r win10-x86 --self-contained false /p:PublishSingleFile=true'
+    zipAfterPublish: false
+    modifyOutputPath: false
 
-- task: PublishBuildArtifacts@1
-  displayName: Publish build artifact
+
+- task: CopyFiles@2
+  displayName: copy document
   inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
-    artifactName: 'BGMPlayer'
+    contents: |
+      $(Build.SourcesDirectory)/**/BGMPlayer/README.txt
+      $(Build.SourcesDirectory)/**/BGMPlayer/使用したライブラリ.txt
+    targetFolder: $(Build.BinariesDirectory)
+    flattenFolders: true
+
+- task: ArchiveFiles@2
+  displayName: Create zip 
+  inputs:
+    rootFolderOrFile: '$(Build.BinariesDirectory)' 
+    includeRootFolder: false 
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/BGMPlayer.zip' 
+
+# GitHubにUpload
+- task: GitHubRelease@1
+  inputs:
+    gitHubConnection: 'dorisol1019-2'
+    repositoryName: '$(Build.Repository.Name)'
+    action: 'create'
+    target: '$(Build.SourceVersion)'
+    tagSource: 'gitTag'
+    changeLogCompareToRelease: 'lastFullRelease'
+    changeLogType: 'commitBased'
+
