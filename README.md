@@ -25,13 +25,13 @@ dorisol1019が欲しい機能を詰め込んだフリーの音楽プレーヤー
 ダウンロードページはこちらになります
 https://github.com/dorisol1019/BGMPlayer/releases
 
-.NET Core 3.0をインストールしている人は「BGMPlayer.zip」をダウンロードして、好きなところに解凍してください。
+.NET Core 3.0(x86)をインストールしている人は「BGMPlayer.zip」をダウンロードして、好きなところに解凍してください。
 
-.NET Core 3.0をインストールしていない人は「BGMPlayer_runtime_bundle.zip」をダウンロードするか、
-以下のページから .NET Core 3.0をインストールしたうえで「BGMPlayer.zip」をダウンロードしてください。
+.NET Core 3.0(x86)をインストールしていない人は「BGMPlayer_runtime_bundle.zip」をダウンロードするか、
+もしくは以下のページから .NET Core Runtime/.NET Core Desktop Runtime（両方ともx86）をインストールしたうえで「BGMPlayer.zip」をダウンロードしてください。
 
 .NET Core ダウンロードページ  
-https://dotnet.microsoft.com/download/dotnet-core
+https://dotnet.microsoft.com/download/dotnet-core/3.0/runtime
 
 ## 注意事項
 
