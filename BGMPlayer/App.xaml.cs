@@ -39,6 +39,7 @@ namespace BGMPlayer
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterDialog<VersionInfoDialog, VersionInfoDialogViewModel>("VersionInfo");
+            containerRegistry.RegisterDialog<LibrarysInfoDialog, LibrarysInfoDialogViewModel>("LibrarysInfo");
 
             containerRegistry.RegisterInstance<IAllBGMs>(new AllBGMs());
             containerRegistry.RegisterInstance<ISelectedBGM>(new SelectedBGM());
