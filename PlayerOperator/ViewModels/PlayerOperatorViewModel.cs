@@ -162,8 +162,7 @@ namespace PlayerOperator.ViewModels
         private IPlaylist playlist;
         public ReactiveProperty<IEnumerable<string>> BGMList { get; }
 
-        private List<BGM> bgms = null;
-        public ICommand RestartCommand { get; }
+        private List<BGM> bgms;
         public ICommand SpaceCommand { get; }
         public ICommand EnterCommand { get; }
         public ICommand MouseDoubleClickCommand { get; }
