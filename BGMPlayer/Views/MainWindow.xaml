@@ -18,7 +18,7 @@
             <i:InvokeCommandAction Command="{Binding Path=WindowClosedCommand}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
-    <Grid FocusManager.FocusedElement="{Binding ElementName=BGMList}" >
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1.3*" />
             <ColumnDefinition Width="1*" />

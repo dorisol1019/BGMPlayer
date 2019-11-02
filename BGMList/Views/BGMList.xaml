@@ -5,7 +5,7 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              
              prism:ViewModelLocator.AutoWireViewModel="True">
-    <Grid>
+    <Grid FocusManager.FocusedElement="{Binding ElementName=BGMListBox}">
         <ListBox Name="BGMListBox" ItemsSource="{Binding BGMs.Value,UpdateSourceTrigger=PropertyChanged}" FontSize="10pt" Margin="2,2,2,2"
                  SelectedIndex="{Binding SelectedBGMIndex.Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                  SelectedItem="{Binding SelectedBGM.Value,Mode=OneWayToSource,UpdateSourceTrigger=PropertyChanged}"
