@@ -22,12 +22,12 @@ dorisol1019が欲しい機能を詰め込んだフリーの音楽プレーヤー
 
 ## インストール
 
-ダウンロードページはこちらになります
+ダウンロードページはこちらになります  
 https://github.com/dorisol1019/BGMPlayer/releases
 
 .NET Core 3.0(x86)をインストールしている人は「BGMPlayer.zip」をダウンロードして、好きなところに解凍してください。
 
-.NET Core 3.0(x86)をインストールしていない人は「BGMPlayer_runtime_bundle.zip」をダウンロードするか、
+.NET Core 3.0(x86)をインストールしていない人は「BGMPlayer_runtime_bundle.zip」をダウンロードするか、  
 もしくは以下のページから .NET Core Runtime/.NET Core Desktop Runtime（両方ともx86）をインストールしたうえで「BGMPlayer.zip」をダウンロードしてください。
 
 .NET Core ダウンロードページ  
@@ -37,11 +37,11 @@ https://dotnet.microsoft.com/download/dotnet-core/3.0/runtime
 
 * 大きいサイズ(数十MB)のファイルを読み込むと、ソフトが異常停止するおそれがあります
 　
-* 「#CC111が最後の発音のあとにある」midiファイルはループ再生しませんので気をつけて下さい
+* 「#CC111が最後の発音のあとにある」midiファイルはループ再生しませんのでお気をつけください
 
 ## 使用方法
 
-1. Playlistフォルダに楽曲を入れます
+1. Playlistフォルダに楽曲を入れます  
    Playlistフォルダがない場合は、本ソフトを起動していただくと作成されます
 2. 本ソフトを起動します
 3. 気分でループや音量の設定をします
@@ -55,9 +55,9 @@ https://dotnet.microsoft.com/download/dotnet-core/3.0/runtime
 
 ## 著作権
 
-本ソフトはフリーですが、著作権は放棄していません
-著作権はdorisol1019に帰属します
-また、使用したライブラリの著作権はライブラリ作者に帰属します
+本ソフトはフリーですが、著作権は放棄していません  
+著作権はdorisol1019に帰属します  
+また、使用したライブラリの著作権はライブラリ作者に帰属します  
 
 ## 連絡先
 
