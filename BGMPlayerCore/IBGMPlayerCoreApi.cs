@@ -24,5 +24,7 @@ namespace BGMPlayerCore
         ReadOnlyReactivePropertySlim<int> LoopCount { get; }
 
         ReadOnlyReactivePropertySlim<BGM> PlayingBGM { get; }
+
+        ReadOnlyReactivePropertySlim<int> Volume { get; }
     }
 }

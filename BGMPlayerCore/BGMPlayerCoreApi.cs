@@ -36,7 +36,7 @@ namespace BGMPlayerCore
 
         private BusyNotifier loopCountUpdate = new BusyNotifier();
 
-        private int volume = 5;
+        private ReactiveProperty<int> volume { get; }
         #endregion
 
         #region　プロパティ
@@ -47,12 +47,14 @@ namespace BGMPlayerCore
         public ReadOnlyReactivePropertySlim<PlayingState> State { get; }
 
         public ReadOnlyReactivePropertySlim<BGM> PlayingBGM { get; }
+
+        public ReadOnlyReactivePropertySlim<int> Volume { get; }
         #endregion
 
         public BGMPlayerCoreApi()
         {
             _ggs.OpenDevice(-1, (IntPtr)0);
-
+            
             state = new ReactivePropertySlim<PlayingState>(PlayingState.Stopping);
             State = state.ToReadOnlyReactivePropertySlim();
 
@@ -65,7 +67,7 @@ namespace BGMPlayerCore
             LoopCount = loopCount.ToReadOnlyReactivePropertySlim();
 
             midiLoopCount = _ggs.ObserveEveryValueChanged(e => e.GetPlayerStatus().LoopCount).ToReadOnlyReactivePropertySlim(mode: ReactivePropertyMode.None);
-
+            
             audioLoopCount = _audioPlayer.ObserveEveryValueChanged(
                 e =>
                 e.LoopCount
@@ -86,6 +88,9 @@ namespace BGMPlayerCore
                       loopCount.Value = count;
                   }
               });
+
+            volume = new ReactiveProperty<int>(5);
+            Volume = new ReadOnlyReactivePropertySlim<int>(volume);
         }
 
         public async Task Play(BGM bgm)
@@ -118,7 +123,7 @@ namespace BGMPlayerCore
             }
             playingBGM.Value = bgm;
             state.Value = PlayingState.Playing;
-            ChangeVolume(volume);
+            ChangeVolume(volume.Value);
         }
         
         public void Stop()
@@ -196,6 +201,8 @@ namespace BGMPlayerCore
 
         public void ChangeVolume(int value)
         {
+            if (value > 10) return;
+            if (value < 0) return;
             if (!IsPlaying) return;
             if (playingBGM.Value.FileExtension == FileExtensionType.midi)
             {
@@ -213,7 +220,7 @@ namespace BGMPlayerCore
                 _audioPlayer.Volume = value * 0.1f;
             }
 
-            this.volume = value;
+            this.volume.Value = value;
         }
     }
 }

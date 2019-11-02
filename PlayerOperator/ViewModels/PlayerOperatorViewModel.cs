@@ -58,25 +58,8 @@ namespace PlayerOperator.ViewModels
             PauseOrRestartCommand = new ReactiveCommand(PauseOrRestartButtonContent.Select(e => !string.IsNullOrEmpty(e)));
             PauseOrRestartCommand.Subscribe(PauseOrRestart);
 
-            Volume = new ReactiveProperty<double>(5);
-            Volume.Subscribe(_ => ChangeVolume());
-
-            CtrlLeftCommand = new DelegateCommand(() =>
-            {
-                if (Volume.Value > 0)
-                {
-                    Volume.Value -= 1;
-                }
-            }
-            );
-            CtrlRightCommand = new DelegateCommand(() =>
-            {
-                if (Volume.Value < 10)
-                {
-                    Volume.Value += 1;
-                }
-            }
-            );
+            Volume = player.Volume.Select(volume => (double)volume).ToReactiveProperty();
+            Volume.Subscribe(volume => player.ChangeVolume((int)volume));
 
             EnterCommand = PlayCommand;
             SpaceCommand = new DelegateCommand(() =>
@@ -181,8 +164,6 @@ namespace PlayerOperator.ViewModels
 
         private List<BGM> bgms = null;
         public ICommand RestartCommand { get; }
-        public ICommand CtrlRightCommand { get; }
-        public ICommand CtrlLeftCommand { get; }
         public ICommand SpaceCommand { get; }
         public ICommand EnterCommand { get; }
         public ICommand MouseDoubleClickCommand { get; }
@@ -190,7 +171,6 @@ namespace PlayerOperator.ViewModels
         public ReactiveCommand PlayCommand { get; }
         public ReactiveCommand StopCommand { get; }
         public ReactiveCommand PauseOrRestartCommand { get; }
-        public ReactiveCommand ChangeVolumeCommand { get; }
         public ReactiveProperty<double> Volume { get; }
         public ReactiveProperty<string> PauseOrRestartButtonContent { get; private set; }
         public ReadOnlyReactiveProperty<bool> TopMost { get; }
@@ -223,7 +203,7 @@ namespace PlayerOperator.ViewModels
                 await player.Play(bgm);
             }
 
-            ChangeVolume();
+            player.ChangeVolume((int)Volume.Value);
         }
 
         private void Stop()
@@ -234,10 +214,6 @@ namespace PlayerOperator.ViewModels
         private void PauseOrRestart()
         {
             player.PauseOrReStart();
-        }
-        private void ChangeVolume()
-        {
-            player.ChangeVolume((int)Volume.Value);
         }
     }
 }

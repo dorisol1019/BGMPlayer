@@ -13,6 +13,8 @@
             <ListBox.InputBindings>
                 <KeyBinding Gesture="Enter" Command="{Binding PlayCommand}" />
                 <KeyBinding Gesture="Space" Command="{Binding PauseOrRestartCommand}" />
+                <KeyBinding Gesture="Ctrl+Right" Command="{Binding VolumeUpCommand}" />
+                <KeyBinding Gesture="Ctrl+Left" Command="{Binding VolumeDownCommand}" />
             </ListBox.InputBindings>
             <ListBox.ItemTemplate>
                 <DataTemplate>

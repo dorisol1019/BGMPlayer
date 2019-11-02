@@ -25,5 +25,7 @@ namespace BGMPlayer
         ReadOnlyReactivePropertySlim<bool> IsPlaying { get; }
 
         ReadOnlyReactivePropertySlim<BGM> PlayingBGM { get; }
+
+        ReadOnlyReactivePropertySlim<int> Volume { get; }
     }
 }
