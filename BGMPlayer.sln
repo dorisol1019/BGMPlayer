@@ -3,15 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BGMPlayer", "BGMPlayer\BGMPlayer.csproj", "{6713322B-4566-4D5B-8408-ADA89BC240BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BGMPlayer", "BGMPlayer\BGMPlayer.csproj", "{6713322B-4566-4D5B-8408-ADA89BC240BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BGMList", "BGMList\BGMList.csproj", "{4B311718-46AB-47FB-B636-3AA590EEFFCB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BGMList", "BGMList\BGMList.csproj", "{4B311718-46AB-47FB-B636-3AA590EEFFCB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BGMPlayerCore", "BGMPlayerCore\BGMPlayerCore.csproj", "{F9BE49DB-FC99-478C-917E-E1D995BB8123}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BGMPlayerCore", "BGMPlayerCore\BGMPlayerCore.csproj", "{F9BE49DB-FC99-478C-917E-E1D995BB8123}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BGMPlayerService", "BGMPlayerService\BGMPlayerService.csproj", "{C13A5793-E414-4152-96E2-C4232875AB8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BGMPlayerService", "BGMPlayerService\BGMPlayerService.csproj", "{C13A5793-E414-4152-96E2-C4232875AB8D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayerOperator", "PlayerOperator\PlayerOperator.csproj", "{107F2D83-4A06-4239-91BA-979916AF89DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlayerOperator", "PlayerOperator\PlayerOperator.csproj", "{107F2D83-4A06-4239-91BA-979916AF89DA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D2E97135-334E-4D4B-9DF5-EB82EB1717BD}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		azure-pipelines.yml = azure-pipelines.yml
+		LICENCE = LICENCE
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
