@@ -10,6 +10,7 @@ using PlayerOperator.Views;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Unity;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows;
@@ -24,6 +25,15 @@ namespace BGMPlayer
         protected override Window CreateShell()
         {
             return Container.Resolve<MainWindow>();
+        }
+
+        public override void Initialize()
+        {
+            if(!Directory.Exists("./Playlist"))
+            {
+                Directory.CreateDirectory("./Playlist");
+            }
+            base.Initialize();
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
