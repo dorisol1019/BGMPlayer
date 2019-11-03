@@ -3,6 +3,8 @@
 
   Copyright (c) 2017-2019 dorisol1019
 
+![BGMPlayer](https://github.com/dorisol1019/BGMPlayer/blob/images/BGMPlayer.jpg)
+
 ## 概要
 
 dorisol1019が欲しい機能を詰め込んだフリーの音楽プレーヤーソフトです
