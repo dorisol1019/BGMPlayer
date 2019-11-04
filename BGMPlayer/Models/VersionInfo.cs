@@ -20,7 +20,7 @@ namespace BGMPlayer.Models
         {
             ApplicationName = "BGM鳴ら～すV3";
             var asm= Assembly.GetExecutingAssembly();
-            ApplicationVersion = $"Version {asm.GetName().Version}";
+            ApplicationVersion = $"Version {asm.GetCustomAttribute<AssemblyInformationalVersionAttribute>()!.InformationalVersion}";
 
             CopyrightText = "Copyright (c) 2017-2019 dorisol1019";
             ProjectURL = "https://github.com/dorisol1019/BGMPlayer";
