@@ -11,7 +11,7 @@ namespace BGMPlayer.Models
         public string Text { get; private set; }
 
         public LibrarysInfo()
-        {   
+        {
             using var reader = new StreamReader("./使用したライブラリ.txt");
             Text = reader.ReadToEnd();
         }

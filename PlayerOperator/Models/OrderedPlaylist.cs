@@ -21,7 +21,7 @@ namespace PlayerOperator.Models
             currentIndex++;
             int index = currentIndex % playlist.Count;
 
-            if(currentIndex >= playlist.Count)
+            if (currentIndex >= playlist.Count)
             {
                 currentIndex = 0;
             }

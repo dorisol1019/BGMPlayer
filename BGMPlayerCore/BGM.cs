@@ -14,7 +14,7 @@ namespace BGMPlayerCore
         public string FullPath { get; }
         public FileExtensionType FileExtension { get; }
 
-        public BGM(string filepath,FileExtensionType fileExtension)
+        public BGM(string filepath, FileExtensionType fileExtension)
         {
             FullPath = Path.GetFullPath(filepath);
             FileName = Path.GetFileName(filepath);

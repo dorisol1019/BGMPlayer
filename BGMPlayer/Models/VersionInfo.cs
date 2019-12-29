@@ -19,7 +19,7 @@ namespace BGMPlayer.Models
         public VersionInfo()
         {
             ApplicationName = "BGM鳴ら～すV3";
-            var asm= Assembly.GetExecutingAssembly();
+            var asm = Assembly.GetExecutingAssembly();
             ApplicationVersion = $"Version {asm.GetCustomAttribute<AssemblyInformationalVersionAttribute>()!.InformationalVersion}";
 
             CopyrightText = "Copyright (c) 2017-2019 dorisol1019";

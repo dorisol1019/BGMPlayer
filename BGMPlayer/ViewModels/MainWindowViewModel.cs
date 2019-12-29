@@ -32,7 +32,7 @@ namespace BGMPlayer.ViewModels
         public ReadOnlyReactivePropertySlim<bool> IsTopMostWindow { get; }
 
         const string _defaultTitle = "BGM鳴ら～すV3";
-        
+
 
         public ICommand Shutdown { get; }
         public ICommand OpenFolderCommand { get; }
@@ -41,7 +41,7 @@ namespace BGMPlayer.ViewModels
 
         private IAllBGMs allBGMs;
 
-        public MainWindowViewModel(IBGMPlayerService bgmPlayerService, IAllBGMs allBGMs, ISettingService settingService , IDialogService dialogService)
+        public MainWindowViewModel(IBGMPlayerService bgmPlayerService, IAllBGMs allBGMs, ISettingService settingService, IDialogService dialogService)
         {
             Title = new ReactiveProperty<string>(_defaultTitle);
             IsTopMostWindow = settingService.IsTopMostWindow.ToReadOnlyReactivePropertySlim();
@@ -50,7 +50,8 @@ namespace BGMPlayer.ViewModels
 
             this.allBGMs = allBGMs;
 
-            bgmPlayerService.State.Subscribe(state => {
+            bgmPlayerService.State.Subscribe(state =>
+            {
                 switch (state)
                 {
                     case PlayingState.Playing:

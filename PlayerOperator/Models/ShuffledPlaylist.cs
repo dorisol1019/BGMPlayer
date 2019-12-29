@@ -22,7 +22,7 @@ namespace PlayerOperator.Models
         }
         public BGM Next()
         {
-            if(!playlist.Any())
+            if (!playlist.Any())
             {
                 playlist = new Queue<BGM>(keepPlaylist);
             }

@@ -29,7 +29,7 @@ namespace BGMPlayer
 
         public override void Initialize()
         {
-            if(!Directory.Exists("./Playlist"))
+            if (!Directory.Exists("./Playlist"))
             {
                 Directory.CreateDirectory("./Playlist");
             }

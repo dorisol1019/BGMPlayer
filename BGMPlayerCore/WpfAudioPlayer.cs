@@ -39,7 +39,7 @@ namespace WpfAudioPlayer
             }
             this.Play();
         }
-        
+
         /// <summary>
         /// ファイルへのストリームを生成します。
         /// </summary>
@@ -86,7 +86,7 @@ namespace WpfAudioPlayer
             else if (FileExtensionType.ogg == ext)
             {
                 var vorbisStream = new NAudio.Vorbis.VorbisWaveReader(fileName);
-                
+
                 stream = new WaveChannel32(vorbisStream);
             }
 
@@ -97,7 +97,7 @@ namespace WpfAudioPlayer
 
             this._volumeStream = stream;
             this._audioStream = new LoopStream(stream, stream.WaveFormat.SampleRate / 10);
-            
+
             this._wasApi = new WasapiOut2();
             this._wasApi.Init(this._audioStream);
         }
@@ -192,13 +192,13 @@ namespace WpfAudioPlayer
                 this.strm = null;
             }
 
-            if(this.fs!=null)
+            if (this.fs != null)
             {
                 fs.Dispose();
                 fs = null;
             }
 
-            if(ms!=null)
+            if (ms != null)
             {
                 ms.Dispose();
                 ms = null;

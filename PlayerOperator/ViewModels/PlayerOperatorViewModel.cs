@@ -166,7 +166,7 @@ namespace PlayerOperator.ViewModels
         public ICommand SpaceCommand { get; }
         public ICommand EnterCommand { get; }
         public ICommand MouseDoubleClickCommand { get; }
-        
+
         public ReactiveCommand PlayCommand { get; }
         public ReactiveCommand StopCommand { get; }
         public ReactiveCommand PauseOrRestartCommand { get; }

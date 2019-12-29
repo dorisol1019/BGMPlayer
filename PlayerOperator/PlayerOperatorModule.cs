@@ -15,7 +15,7 @@ namespace PlayerOperator
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            
+
         }
     }
 }

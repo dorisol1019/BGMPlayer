@@ -15,7 +15,7 @@ namespace BGMPlayer
 
         public ReadOnlyReactivePropertySlim<PlayingState> State { get; }
 
-        public ReadOnlyReactivePropertySlim<int> LoopCounter{get;}
+        public ReadOnlyReactivePropertySlim<int> LoopCounter { get; }
 
         public ReadOnlyReactivePropertySlim<bool> IsPlaying { get; }
 

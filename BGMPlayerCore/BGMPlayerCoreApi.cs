@@ -54,7 +54,7 @@ namespace BGMPlayerCore
         public BGMPlayerCoreApi()
         {
             _ggs.OpenDevice(-1, (IntPtr)0);
-            
+
             state = new ReactivePropertySlim<PlayingState>(PlayingState.Stopping);
             State = state.ToReadOnlyReactivePropertySlim();
 
@@ -67,7 +67,7 @@ namespace BGMPlayerCore
             LoopCount = loopCount.ToReadOnlyReactivePropertySlim();
 
             midiLoopCount = _ggs.ObserveEveryValueChanged(e => e.GetPlayerStatus().LoopCount).ToReadOnlyReactivePropertySlim(mode: ReactivePropertyMode.None);
-            
+
             audioLoopCount = _audioPlayer.ObserveEveryValueChanged(
                 e =>
                 e.LoopCount
@@ -125,7 +125,7 @@ namespace BGMPlayerCore
             state.Value = PlayingState.Playing;
             ChangeVolume(volume.Value);
         }
-        
+
         public void Stop()
         {
             if (playingBGM.Value == null) return;
