@@ -1,18 +1,18 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
   
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <AssemblyName>BGMPlayer</AssemblyName>
-    <Copyright>Copyright 2017-2019 dorisol1019</Copyright>
+    <Copyright>Copyright 2017-2020 dorisol1019</Copyright>
     <Description>ループ再生可能な音楽プレーヤー</Description>
     <Product>BGM鳴ら～すV3</Product>
     <RootNamespace>BGMPlayer</RootNamespace>
     <Nullable>enable</Nullable>
     <ApplicationIcon>icon3.ico</ApplicationIcon>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

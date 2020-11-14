@@ -1,7 +1,7 @@
-﻿
+
 # BGM鳴ら～すV3
 
-  Copyright (c) 2017-2019 dorisol1019
+  Copyright (c) 2017-2020 dorisol1019
 
 ## 概要
 
@@ -24,21 +24,21 @@ dorisol1019が欲しい機能を詰め込んだフリーの音楽プレーヤー
 ## 動作要件
 
 * Windows OSであること
-* .NET Core 3.1の動作要件を満たしていること  
-  https://github.com/dotnet/core/blob/master/release-notes/3.1/3.1-supported-os.md
+* .NET 5 の動作要件を満たしていること  
+  https://github.com/dotnet/core/blob/master/release-notes/5.0/5.0-supported-os.md
 
 ## インストール
 
-ダウンロードページはこちらになります
+ダウンロードページはこちらになります  
 https://github.com/dorisol1019/BGMPlayer/releases
 
-.NET Core 3.1(x86)をインストールしている人は「BGMPlayer.zip」をダウンロードして、好きなところに解凍してください。
+.NET 5(x86)をインストールしている人は「BGMPlayer.zip」をダウンロードして、好きなところに解凍してください。
 
-.NET Core 3.1(x86)をインストールしていない人は「BGMPlayer_runtime_bundle.zip」をダウンロードするか、
-もしくは以下のページから .NET Core Runtime/.NET Core Desktop Runtime（両方ともx86）をインストールしたうえで「BGMPlayer.zip」をダウンロードしてください。
+.NET 5(x86)をインストールしていない人は「BGMPlayer_runtime_bundle.zip」をダウンロードするか、  
+もしくは以下のページから Download x86 を押し、.NET 5をインストールしたうえで「BGMPlayer.zip」をダウンロードしてください。
 
 .NET Core ダウンロードページ  
-https://dotnet.microsoft.com/download
+https://dotnet.microsoft.com/download/dotnet-core/5.0/runtime
 
 ## 注意事項
 
