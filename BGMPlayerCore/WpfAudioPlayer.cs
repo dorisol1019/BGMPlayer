@@ -89,7 +89,7 @@ namespace WpfAudioPlayer
             {
                 var vorbisStream = new NAudio.Vorbis.VorbisWaveReader(fileName);
 
-                (long?,long?) GetLoopMetadata()
+                (long?, long?) GetLoopMetadata()
                 {
                     long? loopStart = null, loopLength = null;
                     foreach (var metadata in vorbisStream.Comments)
@@ -248,7 +248,7 @@ namespace WpfAudioPlayer
 
 
 
-        public LoopStream(WaveStream source, int samplesPerNotification,LoopMetadata? loopMetadata)
+        public LoopStream(WaveStream source, int samplesPerNotification, LoopMetadata? loopMetadata)
         {
             this.sourceStream = source;
             SourceStream = sourceStream;
@@ -293,7 +293,7 @@ namespace WpfAudioPlayer
             int read = 0;
 
             // LoopStart,LoopLengthがあるときの挙動
-            if(loopMetadata != null)
+            if (loopMetadata != null)
             {
                 long loopEnd = loopMetadata.Start + loopMetadata.Length;
                 while (read < count)
