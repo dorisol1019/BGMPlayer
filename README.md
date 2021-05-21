@@ -1,7 +1,7 @@
 
 # BGM鳴ら～すV3
 
-  Copyright (c) 2017-2020 dorisol1019
+  Copyright (c) 2017-2021 dorisol1019
 
 ![BGMPlayer](https://github.com/dorisol1019/BGMPlayer/blob/images/BGMPlayer.jpg)
 
