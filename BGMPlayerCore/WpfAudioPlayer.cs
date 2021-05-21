@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
@@ -23,6 +23,7 @@ namespace WpfAudioPlayer
         private WasapiOut2 _wasApi;
         private FileStream fs = null;
         private MemoryStream ms = null;
+        private LoopMetadata? loopMetadata;
         public AudioPlayer() { }
 
         public async Task Play(string file, FileExtensionType ext)
@@ -47,6 +48,7 @@ namespace WpfAudioPlayer
         /// <exception cref="InvalidOperationException">ストリームの生成に失敗した。</exception>
         private async Task InitializeStream(string fileName, FileExtensionType ext)
         {
+            loopMetadata = null;
             WaveChannel32 stream;
             if (FileExtensionType.wave == ext)
             {
@@ -87,6 +89,39 @@ namespace WpfAudioPlayer
             {
                 var vorbisStream = new NAudio.Vorbis.VorbisWaveReader(fileName);
 
+                (long?,long?) GetLoopMetadata()
+                {
+                    long? loopStart = null, loopLength = null;
+                    foreach (var metadata in vorbisStream.Comments)
+                    {
+                        if (!metadata.Contains('=')) continue;
+                        string? key = metadata.Split('=')[0];
+                        string? value = metadata.Split('=')[1];
+                        if (key == "LOOPSTART")
+                        {
+                            loopStart = long.Parse(value);
+                        }
+                        else if (key == "LOOPLENGTH")
+                        {
+                            loopLength = long.Parse(value);
+                        }
+                        if (loopStart != null && loopLength != null) break;
+                    }
+                    return (loopStart, loopLength);
+                }
+
+                var (loopStart, loopLength) = GetLoopMetadata();
+                if (loopStart != null && loopLength != null)
+                {
+                    loopMetadata = new LoopMetadata()
+                    {
+                        // ByteParFrame = 2(ステレオ) * 32(WaveChannel32のBitsPerSample) / 8 = 8
+                        // ByteParFrameがWaveChannel32である限り8だからsample値に8倍
+                        Start = loopStart.Value * 8,
+                        Length = loopLength.Value * 8
+                    };
+                }
+
                 stream = new WaveChannel32(vorbisStream);
             }
 
@@ -96,7 +131,7 @@ namespace WpfAudioPlayer
             }
 
             this._volumeStream = stream;
-            this._audioStream = new LoopStream(stream, stream.WaveFormat.SampleRate / 10);
+            this._audioStream = new LoopStream(stream, stream.WaveFormat.SampleRate / 10, loopMetadata);
 
             this._wasApi = new WasapiOut2();
             this._wasApi.Init(this._audioStream);
@@ -209,9 +244,11 @@ namespace WpfAudioPlayer
     public class LoopStream : WaveStream
     {
         WaveStream sourceStream;
+        private readonly LoopMetadata? loopMetadata;
 
 
-        public LoopStream(WaveStream source, int samplesPerNotification)
+
+        public LoopStream(WaveStream source, int samplesPerNotification,LoopMetadata? loopMetadata)
         {
             this.sourceStream = source;
             SourceStream = sourceStream;
@@ -219,6 +256,7 @@ namespace WpfAudioPlayer
                 throw new ArgumentException("Metering Stream expects 32 bit floating point audio", "sourceStream");
             maxSamples = new float[sourceStream.WaveFormat.Channels];
             this.SamplesPerNotification = samplesPerNotification;
+            this.loopMetadata = loopMetadata;
         }
 
 
@@ -254,6 +292,34 @@ namespace WpfAudioPlayer
         {
             int read = 0;
 
+            // LoopStart,LoopLengthがあるときの挙動
+            if(loopMetadata != null)
+            {
+                long loopEnd = loopMetadata.Start + loopMetadata.Length;
+                while (read < count)
+                {
+                    int required = count - read;
+                    int readThisTime = sourceStream.Read(buffer, offset + read, required);
+                    bool loopCountupFlag = false;
+                    if (readThisTime < required)
+                    {
+                        loopcount++;
+                        loopCountupFlag = true;
+                        sourceStream.Position = loopMetadata.Start;
+                    }
+
+                    if (sourceStream.Position >= loopEnd)
+                    {
+                        sourceStream.Position = loopMetadata.Start;
+                        if (!loopCountupFlag)
+                            loopcount++;
+                    }
+                    read += readThisTime;
+                }
+                return read;
+            }
+
+            // 今までの挙動
             while (read < count)
             {
                 int required = count - read;
