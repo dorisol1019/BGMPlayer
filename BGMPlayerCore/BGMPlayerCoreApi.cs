@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -135,7 +135,7 @@ namespace BGMPlayerCore
                     PlayerStatus status = _ggs.GetPlayerStatus();
                     if (status.State != PlayerState.Stop)
                     {
-                        _ggs.Stop(0);
+                        _ggs.Pause();
                     }
                     break;
                 case FileExtensionType.wave:
