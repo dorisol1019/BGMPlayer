@@ -310,6 +310,8 @@ namespace WpfAudioPlayer
 
                     if (sourceStream.Position >= loopEnd)
                     {
+                        int yobun = (int)(sourceStream.Position - loopEnd);
+                        readThisTime -= yobun;
                         sourceStream.Position = loopMetadata.Start;
                         if (!loopCountupFlag)
                             loopcount++;
