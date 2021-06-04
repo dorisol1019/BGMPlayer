@@ -6,13 +6,10 @@ using BGMPlayerCore;
 using BGMPlayerService;
 using PlayerOperator;
 using PlayerOperator.Models;
-using PlayerOperator.Views;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Unity;
 using System.IO;
-using System.Linq;
-using System.Threading;
 using System.Windows;
 
 namespace BGMPlayer

@@ -1,13 +1,9 @@
 using NAudio.CoreAudioApi;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BGMPlayerCore
 {
-    class Utility
+    internal class Utility
     {
         internal static MMDevice GetDefaultAudioEndpoint()
         {
@@ -16,7 +12,7 @@ namespace BGMPlayerCore
                 throw new NotSupportedException("WASAPI supported only on Windows Vista and above");
             }
 
-            MMDeviceEnumerator enumerator = new MMDeviceEnumerator();
+            var enumerator = new MMDeviceEnumerator();
             return enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console);
         }
     }

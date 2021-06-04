@@ -1,22 +1,20 @@
+using BGMPlayerCore;
+using NAudio.CoreAudioApi;
+using NAudio.Wave;
+using Reactive.Bindings;
 using System;
+using System.IO;
+using System.Reactive.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using System.IO;
-using NAudio.Wave;
-using NAudio.CoreAudioApi;
-
-using System.Runtime.InteropServices;
-
-using BGMPlayerCore;
-using System.Reactive.Linq;
-using Reactive.Bindings;
 
 namespace WpfAudioPlayer
 {
     /// <summary>
     /// オーディオ再生を行います。
     /// </summary>
-    sealed class AudioPlayer : IDisposable
+    internal sealed class AudioPlayer : IDisposable
     {
         private LoopStream _audioStream;
         private WaveChannel32 _volumeStream;
@@ -32,15 +30,15 @@ namespace WpfAudioPlayer
         {
             try
             {
-                await this.InitializeStream(file, ext);
+                await InitializeStream(file, ext);
 
             }
             catch (Exception exp)
             {
-                this.Dispose();
+                Dispose();
                 throw exp;
             }
-            this.Play();
+            Play();
         }
 
         /// <summary>
@@ -72,7 +70,7 @@ namespace WpfAudioPlayer
             else if (FileExtensionType.mp3 == ext)
             {
                 fs = new FileStream(fileName, FileMode.Open);
-                var buf = new byte[fs.Length];
+                byte[]? buf = new byte[fs.Length];
 
                 await fs.ReadAsync(buf, 0, buf.Length);
 
@@ -81,7 +79,7 @@ namespace WpfAudioPlayer
                 ms = new MemoryStream(buf);
 
                 var reader = new Mp3FileReader(ms);
-                var pcmStream = WaveFormatConversionStream.CreatePcmStream(reader);
+                WaveStream? pcmStream = WaveFormatConversionStream.CreatePcmStream(reader);
                 var blockAlignedStream = new BlockAlignReductionStream(pcmStream);
 
                 stream = new WaveChannel32(blockAlignedStream);
@@ -94,9 +92,13 @@ namespace WpfAudioPlayer
                 (long?, long?) GetLoopMetadata()
                 {
                     long? loopStart = null, loopLength = null;
-                    foreach (var metadata in vorbisStream.Comments)
+                    foreach (string? metadata in vorbisStream.Comments)
                     {
-                        if (!metadata.Contains('=')) continue;
+                        if (!metadata.Contains('='))
+                        {
+                            continue;
+                        }
+
                         string? key = metadata.Split('=')[0];
                         string? value = metadata.Split('=')[1];
                         if (key == "LOOPSTART")
@@ -107,12 +109,15 @@ namespace WpfAudioPlayer
                         {
                             loopLength = long.Parse(value);
                         }
-                        if (loopStart != null && loopLength != null) break;
+                        if (loopStart != null && loopLength != null)
+                        {
+                            break;
+                        }
                     }
                     return (loopStart, loopLength);
                 }
 
-                var (loopStart, loopLength) = GetLoopMetadata();
+                (long? loopStart, long? loopLength) = GetLoopMetadata();
                 if (loopStart != null && loopLength != null)
                 {
                     loopMetadata = new LoopMetadata()
@@ -132,11 +137,11 @@ namespace WpfAudioPlayer
                 throw new InvalidOperationException("Unsupported extension");
             }
 
-            this._volumeStream = stream;
-            this._audioStream = new LoopStream(stream, stream.WaveFormat.SampleRate / 10, loopMetadata);
+            _volumeStream = stream;
+            _audioStream = new LoopStream(stream, stream.WaveFormat.SampleRate / 10, loopMetadata);
 
-            this._wasApi = new WasapiOut2();
-            this._wasApi.Init(this._audioStream);
+            _wasApi = new WasapiOut2();
+            _wasApi.Init(_audioStream);
         }
 
         /// <summary>
@@ -152,7 +157,7 @@ namespace WpfAudioPlayer
         /// </summary>
         public void Play()
         {
-            switch (this._wasApi.PlaybackState)
+            switch (_wasApi.PlaybackState)
             {
                 case PlaybackState.Playing:
                     break;
@@ -170,7 +175,7 @@ namespace WpfAudioPlayer
         public void Stop()
         {
             _wasApi.Stop();
-            this._audioStream?.Dispose();
+            _audioStream?.Dispose();
         }
 
         /// <summary>
@@ -178,14 +183,8 @@ namespace WpfAudioPlayer
         /// </summary>
         public float Volume
         {
-            get
-            {
-                return this._volumeStream.Volume;
-            }
-            set
-            {
-                this._volumeStream.Volume = value;
-            }
+            get => _volumeStream.Volume;
+            set => _volumeStream.Volume = value;
         }
 
         public int LoopCount => _audioStream?.loopcount ?? 0;
@@ -195,41 +194,41 @@ namespace WpfAudioPlayer
         /// </summary>
         public void Dispose()
         {
-            if (this._waveOut != null)
+            if (_waveOut != null)
             {
-                this._waveOut.Stop();
+                _waveOut.Stop();
             }
-            if (this._wasApi != null)
+            if (_wasApi != null)
             {
-                this._wasApi.Stop();
+                _wasApi.Stop();
             }
-            if (this._audioStream != null)
+            if (_audioStream != null)
             {
-                this._volumeStream.Close();
-                this._volumeStream = null;
+                _volumeStream.Close();
+                _volumeStream = null;
 
-                this._audioStream.Close();
-                this._audioStream = null;
-            }
-
-            if (this._waveOut != null)
-            {
-                this._waveOut.Dispose();
-                this._waveOut = null;
-            }
-            if (this._wasApi != null)
-            {
-                this._wasApi.Dispose();
-                this._wasApi = null;
+                _audioStream.Close();
+                _audioStream = null;
             }
 
-            if (this.strm != null)
+            if (_waveOut != null)
             {
-                this.strm.Close();
-                this.strm = null;
+                _waveOut.Dispose();
+                _waveOut = null;
+            }
+            if (_wasApi != null)
+            {
+                _wasApi.Dispose();
+                _wasApi = null;
             }
 
-            if (this.fs != null)
+            if (strm != null)
+            {
+                strm.Close();
+                strm = null;
+            }
+
+            if (fs != null)
             {
                 fs.Dispose();
                 fs = null;
@@ -245,43 +244,34 @@ namespace WpfAudioPlayer
 
     public class LoopStream : WaveStream
     {
-        WaveStream sourceStream;
+        private readonly WaveStream sourceStream;
         private readonly LoopMetadata? loopMetadata;
 
 
 
         public LoopStream(WaveStream source, int samplesPerNotification, LoopMetadata? loopMetadata)
         {
-            this.sourceStream = source;
+            sourceStream = source;
             SourceStream = sourceStream;
             if (sourceStream.WaveFormat.BitsPerSample != 32)
+            {
                 throw new ArgumentException("Metering Stream expects 32 bit floating point audio", "sourceStream");
+            }
+
             maxSamples = new float[sourceStream.WaveFormat.Channels];
-            this.SamplesPerNotification = samplesPerNotification;
+            SamplesPerNotification = samplesPerNotification;
             this.loopMetadata = loopMetadata;
         }
 
 
-        public override WaveFormat WaveFormat
-        {
-            get { return sourceStream.WaveFormat; }
-        }
+        public override WaveFormat WaveFormat => sourceStream.WaveFormat;
 
-        public override long Length
-        {
-            get { return long.MaxValue / 32; }
-        }
+        public override long Length => long.MaxValue / 32;
 
         public override long Position
         {
-            get
-            {
-                return sourceStream.Position;
-            }
-            set
-            {
-                sourceStream.Position = value;
-            }
+            get => sourceStream.Position;
+            set => sourceStream.Position = value;
         }
 
         public override bool HasData(int count)
@@ -316,7 +306,9 @@ namespace WpfAudioPlayer
                         readThisTime -= yobun;
                         sourceStream.Position = loopMetadata.Start;
                         if (!loopCountupFlag)
+                        {
                             loopcount++;
+                        }
                     }
                     read += readThisTime;
                 }
@@ -340,7 +332,9 @@ namespace WpfAudioPlayer
                 {
                     sourceStream.Position = 0;
                     if (!loopCountupFlag)
+                    {
                         loopcount++;
+                    }
                 }
                 read += readThisTime;
             }
@@ -359,8 +353,8 @@ namespace WpfAudioPlayer
         public WaveStream SourceStream { get; private set; }
         public int SamplesPerNotification { get; set; }
 
-        float[] maxSamples;
-        int sampleCount;
+        private readonly float[] maxSamples;
+        private int sampleCount;
 
         public event EventHandler<StreamVolumeEventArgs> StreamVolume;
 
@@ -468,38 +462,38 @@ namespace WpfAudioPlayer
         /// <param name="latency"></param>
         public WasapiOut2(MMDevice device, AudioClientShareMode shareMode, bool useEventSync, int latency)
         {
-            this.audioClient = device.AudioClient;
-            this.mmDevice = device;
+            audioClient = device.AudioClient;
+            mmDevice = device;
             this.shareMode = shareMode;
-            this.isUsingEventSync = useEventSync;
-            this.latencyMilliseconds = latency;
-            this.syncContext = SynchronizationContext.Current ?? throw new InvalidOperationException("SynchronizationContext.Current is null.");
+            isUsingEventSync = useEventSync;
+            latencyMilliseconds = latency;
+            syncContext = SynchronizationContext.Current ?? throw new InvalidOperationException("SynchronizationContext.Current is null.");
 
             audioDeviceWatcher = new AudioDeviceWatcher();
 
             audioDevice = audioDeviceWatcher.CurrentDefaultDevice.ToReadOnlyReactiveProperty(mode: ReactivePropertyMode.None);
             audioDevice.Subscribe(async device =>
             {
-                this.Pause();
+                Pause();
                 await Task.Delay(100);
                 audioClient.Stop();
                 mmDevice = device;
                 audioClient = mmDevice.AudioClient;
-                this.Init(sourceProvider!);
+                Init(sourceProvider!);
                 await Task.Delay(100);
                 audioClient.Start();
-                this.Play();
+                Play();
             });
         }
 
         private async Task PlayTask(CancellationToken cancellationToken)
         {
             ResamplerDmoStream? resamplerDmoStream = null;
-            IWaveProvider playbackProvider = this.sourceProvider;
+            IWaveProvider playbackProvider = sourceProvider;
             Exception? exception = null;
             try
             {
-                if (this.dmoResamplerNeeded)
+                if (dmoResamplerNeeded)
                 {
                     resamplerDmoStream = new ResamplerDmoStream(sourceProvider, outputFormat);
                     playbackProvider = resamplerDmoStream;
@@ -512,13 +506,16 @@ namespace WpfAudioPlayer
                 FillBuffer(playbackProvider, bufferFrameCount);
 
                 // Create WaitHandle for sync
-                WaitHandle[] waitHandles = new WaitHandle[] { frameEventWaitHandle };
+                var waitHandles = new WaitHandle[] { frameEventWaitHandle };
 
                 audioClient.Start();
 
                 while (playbackState != PlaybackState.Stopped)
                 {
-                    if (cancellationToken.IsCancellationRequested) break;
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        break;
+                    }
 
                     // If using Event Sync, Wait for notification from AudioClient or Sleep half latency
                     int indexHandle = 0;
@@ -578,10 +575,10 @@ namespace WpfAudioPlayer
 
         private void RaisePlaybackStopped(Exception e)
         {
-            var handler = PlaybackStopped;
+            EventHandler<StoppedEventArgs>? handler = PlaybackStopped;
             if (handler != null)
             {
-                if (this.syncContext == null)
+                if (syncContext == null)
                 {
                     handler(this, new StoppedEventArgs(e));
                 }
@@ -628,10 +625,7 @@ namespace WpfAudioPlayer
         /// <summary>
         /// Gets a <see cref="Wave.WaveFormat"/> instance indicating the format the hardware is using.
         /// </summary>
-        public WaveFormat OutputWaveFormat
-        {
-            get { return outputFormat; }
-        }
+        public WaveFormat OutputWaveFormat => outputFormat;
 
         #region IWavePlayer Members
 
@@ -644,7 +638,7 @@ namespace WpfAudioPlayer
             {
                 if (playbackState == PlaybackState.Stopped)
                 {
-                    var token = cancellationTokenSource.Token;
+                    CancellationToken token = cancellationTokenSource.Token;
                     playTask = Task.Run(() => PlayTask(token));
                     watchTask = Task.Factory.StartNew(() => audioDeviceWatcher.Watch(token), token, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
                     playbackState = PlaybackState.Playing;
@@ -701,8 +695,7 @@ namespace WpfAudioPlayer
             long latencyRefTimes = latencyMilliseconds * 10000;
             outputFormat = waveProvider.WaveFormat;
             // first attempt uses the WaveFormat from the WaveStream
-            WaveFormatExtensible closestSampleRateFormat;
-            if (!audioClient.IsFormatSupported(shareMode, outputFormat, out closestSampleRateFormat))
+            if (!audioClient.IsFormatSupported(shareMode, outputFormat, out WaveFormatExtensible closestSampleRateFormat))
             {
                 // Use closesSampleRateFormat (in sharedMode, it equals usualy to the audioClient.MixFormat)
                 // See documentation : http://msdn.microsoft.com/en-us/library/ms678737(VS.85).aspx 
@@ -763,13 +756,13 @@ namespace WpfAudioPlayer
                 using (new ResamplerDmoStream(waveProvider, outputFormat))
                 {
                 }
-                this.dmoResamplerNeeded = true;
+                dmoResamplerNeeded = true;
             }
             else
             {
                 dmoResamplerNeeded = false;
             }
-            this.sourceProvider = waveProvider;
+            sourceProvider = waveProvider;
 
             // If using EventSync, setup is specific with shareMode
             if (isUsingEventSync)
@@ -809,24 +802,26 @@ namespace WpfAudioPlayer
         /// <summary>
         /// Playback State
         /// </summary>
-        public PlaybackState PlaybackState
-        {
-            get { return playbackState; }
-        }
+        public PlaybackState PlaybackState => playbackState;
 
         /// <summary>
         /// Volume
         /// </summary>
         public float Volume
         {
-            get
-            {
-                return mmDevice.AudioEndpointVolume.MasterVolumeLevelScalar;
-            }
+            get => mmDevice.AudioEndpointVolume.MasterVolumeLevelScalar;
             set
             {
-                if (value < 0) throw new ArgumentOutOfRangeException("value", "Volume must be between 0.0 and 1.0");
-                if (value > 1) throw new ArgumentOutOfRangeException("value", "Volume must be between 0.0 and 1.0");
+                if (value < 0)
+                {
+                    throw new ArgumentOutOfRangeException("value", "Volume must be between 0.0 and 1.0");
+                }
+
+                if (value > 1)
+                {
+                    throw new ArgumentOutOfRangeException("value", "Volume must be between 0.0 and 1.0");
+                }
+
                 mmDevice.AudioEndpointVolume.MasterVolumeLevelScalar = value;
             }
         }

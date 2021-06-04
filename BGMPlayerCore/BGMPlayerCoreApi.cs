@@ -1,40 +1,33 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using GuruGuruSmf;
-using WpfAudioPlayer;
-using System.IO;
-using System.Collections;
-using BGMPlayerCore;
-using System.Reactive.Linq;
-using System.ComponentModel;
 using Reactive.Bindings;
-using Reactive.Bindings.ObjectExtensions;
 using Reactive.Bindings.Notifiers;
+using Reactive.Bindings.ObjectExtensions;
+using System;
+using System.Linq;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
+using WpfAudioPlayer;
 
 namespace BGMPlayerCore
 {
     public class BGMPlayerCoreApi : IBGMPlayerCoreApi
     {
         #region private変数
-        private IGuruGuruSmf4Api _ggs = Ggs4Dll.GetInstance();
-        private AudioPlayer _audioPlayer;
+        private readonly IGuruGuruSmf4Api _ggs = Ggs4Dll.GetInstance();
+        private readonly AudioPlayer _audioPlayer;
 
-        private ReactivePropertySlim<BGM> playingBGM;
+        private readonly ReactivePropertySlim<BGM> playingBGM;
         private bool isLoopableBGM = false;
 
-        private ReactivePropertySlim<int> loopCount = default;
+        private readonly ReactivePropertySlim<int> loopCount = default;
 
-        private ReactivePropertySlim<PlayingState> state = default;
+        private readonly ReactivePropertySlim<PlayingState> state = default;
 
-        private ReadOnlyReactivePropertySlim<int> midiLoopCount = default;
+        private readonly ReadOnlyReactivePropertySlim<int> midiLoopCount = default;
 
-        private ReadOnlyReactivePropertySlim<int> audioLoopCount = default;
+        private readonly ReadOnlyReactivePropertySlim<int> audioLoopCount = default;
 
-        private BusyNotifier loopCountUpdate = new BusyNotifier();
+        private readonly BusyNotifier loopCountUpdate = new BusyNotifier();
 
         private ReactiveProperty<int> volume { get; }
         #endregion
@@ -77,7 +70,11 @@ namespace BGMPlayerCore
                   using (loopCountUpdate.ProcessStart())
                   {
                       int value = count;
-                      if (isLoopableBGM == false) value = int.MaxValue;
+                      if (isLoopableBGM == false)
+                      {
+                          value = int.MaxValue;
+                      }
+
                       loopCount.Value = value;
                   }
               });
@@ -128,7 +125,11 @@ namespace BGMPlayerCore
 
         public void Stop()
         {
-            if (playingBGM.Value == null) return;
+            if (playingBGM.Value == null)
+            {
+                return;
+            }
+
             switch (playingBGM.Value.FileExtension)
             {
                 case FileExtensionType.midi:
@@ -154,7 +155,11 @@ namespace BGMPlayerCore
 
         public void Pause()
         {
-            if (!IsPlaying) return;
+            if (!IsPlaying)
+            {
+                return;
+            }
+
             switch (playingBGM.Value.FileExtension)
             {
                 case FileExtensionType.midi:
@@ -174,7 +179,11 @@ namespace BGMPlayerCore
 
         public void ReStart()
         {
-            if (!IsPlaying) return;
+            if (!IsPlaying)
+            {
+                return;
+            }
+
             switch (playingBGM.Value.FileExtension)
             {
                 case FileExtensionType.midi:
@@ -201,9 +210,21 @@ namespace BGMPlayerCore
 
         public void ChangeVolume(int value)
         {
-            if (value > 10) return;
-            if (value < 0) return;
-            if (!IsPlaying) return;
+            if (value > 10)
+            {
+                return;
+            }
+
+            if (value < 0)
+            {
+                return;
+            }
+
+            if (!IsPlaying)
+            {
+                return;
+            }
+
             if (playingBGM.Value.FileExtension == FileExtensionType.midi)
             {
                 if (value == 0)
@@ -220,7 +241,7 @@ namespace BGMPlayerCore
                 _audioPlayer.Volume = value * 0.1f;
             }
 
-            this.volume.Value = value;
+            volume.Value = value;
         }
     }
 }

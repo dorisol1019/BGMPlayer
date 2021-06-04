@@ -1,15 +1,13 @@
-﻿using Prism.Commands;
+﻿using BGMList.Models;
+using BGMPlayer;
+using BGMPlayerCore;
+using BGMPlayerService;
 using Prism.Mvvm;
 using Reactive.Bindings;
-using System;
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
-using BGMList.Models;
 using System.Reactive.Linq;
-using BGMPlayer;
-using BGMPlayerService;
-using BGMPlayerCore;
 
 namespace BGMList.ViewModels
 {
@@ -42,7 +40,7 @@ namespace BGMList.ViewModels
             PlayCommand = new AsyncReactiveCommand();
             PlayCommand.Subscribe(() =>
             {
-                var bgm = allBGMs.BGMs.Value.First(e => e.FileName == SelectedBGM.Value);
+                BGM? bgm = allBGMs.BGMs.Value.First(e => e.FileName == SelectedBGM.Value);
                 playingBGMNotification.Notification.Value = bgm;
                 return bgmPlayerService.Play(bgm);
             });

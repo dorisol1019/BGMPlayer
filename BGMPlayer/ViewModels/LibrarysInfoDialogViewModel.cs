@@ -1,10 +1,7 @@
 ﻿using BGMPlayer.Models;
-using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace BGMPlayer.ViewModels
 {
@@ -14,7 +11,7 @@ namespace BGMPlayer.ViewModels
 
         public string Text { get; set; } = "";
 
-        private LibrarysInfo librarysInfo = new LibrarysInfo();
+        private readonly LibrarysInfo librarysInfo = new LibrarysInfo();
 
         public event Action<IDialogResult> RequestClose = (_) => { };
 

@@ -1,8 +1,4 @@
-﻿using Reactive.Bindings;
-using Reactive.Bindings.Notifiers;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Reactive.Bindings.Notifiers;
 
 namespace PlayerOperator.Models
 {
@@ -10,7 +6,7 @@ namespace PlayerOperator.Models
     {
         public SettingService(ISettingRepository settingRepository)
         {
-            var setting = settingRepository.LoadSetting();
+            Setting? setting = settingRepository.LoadSetting();
             IsTopMostWindow = setting.IsTopMostWindow;
         }
 

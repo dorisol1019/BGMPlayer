@@ -1,34 +1,34 @@
+using BGMList.Models;
 using BGMPlayer;
 using BGMPlayerCore;
+using BGMPlayerService;
+using PlayerOperator.Models;
 using Prism.Commands;
 using Prism.Mvvm;
-using Reactive.Bindings.Notifiers;
 using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
+using Reactive.Bindings.Notifiers;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using System.Windows;
-using Reactive.Bindings.Extensions;
-using BGMList.Models;
-using System.Collections;
-using PlayerOperator.Models;
-using BGMPlayerService;
+using System.Windows.Input;
 
 namespace PlayerOperator.ViewModels
 {
     public class PlayerOperatorViewModel : BindableBase
     {
-        private IBGMPlayerService player;
+        private readonly IBGMPlayerService player;
 
-        private ISelectedBGM selectedBGM;
+        private readonly ISelectedBGM selectedBGM;
 
-        private IUserOperationNotification<BGM> playingBGMNotification;
+        private readonly IUserOperationNotification<BGM> playingBGMNotification;
         public PlayerOperatorViewModel(IBGMPlayerService bgmPlayerService, IAllBGMs allBGMs, ISelectedBGM selectedBGM, IUserOperationNotification<BGM> playingBGMNotification, ISettingService settingService)
         {
-            this.player = bgmPlayerService;
+            player = bgmPlayerService;
             this.selectedBGM = selectedBGM;
             this.playingBGMNotification = playingBGMNotification;
 
@@ -49,7 +49,7 @@ namespace PlayerOperator.ViewModels
             PlayCommand = IsIdle.ToReactiveCommand();
             PlayCommand.Subscribe(async () =>
             {
-                await this.Play();
+                await Play();
             });
             StopCommand = new ReactiveCommand();
             StopCommand.Subscribe(Stop);
@@ -80,7 +80,7 @@ namespace PlayerOperator.ViewModels
             {
                 bool canParse = false;
                 {
-                    var tmp = LoopNumber_string.Value + e.Text;
+                    string? tmp = LoopNumber_string.Value + e.Text;
                     canParse = uint.TryParse(tmp, out uint x);
                 }
                 e.Handled = !canParse;
@@ -140,18 +140,18 @@ namespace PlayerOperator.ViewModels
                 }
             });
 
-            this.player.State.Subscribe(state =>
+            player.State.Subscribe(state =>
             {
                 switch (player.State.Value)
                 {
                     case PlayingState.Playing:
-                        this.PauseOrRestartButtonContent.Value = "一時停止";
+                        PauseOrRestartButtonContent.Value = "一時停止";
                         break;
                     case PlayingState.Stopping:
-                        this.PauseOrRestartButtonContent.Value = "";
+                        PauseOrRestartButtonContent.Value = "";
                         break;
                     case PlayingState.Pausing:
-                        this.PauseOrRestartButtonContent.Value = "停止解除";
+                        PauseOrRestartButtonContent.Value = "停止解除";
                         break;
                     default:
                         break;
@@ -190,14 +190,22 @@ namespace PlayerOperator.ViewModels
         public ReactiveProperty<bool> IsNextChecked { get; }
         private Task Play()
         {
-            var bgm = bgms.FirstOrDefault(e => e.FileName == selectedBGM.selectedBGM.Value);
-            if (bgm is null) return Task.CompletedTask;
+            BGM? bgm = bgms.FirstOrDefault(e => e.FileName == selectedBGM.selectedBGM.Value);
+            if (bgm is null)
+            {
+                return Task.CompletedTask;
+            }
+
             playingBGMNotification.Notification.Value = bgm;
             return Play(bgm);
         }
         private async Task Play(BGM bgm)
         {
-            if (IsBusy.Value) return;
+            if (IsBusy.Value)
+            {
+                return;
+            }
+
             using (BusyNotifier.ProcessStart())
             {
                 await player.Play(bgm);

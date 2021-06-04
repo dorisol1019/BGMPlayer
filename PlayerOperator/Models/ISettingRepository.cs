@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace PlayerOperator.Models
+﻿namespace PlayerOperator.Models
 {
     public interface ISettingRepository
     {

@@ -1,26 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Prism.Mvvm;
-using Reactive.Bindings;
-using System.Reactive.Linq;
-using System.Windows.Input;
-using Prism.Commands;
-using System.Windows;
-using System.ComponentModel.DataAnnotations;
-using Reactive.Bindings.Notifiers;
-using Reactive.Bindings.Extensions;
-using System.Windows.Threading;
-using Prism.Interactivity.InteractionRequest;
-using System.IO;
+﻿using BGMList.Models;
 using BGMPlayerCore;
-using System.Collections;
-using BGMList.Models;
-using Prism.Services.Dialogs;
 using PlayerOperator.Models;
+using Prism.Commands;
+using Prism.Mvvm;
+using Prism.Services.Dialogs;
+using Reactive.Bindings;
+using System;
+using System.Reactive.Linq;
+using System.Windows;
+using System.Windows.Input;
 
 namespace BGMPlayer.ViewModels
 {
@@ -31,7 +19,7 @@ namespace BGMPlayer.ViewModels
 
         public ReadOnlyReactivePropertySlim<bool> IsTopMostWindow { get; }
 
-        const string _defaultTitle = "BGM鳴ら～すV3";
+        private const string _defaultTitle = "BGM鳴ら～すV3";
 
 
         public ICommand Shutdown { get; }
@@ -39,7 +27,7 @@ namespace BGMPlayer.ViewModels
 
         public ICommand WindowClosedCommand { get; }
 
-        private IAllBGMs allBGMs;
+        private readonly IAllBGMs allBGMs;
 
         public MainWindowViewModel(IBGMPlayerService bgmPlayerService, IAllBGMs allBGMs, ISettingService settingService, IDialogService dialogService)
         {
@@ -55,13 +43,13 @@ namespace BGMPlayer.ViewModels
                 switch (state)
                 {
                     case PlayingState.Playing:
-                        this.Title.Value = $"再生中 : {bgmPlayerService.PlayingBGM.Value.FileName}";
+                        Title.Value = $"再生中 : {bgmPlayerService.PlayingBGM.Value.FileName}";
                         break;
                     case PlayingState.Stopping:
-                        this.Title.Value = _defaultTitle;
+                        Title.Value = _defaultTitle;
                         break;
                     case PlayingState.Pausing:
-                        this.Title.Value = $"一時停止 : {bgmPlayerService.PlayingBGM.Value.FileName}";
+                        Title.Value = $"一時停止 : {bgmPlayerService.PlayingBGM.Value.FileName}";
                         break;
                     default:
                         break;
@@ -84,16 +72,19 @@ namespace BGMPlayer.ViewModels
         public DelegateCommand PopUpVersionInfoCommand { get; }
         public DelegateCommand PopUpLibrarysInfoCommand { get; }
 
-        void OpenFolder()
+        private void OpenFolder()
         {
             var dig = new Models.OpenFolderDialog();
             dig.Show();
 
-            var folderName = dig.FolderName;
+            string? folderName = dig.FolderName;
 
-            if (folderName == "") return;
+            if (folderName == "")
+            {
+                return;
+            }
 
-            this.allBGMs.Refresh(folderName);
+            allBGMs.Refresh(folderName);
         }
     }
 }

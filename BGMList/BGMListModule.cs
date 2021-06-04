@@ -1,8 +1,6 @@
-﻿using BGMList.Views;
-using Prism.Ioc;
+﻿using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
-using BGMList.Models;
 
 namespace BGMList
 {
@@ -10,7 +8,7 @@ namespace BGMList
     {
         public void OnInitialized(IContainerProvider containerProvider)
         {
-            var regionManager = containerProvider.Resolve<IRegionManager>();
+            IRegionManager? regionManager = containerProvider.Resolve<IRegionManager>();
             regionManager.RegisterViewWithRegion("BGMList", typeof(Views.BGMList));
         }
 

@@ -1,17 +1,12 @@
-﻿using BGMPlayerCore;
+using BGMPlayerCore;
 using Reactive.Bindings;
-using Reactive.Bindings.Notifiers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BGMPlayer
 {
     public class BGMPlayerService : IBGMPlayerService
     {
-        private IBGMPlayerCoreApi bgmPlayerCore;
+        private readonly IBGMPlayerCoreApi bgmPlayerCore;
 
         public ReadOnlyReactivePropertySlim<PlayingState> State { get; }
 
@@ -23,7 +18,7 @@ namespace BGMPlayer
 
         public ReadOnlyReactivePropertySlim<int> Volume { get; }
 
-        private ReactivePropertySlim<bool> isPlaying;
+        private readonly ReactivePropertySlim<bool> isPlaying;
 
         public BGMPlayerService(IBGMPlayerCoreApi bgmPlayerCore)
         {

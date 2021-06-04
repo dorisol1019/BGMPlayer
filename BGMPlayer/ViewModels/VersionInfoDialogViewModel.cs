@@ -1,24 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using BGMPlayer.Models;
 using Prism.Commands;
 using Prism.Mvvm;
-
-using Reactive.Bindings;
-
-using BGMPlayer.Models;
-using System.Windows.Input;
-using Prism.Interactivity.InteractionRequest;
 using Prism.Services.Dialogs;
+using Reactive.Bindings;
+using System;
+using System.Windows.Input;
 
 namespace BGMPlayer.ViewModels
 {
     public class VersionInfoDialogViewModel : BindableBase, IDialogAware
     {
-        VersionInfo _versionInfo = new VersionInfo();
+        private readonly VersionInfo _versionInfo = new VersionInfo();
 
         public event Action<IDialogResult> RequestClose = (_) => { };
 

@@ -1,10 +1,5 @@
 using NAudio.CoreAudioApi;
 using Reactive.Bindings;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Concurrency;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,7 +14,7 @@ namespace BGMPlayerCore
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                var device = Utility.GetDefaultAudioEndpoint();
+                MMDevice? device = Utility.GetDefaultAudioEndpoint();
                 if (CurrentDefaultDevice.Value.ID != device.ID)
                 {
                     CurrentDefaultDevice.Value = device;

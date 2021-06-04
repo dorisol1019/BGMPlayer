@@ -14,7 +14,7 @@ namespace System.Collections
     }
 
     [SuppressUnmanagedCodeSecurity]
-    static public class CompareExtension
+    public static class CompareExtension
     {
         [DllImport("shlwapi.dll", CharSet = CharSet.Unicode)]
         public static extern int StrCmpLogicalW(string x, string y);
