@@ -1,4 +1,4 @@
-﻿using BGMPlayer;
+using BGMPlayer;
 using BGMPlayerCore;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -191,6 +191,7 @@ namespace PlayerOperator.ViewModels
         private Task Play()
         {
             var bgm = bgms.FirstOrDefault(e => e.FileName == selectedBGM.selectedBGM.Value);
+            if (bgm is null) return Task.CompletedTask;
             playingBGMNotification.Notification.Value = bgm;
             return Play(bgm);
         }
