@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BGMPlayer.Models
 {
@@ -22,7 +17,7 @@ namespace BGMPlayer.Models
             var asm = Assembly.GetExecutingAssembly();
             ApplicationVersion = $"Version {asm.GetCustomAttribute<AssemblyInformationalVersionAttribute>()!.InformationalVersion}";
 
-            CopyrightText = "Copyright (c) 2017-2020 dorisol1019";
+            CopyrightText = "Copyright (c) 2017-2021 dorisol1019";
             ProjectURL = "https://github.com/dorisol1019/BGMPlayer";
         }
 
