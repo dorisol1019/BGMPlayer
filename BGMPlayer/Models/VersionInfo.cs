@@ -23,7 +23,7 @@ namespace BGMPlayer.Models
 
         public void NavigateToProjectURL()
         {
-            Process.Start(ProjectURL);
+            Process.Start(new ProcessStartInfo("cmd", $"/c start {ProjectURL}") { CreateNoWindow = true });
         }
 
     }
