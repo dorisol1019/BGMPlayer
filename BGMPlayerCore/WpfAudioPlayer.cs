@@ -8,6 +8,8 @@ using NAudio.CoreAudioApi;
 using System.Runtime.InteropServices;
 
 using BGMPlayerCore;
+using System.Reactive.Linq;
+using Reactive.Bindings;
 
 namespace WpfAudioPlayer
 {
@@ -413,10 +415,17 @@ namespace WpfAudioPlayer
         private EventWaitHandle frameEventWaitHandle;
         private byte[] readBuffer;
         private volatile PlaybackState playbackState;
-        private Thread playThread;
         private WaveFormat outputFormat;
         private bool dmoResamplerNeeded;
         private readonly SynchronizationContext syncContext;
+
+        private Task? playTask;
+
+        private readonly CancellationTokenSource cancellationTokenSource = new();
+
+        private readonly ReadOnlyReactiveProperty<MMDevice?> audioDevice;
+        private readonly AudioDeviceWatcher audioDeviceWatcher;
+        private Task? watchTask;
 
         /// <summary>
         /// Playback Stopped
@@ -429,7 +438,7 @@ namespace WpfAudioPlayer
         /// <param name="shareMode">ShareMode - shared or exclusive</param>
         /// <param name="latency">Desired latency in milliseconds</param>
         public WasapiOut2(AudioClientShareMode shareMode, int latency) :
-            this(GetDefaultAudioEndpoint(), shareMode, true, latency)
+            this(Utility.GetDefaultAudioEndpoint(), shareMode, true, latency)
         {
 
         }
@@ -441,12 +450,12 @@ namespace WpfAudioPlayer
         /// <param name="useEventSync">true if sync is done with event. false use sleep.</param>
         /// <param name="latency">Desired latency in milliseconds</param>
         public WasapiOut2(AudioClientShareMode shareMode, bool useEventSync, int latency) :
-            this(GetDefaultAudioEndpoint(), shareMode, useEventSync, latency)
+            this(Utility.GetDefaultAudioEndpoint(), shareMode, useEventSync, latency)
         {
 
         }
         public WasapiOut2() :
-            this(GetDefaultAudioEndpoint(), AudioClientShareMode.Shared, false, 200)
+            this(Utility.GetDefaultAudioEndpoint(), AudioClientShareMode.Shared, false, 200)
         {
 
         }
@@ -464,24 +473,30 @@ namespace WpfAudioPlayer
             this.shareMode = shareMode;
             this.isUsingEventSync = useEventSync;
             this.latencyMilliseconds = latency;
-            this.syncContext = SynchronizationContext.Current;
-        }
+            this.syncContext = SynchronizationContext.Current ?? throw new InvalidOperationException("SynchronizationContext.Current is null.");
 
-        static MMDevice GetDefaultAudioEndpoint()
-        {
-            if (Environment.OSVersion.Version.Major < 6)
+            audioDeviceWatcher = new AudioDeviceWatcher();
+
+            audioDevice = audioDeviceWatcher.CurrentDefaultDevice.ToReadOnlyReactiveProperty(mode: ReactivePropertyMode.None);
+            audioDevice.Subscribe(async device =>
             {
-                throw new NotSupportedException("WASAPI supported only on Windows Vista and above");
-            }
-            MMDeviceEnumerator enumerator = new MMDeviceEnumerator();
-            return enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console);
+                this.Pause();
+                await Task.Delay(100);
+                audioClient.Stop();
+                mmDevice = device;
+                audioClient = mmDevice.AudioClient;
+                this.Init(sourceProvider!);
+                await Task.Delay(100);
+                audioClient.Start();
+                this.Play();
+            });
         }
 
-        private void PlayThread()
+        private async Task PlayTask(CancellationToken cancellationToken)
         {
-            ResamplerDmoStream resamplerDmoStream = null;
+            ResamplerDmoStream? resamplerDmoStream = null;
             IWaveProvider playbackProvider = this.sourceProvider;
-            Exception exception = null;
+            Exception? exception = null;
             try
             {
                 if (this.dmoResamplerNeeded)
@@ -503,6 +518,8 @@ namespace WpfAudioPlayer
 
                 while (playbackState != PlaybackState.Stopped)
                 {
+                    if (cancellationToken.IsCancellationRequested) break;
+
                     // If using Event Sync, Wait for notification from AudioClient or Sleep half latency
                     int indexHandle = 0;
                     if (isUsingEventSync)
@@ -511,7 +528,7 @@ namespace WpfAudioPlayer
                     }
                     else
                     {
-                        Thread.Sleep(latencyMilliseconds / 2);
+                        await Task.Delay(latencyMilliseconds / 2, cancellationToken);
                     }
 
                     // If still playing and notification is ok
@@ -535,7 +552,7 @@ namespace WpfAudioPlayer
                         }
                     }
                 }
-                Thread.Sleep(latencyMilliseconds / 2);
+                await Task.Delay(latencyMilliseconds / 2, cancellationToken);
                 audioClient.Stop();
                 if (playbackState == PlaybackState.Stopped)
                 {
@@ -552,7 +569,10 @@ namespace WpfAudioPlayer
                 {
                     resamplerDmoStream.Dispose();
                 }
-                RaisePlaybackStopped(exception);
+                if (exception is not null)
+                {
+                    RaisePlaybackStopped(exception);
+                }
             }
         }
 
@@ -624,16 +644,15 @@ namespace WpfAudioPlayer
             {
                 if (playbackState == PlaybackState.Stopped)
                 {
-                    playThread = new Thread(new ThreadStart(PlayThread));
+                    var token = cancellationTokenSource.Token;
+                    playTask = Task.Run(() => PlayTask(token));
+                    watchTask = Task.Factory.StartNew(() => audioDeviceWatcher.Watch(token), token, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
                     playbackState = PlaybackState.Playing;
-                    playThread.Start();
                 }
                 else
                 {
                     playbackState = PlaybackState.Playing;
                 }
-
-
             }
         }
 
@@ -645,8 +664,19 @@ namespace WpfAudioPlayer
             if (playbackState != PlaybackState.Stopped)
             {
                 playbackState = PlaybackState.Stopped;
-                playThread.Join();
-                playThread = null;
+                cancellationTokenSource.Cancel();
+                if (playTask is null)
+                {
+                    throw new InvalidOperationException("playTask is null.");
+                }
+
+                if (watchTask is null)
+                {
+                    throw new InvalidOperationException("watchTask is null.");
+                }
+
+                playTask.Wait();
+                watchTask.Wait();
             }
         }
 
@@ -810,6 +840,7 @@ namespace WpfAudioPlayer
         /// </summary>
         public void Dispose()
         {
+            audioDevice?.Dispose();
 
             if (audioClient != null)
             {
