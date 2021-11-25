@@ -1,27 +1,24 @@
-﻿using Reactive.Bindings;
-using System;
-using System.Threading.Tasks;
+using Reactive.Bindings;
 
-namespace BGMPlayerCore
+namespace BGMPlayerCore;
+
+public interface IBGMPlayerCoreApi : IDisposable
 {
-    public interface IBGMPlayerCoreApi : IDisposable
-    {
-        Task Play(BgmFilePath bgm);
+    Task Play(BgmFilePath bgm);
 
-        void Stop();
+    void Stop();
 
-        void Pause();
+    void Pause();
 
-        void ReStart();
+    void ReStart();
 
-        void ChangeVolume(int volume);
+    void ChangeVolume(int volume);
 
-        ReadOnlyReactivePropertySlim<PlayingState> State { get; }
+    ReadOnlyReactivePropertySlim<PlayingState> State { get; }
 
-        ReadOnlyReactivePropertySlim<int> LoopCount { get; }
+    ReadOnlyReactivePropertySlim<int> LoopCount { get; }
 
-        ReadOnlyReactivePropertySlim<BgmFilePath> PlayingBGM { get; }
+    ReadOnlyReactivePropertySlim<BgmFilePath> PlayingBGM { get; }
 
-        ReadOnlyReactivePropertySlim<int> Volume { get; }
-    }
+    ReadOnlyReactivePropertySlim<int> Volume { get; }
 }

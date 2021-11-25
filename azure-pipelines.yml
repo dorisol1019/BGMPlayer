@@ -21,10 +21,10 @@ variables:
 
 steps:
 - task: UseDotNet@2
-  displayName: Install .NET 5
+  displayName: Install .NET 6
   inputs:
     packageType: 'sdk'
-    version: '5.0.x'
+    version: '6.0.x'
 
 - task: DotNetCoreCLI@2
   displayName: Build projects
@@ -37,7 +37,7 @@ steps:
 - task: DotNetCoreCLI@2
   displayName: Create build self-contained artifact
   inputs:
-    command: publish    
+    command: publish
     publishWebProjects: false
     projects: '**/BGMPlayer.csproj'
     arguments: '--configuration $(BuildConfiguration) --output $(Build.BinariesDirectory) -r win10-x86 --self-contained true /p:PublishSingleFile=true'
@@ -55,18 +55,18 @@ steps:
 
 
 - task: ArchiveFiles@2
-  displayName: Create self-contained zip 
+  displayName: Create self-contained zip
   inputs:
-    rootFolderOrFile: '$(Build.BinariesDirectory)' 
-    includeRootFolder: false 
+    rootFolderOrFile: '$(Build.BinariesDirectory)'
+    includeRootFolder: false
     archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/BGMPlayer_runtime_bundle.zip' 
+    archiveFile: '$(Build.ArtifactStagingDirectory)/BGMPlayer_runtime_bundle.zip'
 
 #ポータブル
 - task: DotNetCoreCLI@2
   displayName: Create build artifact
   inputs:
-    command: publish    
+    command: publish
     publishWebProjects: false
     projects: '**/BGMPlayer.csproj'
     arguments: '--configuration $(BuildConfiguration) --output $(Build.BinariesDirectory) -r win10-x86 --self-contained false /p:PublishSingleFile=true'
@@ -84,12 +84,12 @@ steps:
     flattenFolders: true
 
 - task: ArchiveFiles@2
-  displayName: Create zip 
+  displayName: Create zip
   inputs:
-    rootFolderOrFile: '$(Build.BinariesDirectory)' 
-    includeRootFolder: false 
+    rootFolderOrFile: '$(Build.BinariesDirectory)'
+    includeRootFolder: false
     archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/BGMPlayer.zip' 
+    archiveFile: '$(Build.ArtifactStagingDirectory)/BGMPlayer.zip'
 
 # GitHubにUpload
 - task: GitHubRelease@1

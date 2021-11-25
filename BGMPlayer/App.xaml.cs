@@ -1,4 +1,4 @@
-﻿using BGMList;
+using BGMList;
 using BGMList.Models;
 using BGMPlayer.ViewModels;
 using BGMPlayer.Views;
@@ -12,49 +12,48 @@ using Prism.Unity;
 using System.IO;
 using System.Windows;
 
-namespace BGMPlayer
+namespace BGMPlayer;
+
+/// <summary>
+/// App.xaml の相互作用ロジック
+/// </summary>
+public partial class App : PrismApplication
 {
-    /// <summary>
-    /// App.xaml の相互作用ロジック
-    /// </summary>
-    public partial class App : PrismApplication
+    protected override Window CreateShell()
     {
-        protected override Window CreateShell()
+        return Container.Resolve<MainWindow>();
+    }
+
+    public override void Initialize()
+    {
+        if (!Directory.Exists("./Playlist"))
         {
-            return Container.Resolve<MainWindow>();
+            Directory.CreateDirectory("./Playlist");
         }
+        base.Initialize();
+    }
 
-        public override void Initialize()
-        {
-            if (!Directory.Exists("./Playlist"))
-            {
-                Directory.CreateDirectory("./Playlist");
-            }
-            base.Initialize();
-        }
+    protected override void RegisterTypes(IContainerRegistry containerRegistry)
+    {
+        containerRegistry.RegisterDialog<VersionInfoDialog, VersionInfoDialogViewModel>("VersionInfo");
+        containerRegistry.RegisterDialog<LibrarysInfoDialog, LibrarysInfoDialogViewModel>("LibrarysInfo");
 
-        protected override void RegisterTypes(IContainerRegistry containerRegistry)
-        {
-            containerRegistry.RegisterDialog<VersionInfoDialog, VersionInfoDialogViewModel>("VersionInfo");
-            containerRegistry.RegisterDialog<LibrarysInfoDialog, LibrarysInfoDialogViewModel>("LibrarysInfo");
-
-            containerRegistry.RegisterInstance<IAllBGMs>(new AllBGMs());
-            containerRegistry.RegisterInstance<ISelectedBGM>(new SelectedBGM());
+        containerRegistry.RegisterInstance<IAllBGMs>(new AllBGMs());
+        containerRegistry.RegisterInstance<ISelectedBGM>(new SelectedBGM());
 
 
-            containerRegistry.RegisterSingleton<IBGMPlayerCoreApi, BGMPlayerCoreApi>();
-            containerRegistry.RegisterSingleton<IBGMPlayerService, BGMPlayerService>();
+        containerRegistry.RegisterSingleton<IBGMPlayerCoreApi, BGMPlayerCoreApi>();
+        containerRegistry.RegisterSingleton<IBGMPlayerService, BGMPlayerService>();
 
-            containerRegistry.RegisterInstance<IUserOperationNotification<BgmFilePath>>(new UserOperationNotification<BgmFilePath>());
-            containerRegistry.Register<ISettingRepository, SettingRepository>();
-            containerRegistry.RegisterSingleton<ISettingService, SettingService>();
-        }
+        containerRegistry.RegisterInstance<IUserOperationNotification<BgmFilePath>>(new UserOperationNotification<BgmFilePath>());
+        containerRegistry.Register<ISettingRepository, SettingRepository>();
+        containerRegistry.RegisterSingleton<ISettingService, SettingService>();
+    }
 
-        protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
-        {
-            base.ConfigureModuleCatalog(moduleCatalog);
-            moduleCatalog.AddModule<BGMListModule>(InitializationMode.WhenAvailable);
-            moduleCatalog.AddModule<PlayerOperatorModule>(InitializationMode.WhenAvailable);
-        }
+    protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
+    {
+        base.ConfigureModuleCatalog(moduleCatalog);
+        moduleCatalog.AddModule<BGMListModule>(InitializationMode.WhenAvailable);
+        moduleCatalog.AddModule<PlayerOperatorModule>(InitializationMode.WhenAvailable);
     }
 }

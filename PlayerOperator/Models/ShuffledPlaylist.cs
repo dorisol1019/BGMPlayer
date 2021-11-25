@@ -1,33 +1,29 @@
-﻿using BGMPlayerCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using BGMPlayerCore;
 
-namespace PlayerOperator.Models
+namespace PlayerOperator.Models;
+
+public class ShuffledPlaylist : IPlaylist
 {
-    public class ShuffledPlaylist : IPlaylist
-    {
-        private readonly Queue<BgmFilePath> keepPlaylist;
-        private Queue<BgmFilePath> playlist;
+    private readonly Queue<BgmFilePath> keepPlaylist;
+    private Queue<BgmFilePath> playlist;
 
-        public ShuffledPlaylist(IEnumerable<BgmFilePath> source)
+    public ShuffledPlaylist(IEnumerable<BgmFilePath> source)
+    {
+        keepPlaylist = new Queue<BgmFilePath>(Shuffle(source));
+        playlist = new Queue<BgmFilePath>(keepPlaylist);
+    }
+
+    private IEnumerable<BgmFilePath> Shuffle(IEnumerable<BgmFilePath> source)
+    {
+        return source.OrderBy(e => Guid.NewGuid());
+    }
+    public BgmFilePath Next()
+    {
+        if (!playlist.Any())
         {
-            keepPlaylist = new Queue<BgmFilePath>(Shuffle(source));
             playlist = new Queue<BgmFilePath>(keepPlaylist);
         }
 
-        private IEnumerable<BgmFilePath> Shuffle(IEnumerable<BgmFilePath> source)
-        {
-            return source.OrderBy(e => Guid.NewGuid());
-        }
-        public BgmFilePath Next()
-        {
-            if (!playlist.Any())
-            {
-                playlist = new Queue<BgmFilePath>(keepPlaylist);
-            }
-
-            return playlist.Dequeue();
-        }
+        return playlist.Dequeue();
     }
 }

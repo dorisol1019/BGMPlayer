@@ -1,9 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
-  
+
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <AssemblyName>BGMPlayer</AssemblyName>
     <Copyright>Copyright 2017-2021 dorisol1019</Copyright>
@@ -12,7 +13,7 @@
     <RootNamespace>BGMPlayer</RootNamespace>
     <Nullable>enable</Nullable>
     <ApplicationIcon>icon3.ico</ApplicationIcon>
-    <Version>1.1.1</Version>
+    <Version>1.1.2</Version>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

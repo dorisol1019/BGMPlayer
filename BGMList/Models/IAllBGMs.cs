@@ -1,13 +1,11 @@
-﻿using BGMPlayerCore;
+using BGMPlayerCore;
 using Reactive.Bindings;
-using System.Collections.Generic;
 
-namespace BGMList.Models
+namespace BGMList.Models;
+
+public interface IAllBGMs
 {
-    public interface IAllBGMs
-    {
-        ReadOnlyReactiveProperty<List<BgmFilePath>> BGMs { get; }
+    ReadOnlyReactiveProperty<List<BgmFilePath>> BGMs { get; }
 
-        void Refresh(string path);
-    }
+    void Refresh(string path);
 }

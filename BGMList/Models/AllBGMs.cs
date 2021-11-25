@@ -1,39 +1,36 @@
 using BGMPlayerCore;
 using Reactive.Bindings;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
-namespace BGMList.Models
+namespace BGMList.Models;
+
+public class AllBGMs : IAllBGMs
 {
-    public class AllBGMs : IAllBGMs
+    public ReadOnlyReactiveProperty<List<BgmFilePath>> BGMs { get; }
+    private readonly ReactiveProperty<List<BgmFilePath>> bgms;
+
+    public AllBGMs()
     {
-        public ReadOnlyReactiveProperty<List<BgmFilePath>> BGMs { get; }
-        private readonly ReactiveProperty<List<BgmFilePath>> bgms;
+        bgms = new ReactiveProperty<List<BgmFilePath>>();
+        BGMs = new ReadOnlyReactiveProperty<List<BgmFilePath>>(bgms);
 
-        public AllBGMs()
+        Refresh("./Playlist");
+    }
+    public void Refresh(string path)
+    {
+        if (!Directory.Exists(path))
         {
-            bgms = new ReactiveProperty<List<BgmFilePath>>();
-            BGMs = new ReadOnlyReactiveProperty<List<BgmFilePath>>(bgms);
-
-            Refresh("./Playlist");
+            throw new DirectoryNotFoundException();
         }
-        public void Refresh(string path)
+
+        string[]? files = Directory.GetFiles(path);
+        var enableFiles = new List<BgmFilePath>();
+
+        foreach (string? file in files.Where(e => BgmType.CanParse(e)))
         {
-            if (!Directory.Exists(path))
-            {
-                throw new DirectoryNotFoundException();
-            }
-
-            string[]? files = Directory.GetFiles(path);
-            var enableFiles = new List<BgmFilePath>();
-
-            foreach (string? file in files.Where(e => BgmType.CanParse(e)))
-            {
-                var bgm = new BgmFilePath(file);
-                enableFiles.Add(bgm);
-            }
-            bgms.Value = enableFiles;
+            var bgm = new BgmFilePath(file);
+            enableFiles.Add(bgm);
         }
+        bgms.Value = enableFiles;
     }
 }

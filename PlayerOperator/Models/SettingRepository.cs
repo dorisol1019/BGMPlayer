@@ -1,22 +1,21 @@
-﻿namespace PlayerOperator.Models
+namespace PlayerOperator.Models;
+
+public class SettingRepository : ISettingRepository
 {
-    public class SettingRepository : ISettingRepository
+    private Setting setting;
+
+    public SettingRepository()
     {
-        private Setting setting;
+        setting = new Setting();
+    }
 
-        public SettingRepository()
-        {
-            setting = new Setting();
-        }
+    public void SaveSetting(Setting setting)
+    {
+        this.setting = setting;
+    }
 
-        public void SaveSetting(Setting setting)
-        {
-            this.setting = setting;
-        }
-
-        public Setting LoadSetting()
-        {
-            return setting;
-        }
+    public Setting LoadSetting()
+    {
+        return setting;
     }
 }

@@ -1,9 +1,8 @@
-﻿using Reactive.Bindings;
+using Reactive.Bindings;
 
-namespace BGMList.Models
+namespace BGMList.Models;
+
+public class SelectedBGM : ISelectedBGM
 {
-    public class SelectedBGM : ISelectedBGM
-    {
-        public ReactivePropertySlim<string> selectedBGM { get; set; } = new ReactivePropertySlim<string>("");
-    }
+    public ReactivePropertySlim<string> selectedBGM { get; set; } = new ReactivePropertySlim<string>("");
 }

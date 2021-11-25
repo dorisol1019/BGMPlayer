@@ -1,15 +1,14 @@
-﻿using System.Windows.Controls;
+using System.Windows.Controls;
 
-namespace BGMList.Views
+namespace BGMList.Views;
+
+/// <summary>
+/// Interaction logic for BGMList
+/// </summary>
+public partial class BGMList : UserControl
 {
-    /// <summary>
-    /// Interaction logic for BGMList
-    /// </summary>
-    public partial class BGMList : UserControl
+    public BGMList()
     {
-        public BGMList()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

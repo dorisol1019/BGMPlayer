@@ -1,36 +1,34 @@
-﻿using BGMPlayer.Models;
+using BGMPlayer.Models;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
-using System;
 
-namespace BGMPlayer.ViewModels
+namespace BGMPlayer.ViewModels;
+
+public class LibrarysInfoDialogViewModel : BindableBase, IDialogAware
 {
-    public class LibrarysInfoDialogViewModel : BindableBase, IDialogAware
+    public string Title => "ライブラリの情報";
+
+    public string Text { get; set; } = "";
+
+    private readonly LibrarysInfo librarysInfo = new LibrarysInfo();
+
+    public event Action<IDialogResult> RequestClose = (_) => { };
+
+    public LibrarysInfoDialogViewModel()
     {
-        public string Title => "ライブラリの情報";
+        Text = librarysInfo.Text;
+    }
 
-        public string Text { get; set; } = "";
+    public bool CanCloseDialog()
+    {
+        return true;
+    }
 
-        private readonly LibrarysInfo librarysInfo = new LibrarysInfo();
+    public void OnDialogClosed()
+    {
+    }
 
-        public event Action<IDialogResult> RequestClose = (_) => { };
-
-        public LibrarysInfoDialogViewModel()
-        {
-            Text = librarysInfo.Text;
-        }
-
-        public bool CanCloseDialog()
-        {
-            return true;
-        }
-
-        public void OnDialogClosed()
-        {
-        }
-
-        public void OnDialogOpened(IDialogParameters parameters)
-        {
-        }
+    public void OnDialogOpened(IDialogParameters parameters)
+    {
     }
 }

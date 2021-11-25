@@ -1,9 +1,8 @@
-﻿using BGMPlayerCore;
+using BGMPlayerCore;
 
-namespace PlayerOperator.Models
+namespace PlayerOperator.Models;
+
+public interface IPlaylist
 {
-    public interface IPlaylist
-    {
-        BgmFilePath Next();
-    }
+    BgmFilePath Next();
 }

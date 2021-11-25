@@ -1,9 +1,8 @@
-﻿namespace BGMPlayerCore
+namespace BGMPlayerCore;
+
+public enum PlayingState
 {
-    public enum PlayingState
-    {
-        Playing,
-        Stopping,
-        Pausing,
-    }
+    Playing,
+    Stopping,
+    Pausing,
 }

@@ -1,76 +1,74 @@
 using BGMPlayerCore;
 using Reactive.Bindings;
-using System.Threading.Tasks;
 
-namespace BGMPlayer
+namespace BGMPlayer;
+
+public class BGMPlayerService : IBGMPlayerService
 {
-    public class BGMPlayerService : IBGMPlayerService
+    private readonly IBGMPlayerCoreApi bgmPlayerCore;
+
+    public ReadOnlyReactivePropertySlim<PlayingState> State { get; }
+
+    public ReadOnlyReactivePropertySlim<int> LoopCounter { get; }
+
+    public ReadOnlyReactivePropertySlim<bool> IsPlaying { get; }
+
+    public ReadOnlyReactivePropertySlim<BgmFilePath> PlayingBGM { get; }
+
+    public ReadOnlyReactivePropertySlim<int> Volume { get; }
+
+    private readonly ReactivePropertySlim<bool> isPlaying;
+
+    public BGMPlayerService(IBGMPlayerCoreApi bgmPlayerCore)
     {
-        private readonly IBGMPlayerCoreApi bgmPlayerCore;
+        this.bgmPlayerCore = bgmPlayerCore;
 
-        public ReadOnlyReactivePropertySlim<PlayingState> State { get; }
+        State = bgmPlayerCore.State.ToReadOnlyReactivePropertySlim();
 
-        public ReadOnlyReactivePropertySlim<int> LoopCounter { get; }
+        LoopCounter = bgmPlayerCore.LoopCount.ToReadOnlyReactivePropertySlim();
 
-        public ReadOnlyReactivePropertySlim<bool> IsPlaying { get; }
+        isPlaying = new ReactivePropertySlim<bool>(false);
+        IsPlaying = isPlaying.ToReadOnlyReactivePropertySlim();
 
-        public ReadOnlyReactivePropertySlim<BgmFilePath> PlayingBGM { get; }
+        PlayingBGM = this.bgmPlayerCore.PlayingBGM;
 
-        public ReadOnlyReactivePropertySlim<int> Volume { get; }
+        Volume = this.bgmPlayerCore.Volume;
+    }
+    public async Task Play(BgmFilePath bgm)
+    {
+        bgmPlayerCore.Stop();
+        await bgmPlayerCore.Play(bgm);
+        isPlaying.Value = true;
+    }
 
-        private readonly ReactivePropertySlim<bool> isPlaying;
+    public void Stop()
+    {
+        bgmPlayerCore.Stop();
+        isPlaying.Value = false;
+    }
 
-        public BGMPlayerService(IBGMPlayerCoreApi bgmPlayerCore)
+    public void PauseOrReStart()
+    {
+        switch (State.Value)
         {
-            this.bgmPlayerCore = bgmPlayerCore;
-
-            State = bgmPlayerCore.State.ToReadOnlyReactivePropertySlim();
-
-            LoopCounter = bgmPlayerCore.LoopCount.ToReadOnlyReactivePropertySlim();
-
-            isPlaying = new ReactivePropertySlim<bool>(false);
-            IsPlaying = isPlaying.ToReadOnlyReactivePropertySlim();
-
-            PlayingBGM = this.bgmPlayerCore.PlayingBGM;
-
-            Volume = this.bgmPlayerCore.Volume;
+            case PlayingState.Playing:
+                bgmPlayerCore.Pause();
+                break;
+            case PlayingState.Pausing:
+                bgmPlayerCore.ReStart();
+                break;
+            default:
+                break;
         }
-        public async Task Play(BgmFilePath bgm)
-        {
-            bgmPlayerCore.Stop();
-            await bgmPlayerCore.Play(bgm);
-            isPlaying.Value = true;
-        }
+    }
 
-        public void Stop()
-        {
-            bgmPlayerCore.Stop();
-            isPlaying.Value = false;
-        }
+    public void ChangeVolume(int value)
+    {
+        bgmPlayerCore.ChangeVolume(value);
+    }
 
-        public void PauseOrReStart()
-        {
-            switch (State.Value)
-            {
-                case PlayingState.Playing:
-                    bgmPlayerCore.Pause();
-                    break;
-                case PlayingState.Pausing:
-                    bgmPlayerCore.ReStart();
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        public void ChangeVolume(int value)
-        {
-            bgmPlayerCore.ChangeVolume(value);
-        }
-
-        public void Dispose()
-        {
-            bgmPlayerCore.Dispose();
-        }
+    public void Dispose()
+    {
+        bgmPlayerCore.Dispose();
     }
 }

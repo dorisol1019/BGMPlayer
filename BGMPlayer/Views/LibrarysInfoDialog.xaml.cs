@@ -1,15 +1,14 @@
-﻿using System.Windows.Controls;
+using System.Windows.Controls;
 
-namespace BGMPlayer.Views
+namespace BGMPlayer.Views;
+
+/// <summary>
+/// Interaction logic for LibrarysInfoDialog
+/// </summary>
+public partial class LibrarysInfoDialog : UserControl
 {
-    /// <summary>
-    /// Interaction logic for LibrarysInfoDialog
-    /// </summary>
-    public partial class LibrarysInfoDialog : UserControl
+    public LibrarysInfoDialog()
     {
-        public LibrarysInfoDialog()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

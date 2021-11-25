@@ -1,15 +1,14 @@
-﻿using System.Windows;
+using System.Windows;
 
-namespace BGMPlayer.Views
+namespace BGMPlayer.Views;
+
+/// <summary>
+/// MainWindow.xaml の相互作用ロジック
+/// </summary>
+public partial class MainWindow : Window
 {
-    /// <summary>
-    /// MainWindow.xaml の相互作用ロジック
-    /// </summary>
-    public partial class MainWindow : Window
+    public MainWindow()
     {
-        public MainWindow()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

@@ -1,9 +1,8 @@
-﻿using Reactive.Bindings.Notifiers;
+using Reactive.Bindings.Notifiers;
 
-namespace PlayerOperator.Models
+namespace PlayerOperator.Models;
+
+public interface ISettingService
 {
-    public interface ISettingService
-    {
-        BooleanNotifier IsTopMostWindow { get; set; }
-    }
+    BooleanNotifier IsTopMostWindow { get; set; }
 }

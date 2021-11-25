@@ -1,20 +1,19 @@
-﻿using Prism.Ioc;
+using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
 
-namespace PlayerOperator
+namespace PlayerOperator;
+
+public class PlayerOperatorModule : IModule
 {
-    public class PlayerOperatorModule : IModule
+    public void OnInitialized(IContainerProvider containerProvider)
     {
-        public void OnInitialized(IContainerProvider containerProvider)
-        {
-            IRegionManager? regionManager = containerProvider.Resolve<IRegionManager>();
-            regionManager.RegisterViewWithRegion("PlayerOperator", typeof(Views.PlayerOperator));
-        }
+        IRegionManager? regionManager = containerProvider.Resolve<IRegionManager>();
+        regionManager.RegisterViewWithRegion("PlayerOperator", typeof(Views.PlayerOperator));
+    }
 
-        public void RegisterTypes(IContainerRegistry containerRegistry)
-        {
+    public void RegisterTypes(IContainerRegistry containerRegistry)
+    {
 
-        }
     }
 }

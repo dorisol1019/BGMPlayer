@@ -1,15 +1,14 @@
-﻿using Reactive.Bindings.Notifiers;
+using Reactive.Bindings.Notifiers;
 
-namespace PlayerOperator.Models
+namespace PlayerOperator.Models;
+
+public class SettingService : ISettingService
 {
-    public class SettingService : ISettingService
+    public SettingService(ISettingRepository settingRepository)
     {
-        public SettingService(ISettingRepository settingRepository)
-        {
-            Setting? setting = settingRepository.LoadSetting();
-            IsTopMostWindow = setting.IsTopMostWindow;
-        }
-
-        public BooleanNotifier IsTopMostWindow { get; set; }
+        Setting? setting = settingRepository.LoadSetting();
+        IsTopMostWindow = setting.IsTopMostWindow;
     }
+
+    public BooleanNotifier IsTopMostWindow { get; set; }
 }

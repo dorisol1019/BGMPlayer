@@ -1,15 +1,14 @@
-﻿using System.Windows.Controls;
+using System.Windows.Controls;
 
-namespace PlayerOperator.Views
+namespace PlayerOperator.Views;
+
+/// <summary>
+/// Interaction logic for PlayerOperator
+/// </summary>
+public partial class PlayerOperator : UserControl
 {
-    /// <summary>
-    /// Interaction logic for PlayerOperator
-    /// </summary>
-    public partial class PlayerOperator : UserControl
+    public PlayerOperator()
     {
-        public PlayerOperator()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

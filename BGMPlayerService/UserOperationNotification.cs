@@ -1,9 +1,8 @@
-﻿using Reactive.Bindings;
+using Reactive.Bindings;
 
-namespace BGMPlayerService
+namespace BGMPlayerService;
+
+public class UserOperationNotification<T> : IUserOperationNotification<T>
 {
-    public class UserOperationNotification<T> : IUserOperationNotification<T>
-    {
-        public ReactivePropertySlim<T> Notification { get; } = new ReactivePropertySlim<T>(mode: ReactivePropertyMode.None);
-    }
+    public ReactivePropertySlim<T> Notification { get; } = new ReactivePropertySlim<T>(mode: ReactivePropertyMode.None);
 }
