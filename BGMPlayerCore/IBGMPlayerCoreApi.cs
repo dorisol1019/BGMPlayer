@@ -6,7 +6,7 @@ namespace BGMPlayerCore
 {
     public interface IBGMPlayerCoreApi : IDisposable
     {
-        Task Play(BGM bgm);
+        Task Play(BgmFilePath bgm);
 
         void Stop();
 
@@ -20,7 +20,7 @@ namespace BGMPlayerCore
 
         ReadOnlyReactivePropertySlim<int> LoopCount { get; }
 
-        ReadOnlyReactivePropertySlim<BGM> PlayingBGM { get; }
+        ReadOnlyReactivePropertySlim<BgmFilePath> PlayingBGM { get; }
 
         ReadOnlyReactivePropertySlim<int> Volume { get; }
     }

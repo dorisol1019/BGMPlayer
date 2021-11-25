@@ -27,7 +27,7 @@ namespace BGMList.ViewModels
         private readonly IAllBGMs allBGMs;
 
         private readonly IBGMPlayerService bgmPlayerService;
-        public BGMListViewModel(IBGMPlayerService bgmPlayerService, IAllBGMs allBGMs, ISelectedBGM selectedBGM, IUserOperationNotification<BGM> playingBGMNotification)
+        public BGMListViewModel(IBGMPlayerService bgmPlayerService, IAllBGMs allBGMs, ISelectedBGM selectedBGM, IUserOperationNotification<BgmFilePath> playingBGMNotification)
         {
             this.bgmPlayerService = bgmPlayerService;
 
@@ -40,7 +40,7 @@ namespace BGMList.ViewModels
             PlayCommand = new AsyncReactiveCommand();
             PlayCommand.Subscribe(() =>
             {
-                BGM? bgm = allBGMs.BGMs.Value.First(e => e.FileName == SelectedBGM.Value);
+                BgmFilePath? bgm = allBGMs.BGMs.Value.First(e => e.FileName == SelectedBGM.Value);
                 playingBGMNotification.Notification.Value = bgm;
                 return bgmPlayerService.Play(bgm);
             });

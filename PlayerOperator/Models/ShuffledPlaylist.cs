@@ -7,24 +7,24 @@ namespace PlayerOperator.Models
 {
     public class ShuffledPlaylist : IPlaylist
     {
-        private readonly Queue<BGM> keepPlaylist;
-        private Queue<BGM> playlist;
+        private readonly Queue<BgmFilePath> keepPlaylist;
+        private Queue<BgmFilePath> playlist;
 
-        public ShuffledPlaylist(IEnumerable<BGM> source)
+        public ShuffledPlaylist(IEnumerable<BgmFilePath> source)
         {
-            keepPlaylist = new Queue<BGM>(Shuffle(source));
-            playlist = new Queue<BGM>(keepPlaylist);
+            keepPlaylist = new Queue<BgmFilePath>(Shuffle(source));
+            playlist = new Queue<BgmFilePath>(keepPlaylist);
         }
 
-        private IEnumerable<BGM> Shuffle(IEnumerable<BGM> source)
+        private IEnumerable<BgmFilePath> Shuffle(IEnumerable<BgmFilePath> source)
         {
             return source.OrderBy(e => Guid.NewGuid());
         }
-        public BGM Next()
+        public BgmFilePath Next()
         {
             if (!playlist.Any())
             {
-                playlist = new Queue<BGM>(keepPlaylist);
+                playlist = new Queue<BgmFilePath>(keepPlaylist);
             }
 
             return playlist.Dequeue();

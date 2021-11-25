@@ -6,7 +6,7 @@ namespace BGMList.Models
 {
     public interface IAllBGMs
     {
-        ReadOnlyReactiveProperty<List<BGM>> BGMs { get; }
+        ReadOnlyReactiveProperty<List<BgmFilePath>> BGMs { get; }
 
         void Refresh(string path);
     }

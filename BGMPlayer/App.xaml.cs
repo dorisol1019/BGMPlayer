@@ -45,7 +45,7 @@ namespace BGMPlayer
             containerRegistry.RegisterSingleton<IBGMPlayerCoreApi, BGMPlayerCoreApi>();
             containerRegistry.RegisterSingleton<IBGMPlayerService, BGMPlayerService>();
 
-            containerRegistry.RegisterInstance<IUserOperationNotification<BGM>>(new UserOperationNotification<BGM>());
+            containerRegistry.RegisterInstance<IUserOperationNotification<BgmFilePath>>(new UserOperationNotification<BgmFilePath>());
             containerRegistry.Register<ISettingRepository, SettingRepository>();
             containerRegistry.RegisterSingleton<ISettingService, SettingService>();
         }

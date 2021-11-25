@@ -16,7 +16,7 @@ namespace BGMPlayerCore
         private readonly IGuruGuruSmf4Api _ggs = Ggs4Dll.GetInstance();
         private readonly AudioPlayer _audioPlayer;
 
-        private readonly ReactivePropertySlim<BGM> playingBGM;
+        private readonly ReactivePropertySlim<BgmFilePath> playingBGM;
         private bool isLoopableBGM = false;
 
         private readonly ReactivePropertySlim<int> loopCount = default;
@@ -39,7 +39,7 @@ namespace BGMPlayerCore
 
         public ReadOnlyReactivePropertySlim<PlayingState> State { get; }
 
-        public ReadOnlyReactivePropertySlim<BGM> PlayingBGM { get; }
+        public ReadOnlyReactivePropertySlim<BgmFilePath> PlayingBGM { get; }
 
         public ReadOnlyReactivePropertySlim<int> Volume { get; }
         #endregion
@@ -51,8 +51,8 @@ namespace BGMPlayerCore
             state = new ReactivePropertySlim<PlayingState>(PlayingState.Stopping);
             State = state.ToReadOnlyReactivePropertySlim();
 
-            playingBGM = new ReactivePropertySlim<BGM>(null);
-            PlayingBGM = new ReadOnlyReactivePropertySlim<BGM>(playingBGM);
+            playingBGM = new ReactivePropertySlim<BgmFilePath>(null);
+            PlayingBGM = new ReadOnlyReactivePropertySlim<BgmFilePath>(playingBGM);
 
             _audioPlayer = new AudioPlayer();
 
@@ -90,7 +90,7 @@ namespace BGMPlayerCore
             Volume = new ReadOnlyReactivePropertySlim<int>(volume);
         }
 
-        public async Task Play(BGM bgm)
+        public async Task Play(BgmFilePath bgm)
         {
             loopCount.Value = 0;
             switch (bgm.FileExtension)

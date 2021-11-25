@@ -7,13 +7,13 @@ namespace BGMList.Models
 {
     public class AllBGMs : IAllBGMs
     {
-        public ReadOnlyReactiveProperty<List<BGM>> BGMs { get; }
-        private readonly ReactiveProperty<List<BGM>> bgms;
+        public ReadOnlyReactiveProperty<List<BgmFilePath>> BGMs { get; }
+        private readonly ReactiveProperty<List<BgmFilePath>> bgms;
 
         public AllBGMs()
         {
-            bgms = new ReactiveProperty<List<BGM>>();
-            BGMs = new ReadOnlyReactiveProperty<List<BGM>>(bgms);
+            bgms = new ReactiveProperty<List<BgmFilePath>>();
+            BGMs = new ReadOnlyReactiveProperty<List<BgmFilePath>>(bgms);
 
             Refresh("./Playlist");
         }
@@ -25,7 +25,7 @@ namespace BGMList.Models
             }
 
             string[]? files = Directory.GetFiles(path);
-            var enableFiles = new List<BGM>();
+            var enableFiles = new List<BgmFilePath>();
 
             foreach (string? file in files)
             {
@@ -56,7 +56,7 @@ namespace BGMList.Models
                             ext = FileExtensionType.ogg;
                         }
 
-                        var bgm = new BGM(file, ext);
+                        var bgm = new BgmFilePath(file, ext);
                         enableFiles.Add(bgm);
                         break;
                     }

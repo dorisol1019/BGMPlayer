@@ -14,7 +14,7 @@ namespace BGMPlayer
 
         public ReadOnlyReactivePropertySlim<bool> IsPlaying { get; }
 
-        public ReadOnlyReactivePropertySlim<BGM> PlayingBGM { get; }
+        public ReadOnlyReactivePropertySlim<BgmFilePath> PlayingBGM { get; }
 
         public ReadOnlyReactivePropertySlim<int> Volume { get; }
 
@@ -35,7 +35,7 @@ namespace BGMPlayer
 
             Volume = this.bgmPlayerCore.Volume;
         }
-        public async Task Play(BGM bgm)
+        public async Task Play(BgmFilePath bgm)
         {
             bgmPlayerCore.Stop();
             await bgmPlayerCore.Play(bgm);

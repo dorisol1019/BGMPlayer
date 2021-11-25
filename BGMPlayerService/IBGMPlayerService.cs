@@ -7,7 +7,7 @@ namespace BGMPlayer
 {
     public interface IBGMPlayerService : IDisposable
     {
-        Task Play(BGM bgm);
+        Task Play(BgmFilePath bgm);
 
         void Stop();
 
@@ -21,7 +21,7 @@ namespace BGMPlayer
 
         ReadOnlyReactivePropertySlim<bool> IsPlaying { get; }
 
-        ReadOnlyReactivePropertySlim<BGM> PlayingBGM { get; }
+        ReadOnlyReactivePropertySlim<BgmFilePath> PlayingBGM { get; }
 
         ReadOnlyReactivePropertySlim<int> Volume { get; }
     }

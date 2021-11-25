@@ -5,14 +5,14 @@ namespace PlayerOperator.Models
 {
     public class OrderedPlaylist : IPlaylist
     {
-        private readonly List<BGM> playlist;
+        private readonly List<BgmFilePath> playlist;
         private int currentIndex = 0;
-        public OrderedPlaylist(IEnumerable<BGM> source, BGM currentBGM)
+        public OrderedPlaylist(IEnumerable<BgmFilePath> source, BgmFilePath currentBGM)
         {
-            playlist = new List<BGM>(source);
+            playlist = new List<BgmFilePath>(source);
             currentIndex = playlist.FindIndex(e => e == currentBGM);
         }
-        public BGM Next()
+        public BgmFilePath Next()
         {
             currentIndex++;
             int index = currentIndex % playlist.Count;

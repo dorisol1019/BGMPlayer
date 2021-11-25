@@ -25,8 +25,8 @@ namespace PlayerOperator.ViewModels
 
         private readonly ISelectedBGM selectedBGM;
 
-        private readonly IUserOperationNotification<BGM> playingBGMNotification;
-        public PlayerOperatorViewModel(IBGMPlayerService bgmPlayerService, IAllBGMs allBGMs, ISelectedBGM selectedBGM, IUserOperationNotification<BGM> playingBGMNotification, ISettingService settingService)
+        private readonly IUserOperationNotification<BgmFilePath> playingBGMNotification;
+        public PlayerOperatorViewModel(IBGMPlayerService bgmPlayerService, IAllBGMs allBGMs, ISelectedBGM selectedBGM, IUserOperationNotification<BgmFilePath> playingBGMNotification, ISettingService settingService)
         {
             player = bgmPlayerService;
             this.selectedBGM = selectedBGM;
@@ -123,7 +123,7 @@ namespace PlayerOperator.ViewModels
                         }
                     }
 
-                    BGM nextBGM = playlist.Next();
+                    BgmFilePath nextBGM = playlist.Next();
 
                     await Play(nextBGM);
                 });
@@ -162,7 +162,7 @@ namespace PlayerOperator.ViewModels
         private IPlaylist playlist;
         public ReactiveProperty<IEnumerable<string>> BGMList { get; }
 
-        private List<BGM> bgms;
+        private List<BgmFilePath> bgms;
         public ICommand SpaceCommand { get; }
         public ICommand EnterCommand { get; }
         public ICommand MouseDoubleClickCommand { get; }
@@ -190,7 +190,7 @@ namespace PlayerOperator.ViewModels
         public ReactiveProperty<bool> IsNextChecked { get; }
         private Task Play()
         {
-            BGM? bgm = bgms.FirstOrDefault(e => e.FileName == selectedBGM.selectedBGM.Value);
+            BgmFilePath? bgm = bgms.FirstOrDefault(e => e.FileName == selectedBGM.selectedBGM.Value);
             if (bgm is null)
             {
                 return Task.CompletedTask;
@@ -199,7 +199,7 @@ namespace PlayerOperator.ViewModels
             playingBGMNotification.Notification.Value = bgm;
             return Play(bgm);
         }
-        private async Task Play(BGM bgm)
+        private async Task Play(BgmFilePath bgm)
         {
             if (IsBusy.Value)
             {
