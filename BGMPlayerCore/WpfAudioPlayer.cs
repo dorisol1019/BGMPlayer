@@ -26,11 +26,11 @@ namespace WpfAudioPlayer
         private LoopMetadata? loopMetadata;
         public AudioPlayer() { }
 
-        public async Task Play(string file, FileExtensionType ext)
+        public async Task Play(string file, BgmType bgmType)
         {
             try
             {
-                await InitializeStream(file, ext);
+                await InitializeStream(file, bgmType);
 
             }
             catch (Exception exp)
@@ -46,11 +46,11 @@ namespace WpfAudioPlayer
         /// </summary>
         /// <param name="fileName">ファイルへのパス。</param>
         /// <exception cref="InvalidOperationException">ストリームの生成に失敗した。</exception>
-        private async Task InitializeStream(string fileName, FileExtensionType ext)
+        private async Task InitializeStream(string fileName, BgmType bgmType)
         {
             loopMetadata = null;
             WaveChannel32 stream;
-            if (FileExtensionType.wave == ext)
+            if (BgmType.Wave == bgmType)
             {
                 WaveStream reader = new WaveFileReader(fileName);
                 if (reader.WaveFormat.Encoding != WaveFormatEncoding.Pcm)
@@ -67,7 +67,7 @@ namespace WpfAudioPlayer
 
                 stream = new WaveChannel32(reader);
             }
-            else if (FileExtensionType.mp3 == ext)
+            else if (BgmType.MP3 == bgmType)
             {
                 fs = new FileStream(fileName, FileMode.Open);
                 byte[]? buf = new byte[fs.Length];
@@ -85,7 +85,7 @@ namespace WpfAudioPlayer
                 stream = new WaveChannel32(blockAlignedStream);
             }
 
-            else if (FileExtensionType.ogg == ext)
+            else if (BgmType.Ogg == bgmType)
             {
                 var vorbisStream = new NAudio.Vorbis.VorbisWaveReader(fileName);
 
@@ -134,7 +134,7 @@ namespace WpfAudioPlayer
 
             else
             {
-                throw new InvalidOperationException("Unsupported extension");
+                throw new InvalidOperationException("Unsupported BgmType");
             }
 
             _volumeStream = stream;

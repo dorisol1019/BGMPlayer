@@ -93,30 +93,25 @@ namespace BGMPlayerCore
         public async Task Play(BgmFilePath bgm)
         {
             loopCount.Value = 0;
-            switch (bgm.FileExtension)
+
+            if (bgm.BgmType == BgmType.Midi)
             {
-                case FileExtensionType.midi:
-                    _ggs.AddListFromFile(bgm.FullPath, 0, 1);
-                    _ggs.Play(PlayOption.Loop, 1, 0, 0, 0);
-                    _ggs.GetSmfInformation(out SmfInformation info, 1);
-                    if (info.LoopTime >= info.LastNoteTime)
-                    {
-                        isLoopableBGM = false;
-                    }
-                    else
-                    {
-                        isLoopableBGM = true;
-                    }
-                    break;
-                case FileExtensionType.wave:
-                case FileExtensionType.ogg:
-                case FileExtensionType.mp3:
-                    await _audioPlayer.Play(bgm.FullPath, bgm.FileExtension);
+                _ggs.AddListFromFile(bgm.FullPath, 0, 1);
+                _ggs.Play(PlayOption.Loop, 1, 0, 0, 0);
+                _ggs.GetSmfInformation(out SmfInformation info, 1);
+                if (info.LoopTime >= info.LastNoteTime)
+                {
+                    isLoopableBGM = false;
+                }
+                else
+                {
                     isLoopableBGM = true;
-                    break;
-                case FileExtensionType.other:
-                default:
-                    return;
+                }
+            }
+            else
+            {
+                await _audioPlayer.Play(bgm.FullPath, bgm.BgmType);
+                isLoopableBGM = true;
             }
             playingBGM.Value = bgm;
             state.Value = PlayingState.Playing;
@@ -130,24 +125,20 @@ namespace BGMPlayerCore
                 return;
             }
 
-            switch (playingBGM.Value.FileExtension)
+            if (playingBGM.Value.BgmType == BgmType.Midi)
             {
-                case FileExtensionType.midi:
-                    PlayerStatus status = _ggs.GetPlayerStatus();
-                    if (status.State != PlayerState.Stop)
-                    {
-                        _ggs.Pause();
-                    }
-                    break;
-                case FileExtensionType.wave:
-                case FileExtensionType.ogg:
-                case FileExtensionType.mp3:
-                    _audioPlayer.Stop();
-                    break;
-                case FileExtensionType.other:
-                default:
-                    return;
+                PlayerStatus status = _ggs.GetPlayerStatus();
+                if (status.State != PlayerState.Stop)
+                {
+                    _ggs.Pause();
+                }
             }
+            else
+            {
+                _audioPlayer.Stop();
+
+            }
+
             playingBGM.Value = null;
             state.Value = PlayingState.Stopping;
             loopCount.Value = 0;
@@ -159,20 +150,13 @@ namespace BGMPlayerCore
             {
                 return;
             }
-
-            switch (playingBGM.Value.FileExtension)
+            if(playingBGM.Value.BgmType == BgmType.Midi)
             {
-                case FileExtensionType.midi:
-                    _ggs.Pause();
-                    break;
-                case FileExtensionType.wave:
-                case FileExtensionType.ogg:
-                case FileExtensionType.mp3:
-                    _audioPlayer.Pause();
-                    break;
-                case FileExtensionType.other:
-                default:
-                    break;
+                _ggs.Pause();
+            }
+            else
+            {
+                _audioPlayer.Pause();
             }
             state.Value = PlayingState.Pausing;
         }
@@ -184,20 +168,15 @@ namespace BGMPlayerCore
                 return;
             }
 
-            switch (playingBGM.Value.FileExtension)
+            if (playingBGM.Value.BgmType == BgmType.Midi)
             {
-                case FileExtensionType.midi:
-                    _ggs.Restart();
-                    break;
-                case FileExtensionType.wave:
-                case FileExtensionType.ogg:
-                case FileExtensionType.mp3:
-                    _audioPlayer.Play();
-                    break;
-                case FileExtensionType.other:
-                default:
-                    break;
+                _ggs.Restart();
             }
+            else
+            {
+                _audioPlayer.Play();
+            }
+
             state.Value = PlayingState.Playing;
         }
 
@@ -225,7 +204,7 @@ namespace BGMPlayerCore
                 return;
             }
 
-            if (playingBGM.Value.FileExtension == FileExtensionType.midi)
+            if (playingBGM.Value.BgmType == BgmType.Midi)
             {
                 if (value == 0)
                 {
@@ -236,7 +215,7 @@ namespace BGMPlayerCore
                     _ggs.SetMasterVolume(-5 * (10 - value));
                 }
             }
-            else if (playingBGM.Value.FileExtension != FileExtensionType.other)
+            else
             {
                 _audioPlayer.Volume = value * 0.1f;
             }

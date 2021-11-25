@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 
 namespace BGMPlayerCore
@@ -7,13 +9,13 @@ namespace BGMPlayerCore
         public string FileName { get; }
 
         public string FullPath { get; }
-        public FileExtensionType FileExtension { get; }
+        public BgmType BgmType { get; }
 
-        public BgmFilePath(string filepath, FileExtensionType fileExtension)
+        public BgmFilePath(string filepath)
         {
             FullPath = Path.GetFullPath(filepath);
             FileName = Path.GetFileName(filepath);
-            FileExtension = fileExtension;
+            BgmType = BgmType.Parse(filepath);
         }
     }
 }

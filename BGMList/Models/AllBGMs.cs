@@ -1,7 +1,8 @@
-﻿using BGMPlayerCore;
+using BGMPlayerCore;
 using Reactive.Bindings;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace BGMList.Models
 {
@@ -27,40 +28,10 @@ namespace BGMList.Models
             string[]? files = Directory.GetFiles(path);
             var enableFiles = new List<BgmFilePath>();
 
-            foreach (string? file in files)
+            foreach (string? file in files.Where(e => BgmType.CanParse(e)))
             {
-                foreach (string? extensionName in new[] { ".mid", ".midi", ".wav", ".wave", ".mp3", ".ogg" })
-                {
-                    string? extension = Path.GetExtension(file);
-                    if (string.Compare(extension, extensionName, true) == 0)
-                    {
-                        FileExtensionType ext = FileExtensionType.other;
-                        extension = extension.ToLower();
-                        if (extension == ".mid" || extension == ".midi")
-                        {
-                            ext = FileExtensionType.midi;
-                        }
-
-                        if (extension == ".wav" || extension == ".wave")
-                        {
-                            ext = FileExtensionType.wave;
-                        }
-
-                        if (extension == ".mp3")
-                        {
-                            ext = FileExtensionType.mp3;
-                        }
-
-                        if (extension == ".ogg")
-                        {
-                            ext = FileExtensionType.ogg;
-                        }
-
-                        var bgm = new BgmFilePath(file, ext);
-                        enableFiles.Add(bgm);
-                        break;
-                    }
-                }
+                var bgm = new BgmFilePath(file);
+                enableFiles.Add(bgm);
             }
             bgms.Value = enableFiles;
         }
