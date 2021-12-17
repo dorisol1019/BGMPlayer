@@ -5,25 +5,49 @@ using BGMPlayerService;
 using PlayerOperator.Models;
 using Prism.Commands;
 using Prism.Mvvm;
+using Prism.Navigation;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using Reactive.Bindings.Notifiers;
 using System.Collections;
 using System.Reactive.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Input;
+using Windows.Media;
+using Windows.Storage;
+using Windows.Storage.Streams;
 
 namespace PlayerOperator.ViewModels;
 
-public class PlayerOperatorViewModel : BindableBase
+[SupportedOSPlatform("windows10.0.10240.0")]
+public class PlayerOperatorViewModel : BindableBase, IDestructible
 {
     private readonly IBGMPlayerService player;
 
     private readonly ISelectedBGM selectedBGM;
 
     private readonly IUserOperationNotification<BgmFilePath> playingBGMNotification;
-    public PlayerOperatorViewModel(IBGMPlayerService bgmPlayerService, IAllBGMs allBGMs, ISelectedBGM selectedBGM, IUserOperationNotification<BgmFilePath> playingBGMNotification, ISettingService settingService)
+    private readonly SystemMediaTransportControls systemMediaTransportControls;
+    private readonly SystemMediaTransportControlsDisplayUpdater systemMediaTransportControlsDisplayUpdater;
+    private readonly static InMemoryRandomAccessStream stream = GetIconRandomAccessStream();
+    private static RandomAccessStreamReference GetThumbnail  => RandomAccessStreamReference.CreateFromStream(stream);
+
+    public PlayerOperatorViewModel(IBGMPlayerService bgmPlayerService, IAllBGMs allBGMs, ISelectedBGM selectedBGM, IUserOperationNotification<BgmFilePath> playingBGMNotification, ISettingService settingService
+        , SystemMediaTransportControls systemMediaTransportControls)
     {
+        this.systemMediaTransportControls = systemMediaTransportControls;
+        systemMediaTransportControls.IsPauseEnabled = true;
+        systemMediaTransportControls.IsPlayEnabled = true;
+        systemMediaTransportControls.IsNextEnabled = true;
+        systemMediaTransportControls.IsPreviousEnabled = true;
+        systemMediaTransportControls.ButtonPressed += SystemMediaTransportControls_ButtonPressed;
+        systemMediaTransportControlsDisplayUpdater = systemMediaTransportControls.DisplayUpdater;
+
+        systemMediaTransportControlsDisplayUpdater.Thumbnail = GetThumbnail;
+        systemMediaTransportControlsDisplayUpdater.Update();
+
         player = bgmPlayerService;
         this.selectedBGM = selectedBGM;
         this.playingBGMNotification = playingBGMNotification;
@@ -108,7 +132,7 @@ public class PlayerOperatorViewModel : BindableBase
                 {
                     if (!(playlist is ShuffledPlaylist))
                     {
-                        playlist = new ShuffledPlaylist(bgms);
+                        playlist = new ShuffledPlaylist(bgms, playingBGMNotification.Notification.Value);
                     }
                 }
                 else if (IsNextChecked.Value)
@@ -128,7 +152,7 @@ public class PlayerOperatorViewModel : BindableBase
         {
             if (IsShuffleChecked.Value)
             {
-                playlist = new ShuffledPlaylist(bgms);
+                playlist = new ShuffledPlaylist(bgms, bgm);
             }
             else if (IsNextChecked.Value)
             {
@@ -150,6 +174,68 @@ public class PlayerOperatorViewModel : BindableBase
                     PauseOrRestartButtonContent.Value = "停止解除";
                     break;
                 default:
+                    break;
+            }
+        });
+    }
+
+    private static InMemoryRandomAccessStream GetIconRandomAccessStream()
+    {
+        var uri = new Uri("pack://application:,,,/icon3.png", UriKind.Absolute);
+        var resourceInfo = Application.GetResourceStream(uri);
+        using var resourceInfoStream = resourceInfo.Stream;
+        var array = new byte[resourceInfoStream.Length];
+        resourceInfoStream.Read(array, 0, array.Length);
+        var randomAccessStream = new InMemoryRandomAccessStream();
+        randomAccessStream.WriteAsync(array.AsBuffer()).AsTask().Wait();
+        return randomAccessStream;
+    }
+
+    private async void SystemMediaTransportControls_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
+    {
+        await Application.Current.Dispatcher.InvokeAsync(async () =>
+        {
+            if(args.Button == SystemMediaTransportControlsButton.Next || args.Button == SystemMediaTransportControlsButton.Previous)
+            {
+                if (IsShuffleChecked.Value)
+                {
+                    if (playlist is not ShuffledPlaylist)
+                    {
+                        playlist = new ShuffledPlaylist(bgms, playingBGMNotification.Notification.Value);
+                    }
+                }
+                else if (IsNextChecked.Value)
+                {
+                    if (playlist is not OrderedPlaylist)
+                    {
+                        playlist = new OrderedPlaylist(bgms, playingBGMNotification.Notification.Value);
+                    }
+                }
+            }
+
+            if (args.Button == SystemMediaTransportControlsButton.Next)
+            {
+                BgmFilePath nextBGM = playlist.Next();
+                await Play(nextBGM);
+                return;
+            }
+            else if (args.Button == SystemMediaTransportControlsButton.Previous)
+            {
+                BgmFilePath nextBGM = playlist.Previous();
+                await Play(nextBGM);
+                return;
+            }
+            switch (player.State.Value)
+            {
+                case PlayingState.Playing:
+                    PauseOrRestart();
+                    systemMediaTransportControls.PlaybackStatus = MediaPlaybackStatus.Paused;
+                    break;
+                case PlayingState.Stopping:
+                    return;
+                case PlayingState.Pausing:
+                    PauseOrRestart();
+                    systemMediaTransportControls.PlaybackStatus = MediaPlaybackStatus.Playing;
                     break;
             }
         });
@@ -193,8 +279,10 @@ public class PlayerOperatorViewModel : BindableBase
         }
 
         playingBGMNotification.Notification.Value = bgm;
+
         return Play(bgm);
     }
+
     private async Task Play(BgmFilePath bgm)
     {
         if (IsBusy.Value)
@@ -205,18 +293,50 @@ public class PlayerOperatorViewModel : BindableBase
         using (BusyNotifier.ProcessStart())
         {
             await player.Play(bgm);
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                systemMediaTransportControlsDisplayUpdater.Type = MediaPlaybackType.Music;
+                systemMediaTransportControlsDisplayUpdater.MusicProperties.Title = bgm.FileName;
+                systemMediaTransportControlsDisplayUpdater.Update();
+                systemMediaTransportControls.PlaybackStatus = MediaPlaybackStatus.Playing;
+            });
         }
 
         player.ChangeVolume((int)Volume.Value);
     }
 
+    [SupportedOSPlatform("windows10.0.10240.0")]
+
     private void Stop()
     {
         player.Stop();
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            systemMediaTransportControlsDisplayUpdater.ClearAll();
+            systemMediaTransportControlsDisplayUpdater.Thumbnail = GetThumbnail;
+            systemMediaTransportControlsDisplayUpdater.Update();
+            systemMediaTransportControls.PlaybackStatus = MediaPlaybackStatus.Stopped;
+        });
     }
 
     private void PauseOrRestart()
     {
+        if (player.State.Value == PlayingState.Playing)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+                        systemMediaTransportControls.PlaybackStatus = MediaPlaybackStatus.Paused
+            );
+        }
+        else if (player.State.Value== PlayingState.Pausing)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            systemMediaTransportControls.PlaybackStatus = MediaPlaybackStatus.Playing);
+        }
         player.PauseOrReStart();
+    }
+
+    public void Destroy()
+    {
+        stream?.Dispose();
     }
 }

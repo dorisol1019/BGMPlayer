@@ -3,6 +3,7 @@ using BGMPlayerCore;
 using PlayerOperator.Models;
 using Prism.Commands;
 using Prism.Mvvm;
+using Prism.Regions;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using System.Reactive.Linq;
@@ -28,10 +29,14 @@ public class MainWindowViewModel : BindableBase
 
     private readonly IAllBGMs allBGMs;
 
-    public MainWindowViewModel(IBGMPlayerService bgmPlayerService, IAllBGMs allBGMs, ISettingService settingService, IDialogService dialogService)
+    private IRegionManager regionManager;
+
+
+    public MainWindowViewModel(IBGMPlayerService bgmPlayerService, IAllBGMs allBGMs, ISettingService settingService, IDialogService dialogService, IRegionManager regionManager)
     {
         Title = new ReactiveProperty<string>(_defaultTitle);
         IsTopMostWindow = settingService.IsTopMostWindow.ToReadOnlyReactivePropertySlim();
+        this.regionManager = regionManager;
 
         Shutdown = new DelegateCommand(() => Application.Current.Shutdown());
 
@@ -65,7 +70,14 @@ public class MainWindowViewModel : BindableBase
 
         OpenFolderCommand = new DelegateCommand(() => OpenFolder());
 
-        WindowClosedCommand = new DelegateCommand(() => bgmPlayerService.Dispose());
+        WindowClosedCommand = new DelegateCommand(() =>
+        {
+            bgmPlayerService.Dispose();
+            foreach (var region in this.regionManager.Regions)
+            {
+                region.RemoveAll();
+            }
+        });
     }
 
     public DelegateCommand PopUpVersionInfoCommand { get; }

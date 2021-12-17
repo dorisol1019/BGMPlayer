@@ -6,8 +6,14 @@ using Prism.Mvvm;
 using Reactive.Bindings;
 using System.Collections;
 using System.Reactive.Linq;
+using System.Runtime.Versioning;
+using System.Windows;
+using Windows.Media;
+using Windows.UI.ViewManagement;
 
 namespace BGMList.ViewModels;
+
+[SupportedOSPlatform("windows10.0.10240.0")]
 
 public class BGMListViewModel : BindableBase
 {
@@ -25,8 +31,15 @@ public class BGMListViewModel : BindableBase
     private readonly IAllBGMs allBGMs;
 
     private readonly IBGMPlayerService bgmPlayerService;
-    public BGMListViewModel(IBGMPlayerService bgmPlayerService, IAllBGMs allBGMs, ISelectedBGM selectedBGM, IUserOperationNotification<BgmFilePath> playingBGMNotification)
+
+    private SystemMediaTransportControls systemMediaTransportControls;
+    private SystemMediaTransportControlsDisplayUpdater systemMediaTransportControlsDisplayUpdater;
+
+    public BGMListViewModel(IBGMPlayerService bgmPlayerService, IAllBGMs allBGMs, ISelectedBGM selectedBGM, IUserOperationNotification<BgmFilePath> playingBGMNotification
+        , SystemMediaTransportControls systemMediaTransportControls)
     {
+        this.systemMediaTransportControls = systemMediaTransportControls;
+        systemMediaTransportControlsDisplayUpdater = systemMediaTransportControls.DisplayUpdater;
         this.bgmPlayerService = bgmPlayerService;
 
         this.allBGMs = allBGMs;
@@ -36,15 +49,37 @@ public class BGMListViewModel : BindableBase
         SelectedBGMIndex = new ReactiveProperty<int>(0);
 
         PlayCommand = new AsyncReactiveCommand();
-        PlayCommand.Subscribe(() =>
+        PlayCommand.Subscribe(async () =>
         {
             BgmFilePath? bgm = allBGMs.BGMs.Value.First(e => e.FileName == SelectedBGM.Value);
             playingBGMNotification.Notification.Value = bgm;
-            return bgmPlayerService.Play(bgm);
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                systemMediaTransportControlsDisplayUpdater.Type = MediaPlaybackType.Music;
+                systemMediaTransportControlsDisplayUpdater.MusicProperties.Title = bgm.FileName;
+                systemMediaTransportControlsDisplayUpdater.Update();
+                systemMediaTransportControls.PlaybackStatus = MediaPlaybackStatus.Playing;
+            });
+            await bgmPlayerService.Play(bgm);
         });
 
         PauseOrRestartCommand = new ReactiveCommand();
-        PauseOrRestartCommand.Subscribe(bgmPlayerService.PauseOrReStart);
+        PauseOrRestartCommand.Subscribe(() =>
+        {
+            if (bgmPlayerService.State.Value == PlayingState.Playing)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                            systemMediaTransportControls.PlaybackStatus = MediaPlaybackStatus.Paused
+                );
+            }
+            else if (bgmPlayerService.State.Value == PlayingState.Pausing)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                systemMediaTransportControls.PlaybackStatus = MediaPlaybackStatus.Playing);
+            }
+            bgmPlayerService.PauseOrReStart();
+        }
+        );
 
         VolumeUpCommand = new ReactiveCommand();
         VolumeUpCommand.Subscribe(() =>

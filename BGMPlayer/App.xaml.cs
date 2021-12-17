@@ -11,6 +11,7 @@ using Prism.Modularity;
 using Prism.Unity;
 using System.IO;
 using System.Windows;
+using Windows.Media.Playback;
 
 namespace BGMPlayer;
 
@@ -48,6 +49,7 @@ public partial class App : PrismApplication
         containerRegistry.RegisterInstance<IUserOperationNotification<BgmFilePath>>(new UserOperationNotification<BgmFilePath>());
         containerRegistry.Register<ISettingRepository, SettingRepository>();
         containerRegistry.RegisterSingleton<ISettingService, SettingService>();
+        containerRegistry.RegisterInstance(BackgroundMediaPlayer.Current.SystemMediaTransportControls);
     }
 
     protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)

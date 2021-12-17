@@ -24,9 +24,7 @@ dorisol1019が欲しい機能を詰め込んだフリーの音楽プレーヤー
 
 ## 動作要件
 
-* Windows OSであること
-* .NET 6 の動作要件を満たしていること
-  https://github.com/dotnet/core/blob/main/release-notes/6.0/supported-os.md
+* Windows 10 バージョン 1809以上
 
 ## インストール
 

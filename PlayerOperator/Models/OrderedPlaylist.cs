@@ -23,4 +23,18 @@ public class OrderedPlaylist : IPlaylist
 
         return playlist[index];
     }
+
+    public BgmFilePath Previous()
+    {
+        currentIndex--;
+
+        if(currentIndex < 0)
+        {
+            currentIndex = playlist.Count - 1;
+        }
+
+        int index = currentIndex % playlist.Count;
+
+        return playlist[index];
+    }
 }
