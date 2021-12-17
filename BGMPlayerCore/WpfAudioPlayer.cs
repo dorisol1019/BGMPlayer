@@ -470,15 +470,33 @@ public class WasapiOut2 : IWavePlayer, IWavePosition
         audioDevice = audioDeviceWatcher.CurrentDefaultDevice.ToReadOnlyReactiveProperty(mode: ReactivePropertyMode.None);
         audioDevice.Subscribe(async device =>
         {
-            Pause();
-            await Task.Delay(100);
-            audioClient.Stop();
-            mmDevice = device;
-            audioClient = mmDevice.AudioClient;
-            Init(sourceProvider!);
-            await Task.Delay(100);
-            audioClient.Start();
-            Play();
+            switch (playbackState)
+            {
+                case PlaybackState.Stopped:
+                    return;
+                case PlaybackState.Playing:
+                    Pause();
+                    await Task.Delay(100);
+                    audioClient.Stop();
+                    mmDevice = device;
+                    audioClient = mmDevice.AudioClient;
+                    Init(sourceProvider!);
+                    await Task.Delay(100);
+                    audioClient.Start();
+                    Play();
+                    break;
+                case PlaybackState.Paused:
+                    await Task.Delay(100);
+                    audioClient.Stop();
+                    mmDevice = device;
+                    audioClient = mmDevice.AudioClient;
+                    Init(sourceProvider!);
+                    await Task.Delay(100);
+                    audioClient.Start();
+                    break;
+                default:
+                    break;
+            }
         });
     }
 
