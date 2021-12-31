@@ -201,21 +201,15 @@ public class BGMPlayerCoreApi : IBGMPlayerCoreApi
             return;
         }
 
-        if (playingBGM.Value.BgmType == BgmType.Midi)
+        if (value == 0)
         {
-            if (value == 0)
-            {
-                _ggs.SetMasterVolume(-127);
-            }
-            else
-            {
-                _ggs.SetMasterVolume(-5 * (10 - value));
-            }
+            _ggs.SetMasterVolume(-127);
         }
         else
         {
-            _audioPlayer.Volume = value * 0.1f;
+            _ggs.SetMasterVolume(-5 * (10 - value));
         }
+        _audioPlayer.Volume = value * 0.1f;
 
         volume.Value = value;
     }

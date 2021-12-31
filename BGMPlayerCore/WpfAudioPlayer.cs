@@ -13,7 +13,7 @@ namespace WpfAudioPlayer;
 internal sealed class AudioPlayer : IDisposable
 {
     private LoopStream _audioStream;
-    private WaveChannel32 _volumeStream;
+    private WaveChannel32? _volumeStream;
     private IWavePlayer _waveOut;
     private Stream strm;
     private WasapiOut2 _wasApi;
@@ -133,6 +133,9 @@ internal sealed class AudioPlayer : IDisposable
             throw new InvalidOperationException("Unsupported BgmType");
         }
 
+        // 既に設定した音量があればそれを初期値にする
+        // これがないと曲の最初だけ音がMaxで出る
+        stream.Volume = Volume;
         _volumeStream = stream;
         _audioStream = new LoopStream(stream, stream.WaveFormat.SampleRate / 10, loopMetadata);
 
@@ -174,13 +177,25 @@ internal sealed class AudioPlayer : IDisposable
         _audioStream?.Dispose();
     }
 
+    private float initialVolume = 0.5f;
     /// <summary>
     /// ボリュームを取得または設定します。
     /// </summary>
     public float Volume
     {
-        get => _volumeStream.Volume;
-        set => _volumeStream.Volume = value;
+        get
+        {
+            return _volumeStream?.Volume ?? initialVolume;
+        }
+        set
+        {
+            if (_volumeStream is null)
+            {
+                initialVolume = value;
+                return;
+            }
+            _volumeStream.Volume = initialVolume = value;
+        }
     }
 
     public int LoopCount => _audioStream?.loopcount ?? 0;
