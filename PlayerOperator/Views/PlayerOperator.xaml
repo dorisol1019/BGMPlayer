@@ -27,7 +27,16 @@
         </Grid>
         <GroupBox Header="音量" Grid.Row="1">
             <Slider Name="volumeSlider" Value="{Binding Volume.Value}"
-                    Maximum="10" Minimum="0" LargeChange="1" SmallChange="1" TickPlacement="Both"/>
+                    Maximum="10" Minimum="0" LargeChange="1" SmallChange="1" TickPlacement="Both">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="PreviewMouseDown">
+                        <i:InvokeCommandAction Command="{Binding VolumeSliderManipulateStart}"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="PreviewMouseUp">
+                        <i:InvokeCommandAction Command="{Binding VolumeSliderManipulateComplete}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Slider>
         </GroupBox>
         <CheckBox Name="IsTopMostWindow" VerticalAlignment="Center" IsChecked="{Binding IsTopMostWindow.Value}" Content="常に最前面に表示する" Grid.Row="2" />
         <GroupBox Header="ループ設定" Grid.Row="3">

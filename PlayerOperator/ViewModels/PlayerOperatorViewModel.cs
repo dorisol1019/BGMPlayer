@@ -34,6 +34,10 @@ public class PlayerOperatorViewModel : BindableBase, IDestructible
     private readonly static InMemoryRandomAccessStream stream = GetIconRandomAccessStream();
     private static RandomAccessStreamReference GetThumbnail  => RandomAccessStreamReference.CreateFromStream(stream);
 
+    private bool isVolumeSliderManipulating = false;
+    public ICommand VolumeSliderManipulateStart { get; }
+    public ICommand VolumeSliderManipulateComplete { get; }
+
     public PlayerOperatorViewModel(IBGMPlayerService bgmPlayerService, IAllBGMs allBGMs, ISelectedBGM selectedBGM, IUserOperationNotification<BgmFilePath> playingBGMNotification, ISettingService settingService
         , SystemMediaTransportControls systemMediaTransportControls)
     {
@@ -78,7 +82,7 @@ public class PlayerOperatorViewModel : BindableBase, IDestructible
         PauseOrRestartCommand = new ReactiveCommand(PauseOrRestartButtonContent.Select(e => !string.IsNullOrEmpty(e)));
         PauseOrRestartCommand.Subscribe(PauseOrRestart);
 
-        Volume = player.Volume.Select(volume => (double)volume).ToReactiveProperty();
+        Volume = player.Volume.Where(_ => !isVolumeSliderManipulating).Select(volume => (double)volume).ToReactiveProperty();
         Volume.Subscribe(volume => player.ChangeVolume((int)volume));
 
         EnterCommand = PlayCommand;
@@ -177,6 +181,9 @@ public class PlayerOperatorViewModel : BindableBase, IDestructible
                     break;
             }
         });
+
+        VolumeSliderManipulateStart = new DelegateCommand(()=> isVolumeSliderManipulating = true);
+        VolumeSliderManipulateComplete = new DelegateCommand(()=> isVolumeSliderManipulating = false);
     }
 
     private static InMemoryRandomAccessStream GetIconRandomAccessStream()
