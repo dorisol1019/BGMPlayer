@@ -17,7 +17,7 @@ public class VersionInfo
         var asm = Assembly.GetExecutingAssembly();
         ApplicationVersion = $"Version {asm.GetCustomAttribute<AssemblyInformationalVersionAttribute>()!.InformationalVersion}";
 
-        CopyrightText = "Copyright (c) 2017-2021 dorisol1019";
+        CopyrightText = "Copyright (c) 2017-2022 dorisol1019";
         ProjectURL = "https://github.com/dorisol1019/BGMPlayer";
     }
 
