@@ -668,7 +668,7 @@ public class WasapiOut2 : IWavePlayer, IWavePosition
             if (playbackState == PlaybackState.Stopped)
             {
                 CancellationToken token = cancellationTokenSource.Token;
-                playTask = Task.Run(() => PlayTask(token));
+                playTask = Task.Factory.StartNew(() => PlayTask(token), TaskCreationOptions.LongRunning);
                 watchTask = Task.Factory.StartNew(() => audioDeviceWatcher.Watch(token), token, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
                 playbackState = PlaybackState.Playing;
             }
